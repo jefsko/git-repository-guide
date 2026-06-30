@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.1.0  
-Previous locked version: v1.0.0  
+Document version: v1.2.0  
+Previous locked version: v1.1.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.1.0` file. Save future changes as a new version, such as `v1.1.1` or `v1.2.0`.  
+Future edit policy: Do not overwrite this `v1.2.0` file. Save future changes as a new version, such as `v1.2.1` or `v1.3.0`.  
 Current as of: 2026-06-29
 
-Revision note: This `v1.1.0` edition preserves the `v1.0.0` guide and additively incorporates supplemental Git tagging, repository naming, retrieval, and pager guidance from the uploaded reference file `git_tags_versioning_reference(1).md`.
+Revision note: This `v1.2.0` edition preserves the `v1.1.0` guide and additively incorporates repository packaging, stable filename, README/CHANGELOG, first-time vs. later push workflow, branch workflow, merge, rebase, and Git object-count guidance from the cumulative Version Update Brief.
 
 ---
 
@@ -28,13 +28,18 @@ Revision note: This `v1.1.0` edition preserves the `v1.0.0` guide and additively
 - [12. Naming and Versioning Recommendations](#12-naming-and-versioning-recommendations)
 - [13. Common Mistakes to Avoid](#13-common-mistakes-to-avoid)
 - [14. Quick Command Cheat Sheet](#14-quick-command-cheat-sheet)
+- [15. Repository Packaging and Stable Filenames](#15-repository-packaging-and-stable-filenames)
+- [16. First-Time Setup vs. Later Updates](#16-first-time-setup-vs-later-updates)
+- [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing)
+- [18. Git Push Object Counts and Git Objects](#18-git-push-object-counts-and-git-objects)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
 - [Appendix D: Production Release and Deployment Details](#appendix-d-production-release-and-deployment-details)
 - [Appendix E: Troubleshooting](#appendix-e-troubleshooting)
 - [Appendix F: Knowledge Base and How-To Reference](#appendix-f-knowledge-base-and-how-to-reference)
-- [Appendix G: References](#appendix-g-references)
+- [Appendix G: Command Sequences and Workflow Recipes](#appendix-g-command-sequences-and-workflow-recipes)
+- [Appendix H: References](#appendix-h-references)
 - [Index](#index)
 
 ---
@@ -46,7 +51,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark a newer file set as `v1.1.0`.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -115,6 +120,36 @@ If a file is untracked, unstaged, modified but not committed, ignored by `.gitig
 ### Repository
 
 A **repository**, or **repo**, is the Git-tracked project. It includes your files and Git’s history.
+
+Use **repository** for formal explanations and first mentions. After that, **repo** is a common and acceptable abbreviation.
+
+### Remote
+
+A **remote** is a named connection to another copy of the repository, usually on GitHub.
+
+The conventional default remote name is:
+
+```text
+origin
+```
+
+`origin` is not a branch. It is a local nickname for the remote repository URL.
+
+### Branch
+
+A **branch** is a movable name pointing to a line of work.
+
+The modern common primary branch name is:
+
+```text
+main
+```
+
+Older repositories may use:
+
+```text
+master
+```
 
 ### Working Tree
 
@@ -483,6 +518,12 @@ Stage the changes:
 
 ```bash
 git add .
+```
+
+Check status again to confirm what is staged:
+
+```bash
+git status
 ```
 
 Commit the new version:
@@ -953,6 +994,788 @@ gh release create v1.1.0 --title "v1.1.0" --notes "Describe what changed in v1.1
 
 ---
 
+---
+
+## 15. Repository Packaging and Stable Filenames
+
+This guide is meant to become a real Git repository. Once it is in a repository, the active guide file should keep one stable filename:
+
+```text
+git-repository-guide.md
+```
+
+Do not keep renaming the active guide file for every version, such as:
+
+```text
+git-repository-guide-v1.1.0.md
+git-repository-guide-v1.2.0.md
+git-repository-guide-v1.3.0.md
+```
+
+Those names are acceptable for standalone downloads in a chat or file-sharing context, but they are not the best pattern inside the actual repository.
+
+Inside the repository, use Git history to track versions:
+
+```text
+commit history
+tags
+GitHub Releases
+CHANGELOG.md
+```
+
+The recommended repository structure is:
+
+```text
+git-repository-guide/
+├─ README.md
+├─ CHANGELOG.md
+└─ git-repository-guide.md
+```
+
+Recommended repository name:
+
+```text
+git-repository-guide
+```
+
+Recommended GitHub repository description:
+
+```text
+A beginner-friendly guide to creating Git repositories and managing versioned file sets
+```
+
+Do not add a period to the GitHub description. Treat it like a short label.
+
+### README.md
+
+Use:
+
+```text
+README.md
+```
+
+The README should be short. It should identify the project, explain what the repository contains, point to the main guide file, list major topics, state the current guide version, and summarize the versioning policy.
+
+GitHub displays a repository README when it exists in expected locations such as the repository root. [R36]
+
+### CHANGELOG.md
+
+Use:
+
+```text
+CHANGELOG.md
+```
+
+The changelog should summarize notable changes by version. It does not replace Git history, but it gives humans a convenient summary of what changed.
+
+### Version history for this guide
+
+Recommended history:
+
+| Version | Description |
+|---|---|
+| `v0.1.0` | Original pre-release draft |
+| `v1.0.0` | First complete locked baseline |
+| `v1.1.0` | Additive expansion with expanded Git reference and Knowledge Base |
+| `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
+
+### Commit messages, tag names, tag messages, and changelog entries
+
+These are related but not the same thing.
+
+| Thing | Example | Purpose |
+|---|---|---|
+| Commit message | `Expand guide with branch workflow guidance` | Describes what changed in one commit |
+| Tag name | `v1.2.0` | Identifies the version marker |
+| Tag message | `Version 1.2.0` | Describes the annotated tag |
+| Changelog entry | `Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance` | Human-readable version summary |
+| GitHub Release title | `v1.2.0` or `Version 1.2.0` | Title for a GitHub Release page |
+| GitHub Release notes | Bulleted summary of changes | Published release summary |
+
+Preferred annotated tag pattern:
+
+```bash
+git tag -a v1.2.0 -m "Version 1.2.0"
+```
+
+Avoid unnecessary redundancy except when showing what not to do:
+
+```bash
+git tag -a v1.2.0 -m "Version v1.2.0"
+```
+
+The tag name already has the leading `v`. The tag message does not need to repeat it.
+
+---
+
+## 16. First-Time Setup vs. Later Updates
+
+A common source of confusion is that first-time setup commands are not the same as everyday update commands.
+
+### First-time repository setup
+
+Use this when starting a brand-new local repository and connecting it to GitHub for the first time.
+
+Minimal version:
+
+```bash
+git init -b main
+git add .
+git commit -m "Add original pre-release draft"
+
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git push -u origin main
+
+git tag -a v0.1.0 -m "Version 0.1.0"
+git push origin v0.1.0
+```
+
+Recommended beginner-friendly version:
+
+```bash
+git init -b main
+git status
+git add .
+git status
+git commit -m "Add original pre-release draft"
+
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git remote -v
+git push -u origin main
+
+git tag -a v0.1.0 -m "Version 0.1.0"
+git push origin v0.1.0
+```
+
+The second `git status` is intentional. It lets you confirm exactly what is staged before committing.
+
+### Normal later update without a new version tag
+
+Minimal version:
+
+```bash
+git add .
+git commit -m "Describe what changed"
+git push
+```
+
+Recommended version:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+```
+
+No tag command is needed if you are not marking a new version.
+
+### Later update with a new version tag
+
+Minimal version:
+
+```bash
+git add .
+git commit -m "Describe what changed"
+git push
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Recommended version:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Example:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Expand guide with repository packaging and branch workflow guidance"
+git push
+
+git tag -a v1.2.0 -m "Version 1.2.0"
+git push origin v1.2.0
+```
+
+### Why later updates usually use plain `git push`
+
+The first push usually uses:
+
+```bash
+git push -u origin main
+```
+
+The `-u` option sets upstream tracking. After that, Git knows that your local `main` branch pushes to `origin/main`, so later branch pushes can usually be:
+
+```bash
+git push
+```
+
+Use `git push -u origin main` again only when upstream tracking is missing or when setting upstream for a new branch. `--set-upstream` is the long form of `-u`. [R22]
+
+### `git tag`, `git push`, and `git push origin <tag>`
+
+These commands do different things.
+
+```bash
+git tag
+```
+
+lists local tags.
+
+```bash
+git tag -a v1.2.0 -m "Version 1.2.0"
+```
+
+creates an annotated tag locally.
+
+```bash
+git push
+```
+
+pushes commits from the current branch to its configured upstream branch.
+
+```bash
+git push origin v1.2.0
+```
+
+pushes the specific tag `v1.2.0` to GitHub.
+
+Do not rely on plain `git push` to publish a newly created tag. The clear beginner-friendly pattern is:
+
+```bash
+git push
+git push origin v1.2.0
+```
+
+A useful optional alternative is:
+
+```bash
+git push --follow-tags
+```
+
+This can push annotated tags reachable from the commits being pushed. [R22]
+
+### Command requirement matrix
+
+| Command | First-time setup | Later update, no tag | Later update with tag | Notes |
+|---|---:|---:|---:|---|
+| `git init -b main` | Yes | No | No | Creates the local repository. |
+| `git status` before `git add` | Recommended | Recommended | Recommended | Shows what changed before staging. |
+| `git add .` | Yes | Yes | Yes | Stages changes. |
+| `git status` after `git add` | Recommended | Recommended | Recommended | Confirms what is staged. |
+| `git commit -m "..."` | Yes | Yes | Yes | Creates a commit. |
+| `git remote add origin ...` | Yes, if no remote exists | No | No | Connects the local repository to GitHub. |
+| `git remote -v` | Recommended | Optional | Optional | Verifies the remote URL. |
+| `git push -u origin main` | Yes, if upstream is not set | Usually no | Usually no | Pushes and sets upstream tracking. |
+| `git push` | No after first `-u` push | Yes | Yes | Pushes commits after upstream is set. |
+| `git tag -a vX.Y.Z -m "Version X.Y.Z"` | Only if tagging first version | No | Yes | Creates an annotated tag locally. |
+| `git push origin vX.Y.Z` | Only if pushing first tag | No | Yes | Publishes the tag. |
+
+---
+
+## 17. Branching, Merging, and Rebasing
+
+The earlier workflow in this guide is intentionally simple and often works directly on `main`.
+
+That is acceptable for a small solo documentation project or beginner practice.
+
+For larger changes, team projects, reviewed work, or safer version-control habits, use a branch.
+
+A safer workflow is:
+
+```text
+create a working branch
+make changes there
+commit the changes
+push the branch
+merge the branch into main
+tag the version from main
+```
+
+### `origin`, `main`, and `master`
+
+`origin` is the conventional name for the remote repository.
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+```
+
+`origin` is not a branch. It is a local nickname for a remote repository URL.
+
+`main` is the modern common name for the primary branch.
+
+```bash
+git push -u origin main
+```
+
+In that command, `origin` is the remote and `main` is the branch.
+
+`master` is the older traditional default branch name. Many older repositories still use `master`; many newer repositories use `main`.
+
+Recommended policy for this guide:
+
+- Use `origin` as the remote name.
+- Use `main` as the primary branch name for new repositories.
+- Mention that older repositories may use `master`.
+- Do not rename an existing `master` branch casually if scripts, collaborators, branch protections, deployment settings, or documentation depend on it.
+
+Basic rename example:
+
+```bash
+git branch -m master main
+git push -u origin main
+```
+
+Then update GitHub’s default branch setting before deleting the old remote branch. Do not delete the old remote primary branch until the default branch and integrations have been updated.
+
+### What is a branch?
+
+A branch is a movable name pointing to a line of work.
+
+For beginners:
+
+> A branch lets you work on changes separately from the primary version of the project.
+
+Create and switch to a new branch:
+
+```bash
+git switch -c update-v1.2.0-guide
+```
+
+Older tutorials may use:
+
+```bash
+git checkout -b update-v1.2.0-guide
+```
+
+Both are common. This guide prefers `git switch` because it is clearer for branch switching. [R28]
+
+Switch branches:
+
+```bash
+git switch main
+git switch update-v1.2.0-guide
+```
+
+List local branches:
+
+```bash
+git branch
+```
+
+List local and remote-tracking branches:
+
+```bash
+git branch -a
+```
+
+Push a new branch and set upstream tracking:
+
+```bash
+git push -u origin update-v1.2.0-guide
+```
+
+### Working branches vs. temporary branches
+
+Git does not technically have a special branch type called a “working branch” or “temporary branch.”
+
+A branch is just a branch.
+
+The labels describe how humans intend to use the branch.
+
+| Informal branch type | Meaning | Example |
+|---|---|---|
+| Working branch | Branch where active work happens | `update-v1.2.0-guide` |
+| Feature branch | Branch for a feature or major update | `add-branching-section` |
+| Topic branch | Branch for a focused topic/change | `fix-changelog-format` |
+| Temporary branch | Short-lived branch for testing or experiments | `try-rebase-example` |
+
+### Should work happen directly on `main`?
+
+For small solo projects, working directly on `main` can be acceptable.
+
+For team projects, important projects, or changes that need review, use a branch.
+
+| Workflow | Pros | Cons |
+|---|---|---|
+| Direct to `main` | Simple, fewer commands, good for tiny solo projects | Unfinished work lands on the official branch; less review-friendly |
+| Branch-based | Keeps `main` stable, supports review, safer for experiments | More commands and more concepts |
+
+Recommended guide position:
+
+> Learn the direct-to-`main` workflow first as the simplest baseline. Once comfortable, use branches for meaningful work and merge into `main` when ready.
+
+### Branch-based update workflow
+
+Create a working branch:
+
+```bash
+git status
+git switch -c update-v1.2.0-guide
+```
+
+Make changes, then commit and push the branch:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push -u origin update-v1.2.0-guide
+```
+
+Merge after review or testing:
+
+```bash
+git switch main
+git pull
+git merge update-v1.2.0-guide
+git push
+```
+
+If the merged result is a new version:
+
+```bash
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Optional cleanup after merge:
+
+```bash
+git branch -d update-v1.2.0-guide
+git push origin --delete update-v1.2.0-guide
+```
+
+### GitHub Pull Request workflow
+
+A Pull Request is a GitHub feature for proposing, reviewing, discussing, and merging changes from one branch into another. [R42]
+
+Typical command-line setup:
+
+```bash
+git switch -c update-v1.2.0-guide
+git add .
+git commit -m "Describe what changed"
+git push -u origin update-v1.2.0-guide
+```
+
+Then on GitHub:
+
+1. Open a Pull Request from `update-v1.2.0-guide` into `main`.
+2. Review the changes.
+3. Resolve comments or requested changes.
+4. Merge the Pull Request.
+5. Pull the updated `main` locally.
+
+After the Pull Request is merged:
+
+```bash
+git switch main
+git pull
+```
+
+If the merged result is a new version:
+
+```bash
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+### What is merging?
+
+Merging combines changes from one branch into another branch.
+
+Common example:
+
+```text
+merge update-v1.2.0-guide into main
+```
+
+Command example:
+
+```bash
+git switch main
+git pull
+git merge update-v1.2.0-guide
+git push
+```
+
+Git’s merge documentation describes merging as incorporating changes from named commits into the current branch. [R38]
+
+A fast-forward merge happens when `main` has not changed since the working branch was created. Git can simply move `main` forward.
+
+A merge commit happens when both branches have new commits. Git combines the histories with a new commit.
+
+What can go wrong:
+
+- Merge conflicts.
+- Both branches changed the same lines.
+- One branch deleted a file while another edited it.
+- Files were renamed differently.
+- The automatic merge succeeds but the combined result is logically wrong.
+
+Basic conflict workflow:
+
+```bash
+git status
+```
+
+Open conflicted files and look for markers like:
+
+```text
+<<<<<<< HEAD
+current branch version
+=======
+incoming branch version
+>>>>>>> branch-name
+```
+
+Edit the file so it contains the correct final content.
+
+Then:
+
+```bash
+git add conflicted-file.md
+git commit
+```
+
+Abort the merge if needed:
+
+```bash
+git merge --abort
+```
+
+Recommended merge practices:
+
+- Start from an up-to-date `main`.
+- Keep branches focused.
+- Merge smaller changes more frequently.
+- Review the diff before merging.
+- Run checks or proofread after merging.
+- Tag versions only after the final merged result is correct.
+
+Useful commands:
+
+```bash
+git diff main..branch-name
+git log --oneline --graph --decorate --all
+```
+
+### What is rebasing?
+
+Rebasing moves or replays commits from one branch onto another base commit.
+
+Beginner explanation:
+
+> Rebasing takes the work from your branch and re-applies it as if it started from the latest version of another branch.
+
+Example:
+
+```bash
+git switch update-v1.2.0-guide
+git fetch origin
+git rebase origin/main
+```
+
+Git’s rebase documentation describes reapplying commits on top of another base tip. [R39]
+
+Rebasing can:
+
+- create a cleaner, more linear history;
+- update a private working branch with the latest `main` changes;
+- avoid some unnecessary merge commits;
+- make the final history easier to read.
+
+Merge vs. rebase:
+
+| Topic | Merge | Rebase |
+|---|---|---|
+| Basic idea | Combines branches | Replays commits onto a new base |
+| History shape | May preserve branching structure | Creates a more linear history |
+| Commit IDs | Existing commits stay as they are | Rewritten commits get new IDs |
+| Beginner safety | Safer/easier to understand | More powerful but easier to misuse |
+| Collaboration | Safe for shared branches | Be careful on shared branches |
+
+Good cases for rebase:
+
+- updating a private branch before merging;
+- cleaning up local work before sharing;
+- keeping a feature branch current with `main`;
+- making history easier to review.
+
+Avoid rebasing commits that other people are already using unless everyone understands and agrees.
+
+Reason:
+
+> Rebase rewrites commit history. Rewritten commits get new commit IDs.
+
+Recommended beginner rule:
+
+> Merge is the safer beginner default. Rebase your own private local branch if useful. Do not rebase shared branches unless you know exactly why you are doing it.
+
+Rebase conflict workflow:
+
+```bash
+git status
+```
+
+Fix the conflicted files.
+
+Then:
+
+```bash
+git add conflicted-file.md
+git rebase --continue
+```
+
+Abort the rebase if needed:
+
+```bash
+git rebase --abort
+```
+
+---
+
+## 18. Git Push Object Counts and Git Objects
+
+When Git says something like:
+
+```text
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), done.
+```
+
+it is not saying that three project files were pushed.
+
+It is saying that three Git objects were pushed.
+
+For a simple first commit with one file in the repository root, the three objects are commonly:
+
+| Git object | Meaning |
+|---|---|
+| Blob | The contents of the committed file |
+| Tree | The directory snapshot that points to blobs and subtrees |
+| Commit | Commit metadata, including author, date, message, parent commit if any, and the tree it points to |
+
+Simple model:
+
+```text
+commit object
+└─ tree object
+   └─ blob object for the file
+```
+
+Git stores content and history as objects. A commit points to a tree, and the tree points to file contents stored as blobs. [R3]
+
+### Will Git push always show three objects?
+
+No.
+
+The object count depends on new commits, trees, blobs, tag objects, and what the remote already has.
+
+For a normal first commit with files in the repository root:
+
+```text
+objects pushed = 1 commit + 1 tree + 1 blob per unique file content
+```
+
+Examples:
+
+| First commit contents | Likely objects pushed |
+|---|---|
+| 1 file in root | 1 commit + 1 tree + 1 blob = 3 objects |
+| 2 different files in root | 1 commit + 1 tree + 2 blobs = 4 objects |
+| 3 different files in root | 1 commit + 1 tree + 3 blobs = 5 objects |
+
+Important nuances:
+
+| Situation | Blob behavior |
+|---|---|
+| Add one new file | Usually one new blob |
+| Add two different files | Usually two new blobs |
+| Add two files with identical content | Possibly one shared blob |
+| Modify one existing file | New blob for the new contents |
+| Rename a file without changing content | Usually no new blob |
+| Delete a file | No new blob |
+| Add files in subfolders | More tree objects may be needed |
+
+If the first commit contains:
+
+```text
+README.md
+docs/git-repository-guide.md
+```
+
+Git may need:
+
+```text
+1 commit object
+1 root tree object
+1 docs/ tree object
+2 blob objects
+= 5 objects
+```
+
+If the commit is already on GitHub and you push only a new annotated tag, Git may push just one tag object because the commit, tree, and blobs are already on the remote.
+
+### How to see file counts instead
+
+To see the actual tracked files in the current commit:
+
+```bash
+git ls-tree -r --name-only HEAD
+```
+
+`git ls-tree` lists the contents of a tree object. [R37]
+
+To see file-change counts in the latest commit:
+
+```bash
+git log --stat --oneline -1
+```
+
+To see what changed in the latest commit:
+
+```bash
+git show --stat --oneline HEAD
+```
+
+To see what files changed before committing:
+
+```bash
+git status
+```
+
+To see a staged-change summary before committing:
+
+```bash
+git diff --cached --stat
+```
+
+Mental model:
+
+```text
+Files changed = human/project view
+Objects pushed = Git storage view
+```
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -1060,6 +1883,112 @@ Pushes a specific tag to GitHub.
 Official reference: [R22]
 
 ---
+
+
+### `git clone`
+
+Purpose:
+
+Copies an existing repository from a remote location to your computer.
+
+Example:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+```
+
+With a custom local folder name:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git FOLDER-NAME
+```
+
+A cloned repository usually already has a remote named `origin`. [R34]
+
+### `git fetch`
+
+Purpose:
+
+Downloads remote commits, branches, tags, and required objects without directly merging them into your current branch. [R40]
+
+Example:
+
+```bash
+git fetch origin
+```
+
+This is often used before rebasing a private working branch:
+
+```bash
+git fetch origin
+git rebase origin/main
+```
+
+### `git merge`
+
+Purpose:
+
+Combines changes from another branch into the current branch. [R38]
+
+Example:
+
+```bash
+git switch main
+git merge update-v1.2.0-guide
+```
+
+### `git pull`
+
+Purpose:
+
+Fetches changes from a remote repository and then integrates them into the current branch. Git’s documentation describes `git pull` as running `git fetch` first, then integrating the fetched branch into the current branch. [R41]
+
+Example:
+
+```bash
+git pull
+```
+
+### `git rebase`
+
+Purpose:
+
+Replays commits from the current branch onto another base. [R39]
+
+Example:
+
+```bash
+git switch update-v1.2.0-guide
+git fetch origin
+git rebase origin/main
+```
+
+Use carefully because rebasing rewrites commit IDs.
+
+### `git ls-tree`
+
+Purpose:
+
+Lists the contents of a tree object, which is useful for seeing tracked files in a commit. [R37]
+
+Example:
+
+```bash
+git ls-tree -r --name-only HEAD
+```
+
+### `git diff --cached --stat`
+
+Purpose:
+
+Shows a compact summary of staged changes before committing.
+
+Example:
+
+```bash
+git diff --cached --stat
+```
+
 
 ## A.2 Commands in alphabetical order
 
@@ -1316,6 +2245,31 @@ Use tag deletion carefully.
 Official reference: [R2]
 
 ---
+
+
+### `git clone`
+
+See [Appendix G](#appendix-g-command-sequences-and-workflow-recipes) for clone workflow examples.
+
+### `git fetch`
+
+Use this to download remote updates without immediately integrating them.
+
+### `git merge`
+
+Use this to combine another branch into the current branch.
+
+### `git pull`
+
+Use this to fetch and integrate remote changes into the current branch.
+
+### `git rebase`
+
+Use this carefully to replay commits onto another base.
+
+### `git ls-tree`
+
+Use this to inspect tracked files in a commit or tree.
 
 # Appendix B: Expanded VS Code Reference
 
@@ -2443,7 +3397,512 @@ Most important idea:
 > A tag labels a repository snapshot. A repository snapshot is the file set. That is why tags are a good way to version file sets in Git.
 
 
-# Appendix G: References
+
+## F.27 Should I keep renaming the guide file with each version?
+
+Usually, no.
+
+Inside a Git repository, use one stable filename, such as:
+
+```text
+git-repository-guide.md
+```
+
+Use Git commits, tags, GitHub Releases, and `CHANGELOG.md` to track versions.
+
+Standalone downloads can include version numbers, but the active repository file should usually stay stable.
+
+## F.28 What should I name this repository?
+
+Recommended:
+
+```text
+git-repository-guide
+```
+
+That name is broad enough to cover first-time repository setup, GitHub setup, tags, versioned file sets, and common Git questions.
+
+## F.29 What should the GitHub repository description be?
+
+Recommended:
+
+```text
+A beginner-friendly guide to creating Git repositories and managing versioned file sets
+```
+
+Do not include a period at the end. GitHub descriptions are often short label-style phrases.
+
+## F.30 Should I create a README?
+
+Yes.
+
+GitHub can display a README automatically when it exists, but GitHub does not write the meaningful project explanation for you. Create `README.md` yourself. [R36]
+
+## F.31 Should I create a CHANGELOG?
+
+Yes.
+
+Use `CHANGELOG.md` to summarize notable changes by version.
+
+The changelog does not replace commit history. It gives humans a clean version-by-version summary.
+
+## F.32 Should the active file include the version number?
+
+Usually, no.
+
+Inside the repository, use:
+
+```text
+git-repository-guide.md
+```
+
+Do not use the active filename as the version tracker.
+
+Use tags, releases, metadata, and `CHANGELOG.md` for version tracking.
+
+## F.33 What version should a pre-release draft use?
+
+For the first meaningful early draft, use:
+
+```text
+v0.1.0
+```
+
+That communicates “pre-1.0, but meaningful enough to label.”
+
+## F.34 Are version-history descriptions commit messages?
+
+No.
+
+This is a version-history or changelog description:
+
+```text
+v1.1.0 = Additive expansion with expanded Git reference and Knowledge Base
+```
+
+A better commit message is:
+
+```text
+Expand guide with Git reference and Knowledge Base
+```
+
+## F.35 What should tag messages look like?
+
+Preferred:
+
+```bash
+git tag -a v1.2.0 -m "Version 1.2.0"
+```
+
+Less preferred because it repeats the leading `v`:
+
+```bash
+git tag -a v1.2.0 -m "Version v1.2.0"
+```
+
+The tag name includes `v`. The message can simply say `Version 1.2.0`.
+
+## F.36 Why did `git push` say “Enumerating objects: 3” when I committed one file?
+
+Git was reporting Git objects, not project files.
+
+A simple one-file first commit commonly involves:
+
+```text
+1 commit object
+1 tree object
+1 blob object
+= 3 objects
+```
+
+See [Section 18](#18-git-push-object-counts-and-git-objects).
+
+## F.37 Will Git push always say 3 objects?
+
+No.
+
+The object count depends on new commits, trees, blobs, tag objects, and what the remote already has.
+
+## F.38 When does Git show file counts?
+
+Use commands such as:
+
+```bash
+git status
+git diff --cached --stat
+git log --stat --oneline -1
+git show --stat --oneline HEAD
+```
+
+Those commands are better for file-change summaries than `git push` output.
+
+## F.39 What is `origin`?
+
+`origin` is the conventional name for the remote repository.
+
+It is not a branch.
+
+## F.40 What is `main`?
+
+`main` is the modern common name for the primary branch.
+
+For new repositories, this guide recommends `main`.
+
+## F.41 What is `master`?
+
+`master` is the older traditional primary branch name.
+
+Older repositories may still use it.
+
+## F.42 Should I rename `master` to `main`?
+
+For new repositories, use `main`.
+
+For existing repositories, renaming can be reasonable, but be careful. Check for scripts, CI/CD workflows, branch protection rules, documentation, deployment settings, and collaborators before changing it.
+
+## F.43 Should I work directly on `main`?
+
+For a tiny solo project, it can be acceptable.
+
+For safer habits, larger changes, shared work, or reviewed work, create a working branch, commit there, and merge into `main` when ready.
+
+## F.44 What is a working branch?
+
+A working branch is an ordinary Git branch used for active work.
+
+Git does not technically treat it differently from any other branch.
+
+## F.45 What is a temporary branch?
+
+A temporary branch is an ordinary branch intended for short-lived work or experiments.
+
+## F.46 What is merging?
+
+Merging combines changes from one branch into another.
+
+Example:
+
+```bash
+git switch main
+git merge update-v1.2.0-guide
+```
+
+## F.47 What is a merge conflict?
+
+A merge conflict happens when Git cannot automatically combine changes.
+
+This often happens when two branches edit the same lines differently.
+
+## F.48 What is rebasing?
+
+Rebasing replays commits from one branch onto another base commit.
+
+It is useful, but it rewrites commit IDs, so use it carefully.
+
+## F.49 Should beginners merge or rebase?
+
+Prefer merging as the safer beginner default.
+
+Learn rebasing later for private branches and cleaner history.
+
+## F.50 Should this guide say “repo” or “repository”?
+
+Use `repository` for formal explanations and first mentions.
+
+Introduce `repo` as a common abbreviation:
+
+```text
+A Git repository, often shortened to repo, is the folder/project that Git tracks.
+```
+
+After that, both are acceptable depending on clarity and tone.
+
+
+
+---
+
+# Appendix G: Command Sequences and Workflow Recipes
+
+This appendix is intentionally workflow-oriented.
+
+It answers:
+
+> “What commands do I run, and in what order?”
+
+For explanations of individual commands, see [Appendix A](#appendix-a-expanded-git-command-reference).
+
+## G.1 Variables used in command examples
+
+| Placeholder | Meaning | Example |
+|---|---|---|
+| `YOUR-USERNAME` | GitHub username or organization | `jefsko` |
+| `YOUR-REPO` | Repository name | `git-repository-guide` |
+| `origin` | Conventional remote name | `origin` |
+| `main` | Primary branch name | `main` |
+| `master` | Older primary branch name | `master` |
+| `vX.Y.Z` | Version tag placeholder | `v1.2.0` |
+| `X.Y.Z` | Version number without leading `v` | `1.2.0` |
+| `work-branch-name` | Branch for active work | `update-v1.2.0-guide` |
+| `"Describe what changed"` | Commit message | `"Add branch workflow guidance"` |
+
+## G.2 Common options used in command examples
+
+| Option | Used in | Meaning |
+|---|---|---|
+| `-b main` | `git init -b main` | Creates the repository using `main` as the initial branch name. |
+| `-m "message"` | `git commit -m`, `git tag -m` | Supplies the message inline. |
+| `-a` | `git tag -a` | Creates an annotated tag. |
+| `-u` | `git push -u origin main` | Sets upstream tracking. |
+| `--set-upstream` | `git push --set-upstream origin main` | Long form of `-u`. |
+| `--follow-tags` | `git push --follow-tags` | Pushes annotated tags reachable from pushed commits. |
+| `-d` | `git branch -d branch-name` | Deletes a local branch if safely merged. |
+| `-D` | `git branch -D branch-name` | Force-deletes a local branch. Use carefully. |
+| `--delete` | `git push origin --delete branch-name` | Deletes a remote branch. |
+
+## G.3 New repository, minimal setup with initial tag
+
+```bash
+git init -b main
+git add .
+git commit -m "Add original pre-release draft"
+
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git push -u origin main
+
+git tag -a v0.1.0 -m "Version 0.1.0"
+git push origin v0.1.0
+```
+
+## G.4 New repository, recommended setup with initial tag
+
+```bash
+git init -b main
+git status
+git add .
+git status
+git commit -m "Add original pre-release draft"
+
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git remote -v
+git push -u origin main
+
+git tag -a v0.1.0 -m "Version 0.1.0"
+git push origin v0.1.0
+```
+
+## G.5 Existing local repository, minimal later update
+
+```bash
+git add .
+git commit -m "Describe what changed"
+git push
+```
+
+## G.6 Existing local repository, recommended later update
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+```
+
+## G.7 Existing local repository, later update with new version tag
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+## G.8 Existing remote repository, clone first
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
+cd YOUR-REPO
+```
+
+With a custom local folder name:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git FOLDER-NAME
+cd FOLDER-NAME
+```
+
+Then use the normal later update workflow:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+```
+
+A cloned repository already has a remote named `origin`, so `git remote add origin ...` is not needed after cloning. [R34]
+
+## G.9 Branch-based workflow
+
+```bash
+git status
+git switch -c work-branch-name
+
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push -u origin work-branch-name
+```
+
+Then merge:
+
+```bash
+git switch main
+git pull
+git merge work-branch-name
+git push
+```
+
+If the merged result is a new version:
+
+```bash
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Optional cleanup:
+
+```bash
+git branch -d work-branch-name
+git push origin --delete work-branch-name
+```
+
+## G.10 Pull Request workflow
+
+```bash
+git switch -c work-branch-name
+git add .
+git commit -m "Describe what changed"
+git push -u origin work-branch-name
+```
+
+Then open a Pull Request on GitHub from `work-branch-name` into `main`.
+
+After the Pull Request is merged:
+
+```bash
+git switch main
+git pull
+```
+
+If the merged result is a new version:
+
+```bash
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+## G.11 Merge workflow
+
+```bash
+git switch main
+git pull
+git merge branch-name
+git push
+```
+
+If there is a conflict:
+
+```bash
+git status
+```
+
+Fix the conflicted files, then:
+
+```bash
+git add conflicted-file.md
+git commit
+```
+
+Abort if needed:
+
+```bash
+git merge --abort
+```
+
+## G.12 Rebase workflow for a private branch
+
+```bash
+git switch work-branch-name
+git fetch origin
+git rebase origin/main
+```
+
+If there is a conflict:
+
+```bash
+git status
+```
+
+Fix the conflicted files, then:
+
+```bash
+git add conflicted-file.md
+git rebase --continue
+```
+
+Abort if needed:
+
+```bash
+git rebase --abort
+```
+
+## G.13 Inspect files, changes, and Git objects
+
+Tracked files in the current commit:
+
+```bash
+git ls-tree -r --name-only HEAD
+```
+
+Commit history with file-change statistics:
+
+```bash
+git log --stat --oneline
+```
+
+Latest commit with file-change statistics:
+
+```bash
+git log --stat --oneline -1
+```
+
+Object IDs and paths:
+
+```bash
+git rev-list --objects --all
+```
+
+Latest commit details:
+
+```bash
+git show --stat --oneline HEAD
+```
+
+Staged-change summary before committing:
+
+```bash
+git diff --cached --stat
+```
+
+
+# Appendix H: References
 
 ## Core conceptual references
 
@@ -2562,9 +4021,55 @@ https://git-scm.com/docs/git-rev-list
 [R36] GitHub Docs, “About the repository README file.”  
 https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes
 
+[R37] Git documentation, `git-ls-tree`.  
+https://git-scm.com/docs/git-ls-tree
+
+[R38] Git documentation, `git-merge`.  
+https://git-scm.com/docs/git-merge
+
+[R39] Git documentation, `git-rebase`.  
+https://git-scm.com/docs/git-rebase
+
+[R40] Git documentation, `git-fetch`.  
+https://git-scm.com/docs/git-fetch
+
+[R41] Git documentation, `git-pull`.  
+https://git-scm.com/docs/git-pull
+
+[R42] GitHub Docs, “Creating a pull request.”  
+https://docs.github.com/articles/creating-a-pull-request
+
 ---
 
 # Index
+
+## Branch workflow
+
+See [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing) and [Appendix G](#appendix-g-command-sequences-and-workflow-recipes).
+
+## Command sequences
+
+See [Appendix G: Command Sequences and Workflow Recipes](#appendix-g-command-sequences-and-workflow-recipes).
+
+## Git objects
+
+See [18. Git Push Object Counts and Git Objects](#18-git-push-object-counts-and-git-objects).
+
+## Merge
+
+See [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing).
+
+## Rebase
+
+See [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing).
+
+## README
+
+See [15. Repository Packaging and Stable Filenames](#15-repository-packaging-and-stable-filenames).
+
+## CHANGELOG
+
+See [15. Repository Packaging and Stable Filenames](#15-repository-packaging-and-stable-filenames).
 
 ## Annotated tag
 
