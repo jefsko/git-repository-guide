@@ -4,6 +4,49 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.3.0
+
+### Added
+
+- Added explicit guidance for adding new files to a repository.
+- Added explicit guidance for updating, replacing, deleting, renaming, and moving tracked files.
+- Added explanation that ordinary single-user file updates usually do not require merging when history has not diverged.
+- Added clarification that Git does not normally use old-style exclusive file checkout or locking.
+- Added distinction between `git add`, `git commit`, `git push`, `git fetch`, `git pull`, `git merge`, and `git rebase`.
+- Added dedicated explanation of `git fetch`, `git pull`, `git merge`, and `git rebase`.
+- Added syntax tables showing required and optional parts of fetch, pull, merge, and rebase commands.
+- Added decision guidance for when to use fetch vs. pull, merge vs. rebase, and pull vs. fetch-plus-merge.
+- Added explanation that push rejection is not the same as a merge conflict.
+- Added multi-user scenarios showing when merges happen and when conflicts appear.
+- Added examples for same-file edits, different-line edits, same-line conflicts, delete/modify conflicts, add/add conflicts, rename/edit conflicts, binary conflicts, and semantic/logical conflicts.
+- Added multiple conflict-resolution strategies, including manual editing, VS Code merge editor, Git mergetool, choosing one side, aborting, and resolving simple conflicts on GitHub.
+- Added guidance for diff, comparison, merge, and conflict-resolution tools.
+- Added ranked Git tool recommendations with pros and cons.
+- Added a dedicated appendix for file update, merge, and conflict scenarios.
+- Added additional Knowledge Base entries for file updates, fetch, pull, merge, rebase, and conflict-resolution concepts.
+
+### Changed
+
+- Updated the guide metadata from `v1.2.0` to `v1.3.0`.
+- Expanded the existing merging discussion from a brief conceptual overview into a scenario-based explanation.
+- Clarified that merging is about combining histories, not merely replacing a file with a newer local version.
+- Clarified that two users editing the same file does not always create a conflict.
+- Clarified that `git pull` performs fetch plus integration, commonly merge by default or rebase with `--rebase`.
+- Clarified that beginners should generally use merge as the safer default and treat rebase as an advanced/private-branch tool.
+- Added a new Appendix H for file update, merge, and conflict scenarios.
+- Moved the references appendix from Appendix H to Appendix I so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.2.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.3.0.md`.
+
+All notable changes to this guide are documented here.
+
+This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
+
 ## v1.2.0
 
 ### Added

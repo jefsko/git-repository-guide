@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.2.0  
-Previous locked version: v1.1.0  
+Document version: v1.3.0  
+Previous locked version: v1.2.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.2.0` file. Save future changes as a new version, such as `v1.2.1` or `v1.3.0`.  
-Current as of: 2026-06-29
+Future edit policy: Do not overwrite this `v1.3.0` file. Save future changes as a new version, such as `v1.3.1` or `v1.4.0`.  
+Current as of: 2026-06-30
 
-Revision note: This `v1.2.0` edition preserves the `v1.1.0` guide and additively incorporates repository packaging, stable filename, README/CHANGELOG, first-time vs. later push workflow, branch workflow, merge, rebase, and Git object-count guidance from the cumulative Version Update Brief.
+Revision note: This `v1.3.0` edition preserves the `v1.2.0` guide and additively incorporates file-add/update/replace workflows, fetch/pull/merge/rebase decision guidance, merge-conflict scenarios, conflict-resolution strategies, and Git tooling recommendations from the v1.3.0 update brief.
 
 ---
 
@@ -32,6 +32,8 @@ Revision note: This `v1.2.0` edition preserves the `v1.1.0` guide and additively
 - [16. First-Time Setup vs. Later Updates](#16-first-time-setup-vs-later-updates)
 - [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing)
 - [18. Git Push Object Counts and Git Objects](#18-git-push-object-counts-and-git-objects)
+- [19. Adding, Updating, and Replacing Files](#19-adding-updating-and-replacing-files)
+- [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -39,7 +41,8 @@ Revision note: This `v1.2.0` edition preserves the `v1.1.0` guide and additively
 - [Appendix E: Troubleshooting](#appendix-e-troubleshooting)
 - [Appendix F: Knowledge Base and How-To Reference](#appendix-f-knowledge-base-and-how-to-reference)
 - [Appendix G: Command Sequences and Workflow Recipes](#appendix-g-command-sequences-and-workflow-recipes)
-- [Appendix H: References](#appendix-h-references)
+- [Appendix H: File Update, Merge, and Conflict Scenarios](#appendix-h-file-update-merge-and-conflict-scenarios)
+- [Appendix I: References](#appendix-i-references)
 - [Index](#index)
 
 ---
@@ -51,7 +54,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -994,8 +997,6 @@ gh release create v1.1.0 --title "v1.1.0" --notes "Describe what changed in v1.1
 
 ---
 
----
-
 ## 15. Repository Packaging and Stable Filenames
 
 This guide is meant to become a real Git repository. Once it is in a repository, the active guide file should keep one stable filename:
@@ -1078,6 +1079,7 @@ Recommended history:
 | `v1.0.0` | First complete locked baseline |
 | `v1.1.0` | Additive expansion with expanded Git reference and Knowledge Base |
 | `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
+| `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -1776,6 +1778,602 @@ Objects pushed = Git storage view
 ```
 
 
+
+---
+
+## 19. Adding, Updating, and Replacing Files
+
+The earlier sections explain the normal Git flow:
+
+```text
+edit files
+git status
+git add
+git commit
+git push
+```
+
+This section makes that flow more explicit for ordinary file work.
+
+The key idea:
+
+> Adding, updating, replacing, deleting, and renaming files are all just different kinds of changes. Git records the next committed snapshot.
+
+### Adding a new file
+
+Suppose the repository already exists and you create a new file:
+
+```text
+notes.md
+```
+
+Check status:
+
+```bash
+git status
+```
+
+Git should show `notes.md` as an untracked file.
+
+Stage the new file:
+
+```bash
+git add notes.md
+```
+
+Check status again:
+
+```bash
+git status
+```
+
+Commit the new file:
+
+```bash
+git commit -m "Add notes file"
+```
+
+Push the commit:
+
+```bash
+git push
+```
+
+In plain English:
+
+> Adding a file means Git did not previously track that path, and now the next commit includes it.
+
+You can also stage all current changes under the current folder:
+
+```bash
+git add .
+```
+
+Use `git add .` when you intentionally want to stage all current changes. Use a specific path, such as `git add notes.md`, when you want to stage only one file.
+
+### Updating an existing tracked file
+
+Suppose the repository already tracks this file:
+
+```text
+guide.md
+```
+
+You edit it locally and want the repository to contain the updated version.
+
+Use:
+
+```bash
+git status
+git add guide.md
+git status
+git commit -m "Update guide"
+git push
+```
+
+Git treats this as the same tracked file path with newer content in a newer commit.
+
+### Replacing an existing file with a newer local copy
+
+Suppose this file already exists in the repository:
+
+```text
+guide.md
+```
+
+Then you copy a newer version over the local file, but the filename and path stay the same:
+
+```text
+guide.md
+```
+
+Use:
+
+```bash
+git status
+git add guide.md
+git status
+git commit -m "Replace guide with updated version"
+git push
+```
+
+If the path is the same, Git normally treats this as a modification to the existing tracked file. It does not matter whether you edited the file manually or copied a new version over it.
+
+Important:
+
+> Git stores snapshots. It does not think about replacement the same way a file manager does. Git compares the new committed content to the old committed content and records the new repository snapshot.
+
+### Deleting a file
+
+If you want to delete a tracked file, use:
+
+```bash
+git status
+git rm old-notes.md
+git commit -m "Remove old notes file"
+git push
+```
+
+If you already deleted the file outside Git, stage the deletion:
+
+```bash
+git status
+git add old-notes.md
+git commit -m "Remove old notes file"
+git push
+```
+
+A deletion is still a change. The next commit records that the file no longer exists in that snapshot.
+
+### Renaming or moving a file
+
+Preferred:
+
+```bash
+git mv old-name.md new-name.md
+git commit -m "Rename guide file"
+git push
+```
+
+Alternative:
+
+```bash
+mv old-name.md new-name.md
+git add old-name.md new-name.md
+git commit -m "Rename guide file"
+git push
+```
+
+Git often detects renames by comparing content between snapshots. A rename is still represented as part of the change from one committed snapshot to the next.
+
+### Why did the updated file just appear without a merge?
+
+If you are the only person changing the repository, or if nobody else changed the remote branch since your last pull or clone, your history is usually linear:
+
+```text
+A -- B -- C
+```
+
+Where:
+
+- `A` = original commit
+- `B` = first update
+- `C` = second update
+
+When you push `C`, Git can simply move the remote branch forward.
+
+This is called a fast-forward update.
+
+No merge is needed because there are not two competing lines of history to combine.
+
+The most important rule:
+
+> Updating a file does not automatically mean merging. Merging is about combining different histories, not merely saving a newer local version of a file.
+
+### Does Git check out files like older version-control systems?
+
+Some older version-control systems use an exclusive checkout or locking model:
+
+```text
+User A checks out a file.
+User B cannot edit or check in that same file until User A checks it back in.
+```
+
+Git usually does not work that way.
+
+Git is distributed:
+
+```text
+User A has a local clone.
+User B has a local clone.
+Both can edit the same file locally at the same time.
+Git resolves or reports conflicts later when histories are combined.
+```
+
+In Git, these terms matter:
+
+| Term | Meaning |
+|---|---|
+| `git checkout` / `git switch` | Switches branches, commits, or working states. It does not normally lock a file for exclusive editing. |
+| `git add` | Stages a file change for the next commit. |
+| `git commit` | Saves staged changes into local Git history. |
+| `git push` | Sends local commits to the remote repository. |
+| `git pull` | Fetches remote changes and integrates them into the current branch. |
+| `git merge` | Combines histories. |
+| Merge conflict | Git could not safely combine changes automatically. |
+
+`git add` does **not** mean “add this file back to the server.”
+
+It means:
+
+> Stage this file's current content for the next commit.
+
+---
+
+## 20. Fetch, Pull, Merge, Rebase, and Conflict Basics
+
+`git fetch`, `git pull`, `git merge`, and `git rebase` are about synchronizing or combining Git history.
+
+They are not the same as `git add` or `git commit`.
+
+Quick model:
+
+```text
+git add      = stage local file content
+git commit   = save staged content into local history
+git fetch    = download remote history, but do not integrate it yet
+git pull     = fetch remote history and integrate it into the current branch
+git merge    = combine another branch/history into the current branch
+git rebase   = replay current branch commits onto another base
+```
+
+### Quick comparison
+
+| Command | What it does | Changes current branch? | Typical use |
+|---|---|---:|---|
+| `git fetch` | Downloads remote commits, branches, tags, and objects | No | Check what changed remotely before integrating |
+| `git pull` | Fetches, then integrates into the current branch | Yes | Update your branch from its upstream |
+| `git merge` | Combines another branch/history into the current branch | Yes | Bring a working branch into `main` or integrate fetched history |
+| `git rebase` | Replays commits onto a new base | Yes, and rewrites local commit IDs | Update or clean up a private working branch |
+
+Beginner rule:
+
+> Use `git pull` for ordinary “get the latest remote changes” workflows. Use `git fetch` when you want to inspect remote changes before integrating them. Use `git merge` to combine branches. Use `git rebase` carefully, usually only on your own private working branch.
+
+### `git fetch`
+
+`git fetch` downloads remote history and updates remote-tracking branches such as:
+
+```text
+origin/main
+origin/update-guide
+```
+
+It does not automatically change your current local branch.
+
+Beginner wording:
+
+> `git fetch` says, “Go see what changed on GitHub and bring that information down locally, but do not change my current branch yet.”
+
+Common commands:
+
+```bash
+git fetch
+git fetch origin
+git fetch origin main
+git fetch --all
+git fetch --prune
+```
+
+Common optional parts:
+
+| Syntax part | Required? | Meaning |
+|---|---:|---|
+| `git fetch` | Required | The command. |
+| `origin` | Optional | The remote to fetch from. |
+| `main` | Optional | A specific branch/ref to fetch. |
+| `--all` | Optional | Fetch from all remotes. |
+| `--prune` | Optional | Remove stale remote-tracking refs that no longer exist on the remote. |
+| `--tags` | Optional | Fetch tags explicitly. |
+
+Use `fetch` when you want to inspect before integrating:
+
+```bash
+git fetch origin
+git log --oneline --decorate --graph --all
+git diff main..origin/main
+```
+
+### `git pull`
+
+`git pull` fetches remote changes and integrates them into the current branch.
+
+Conceptually:
+
+```text
+git pull = git fetch + integrate
+```
+
+By default, that integration is commonly a merge. With `--rebase`, it integrates by rebasing.
+
+Common commands:
+
+```bash
+git pull
+git pull origin main
+git pull --ff-only
+git pull --rebase
+git pull --no-rebase
+```
+
+Common optional parts:
+
+| Syntax part | Required? | Meaning |
+|---|---:|---|
+| `git pull` | Required | The command. |
+| `origin` | Optional | The remote to pull from. |
+| `main` | Optional | The branch/ref to pull. |
+| `--ff-only` | Optional | Only update if the result can be a fast-forward. |
+| `--rebase` | Optional | Fetch, then rebase local commits on top of the remote branch. |
+| `--no-rebase` | Optional | Fetch, then merge. |
+
+Ordinary use:
+
+```bash
+git switch main
+git pull
+```
+
+Use this when you want your local `main` to catch up to GitHub.
+
+If your push is rejected because the remote has new commits, `git pull` is often the next beginner-friendly command:
+
+```bash
+git pull
+git push
+```
+
+If conflicts appear, they happen during the integration part of `pull`.
+
+### Push rejection is not the same as a merge conflict
+
+A push rejection may look like this:
+
+```text
+! [rejected] main -> main (fetch first)
+error: failed to push some refs
+hint: Updates were rejected because the remote contains work that you do not have locally.
+```
+
+This means:
+
+> The remote branch has commits that your local branch does not have.
+
+That is not yet necessarily a merge conflict.
+
+Next, you integrate the remote work:
+
+```bash
+git pull
+```
+
+Then one of two things happens:
+
+1. Git integrates the remote changes automatically.
+2. Git reports a merge or rebase conflict.
+
+The conflict is discovered during pull, merge, or rebase, not merely because the file was edited.
+
+### `git merge`
+
+`git merge` combines another branch or commit history into your current branch.
+
+Beginner wording:
+
+> `git merge` says, “Take the changes from that branch and integrate them into the branch I am currently on.”
+
+Common commands:
+
+```bash
+git merge branch-name
+git merge origin/main
+git merge --abort
+git merge --continue
+git merge --no-ff branch-name
+git merge --ff-only branch-name
+```
+
+Common optional parts:
+
+| Syntax part | Required? | Meaning |
+|---|---:|---|
+| `git merge` | Required | The command. |
+| `branch-name` or commit | Usually required | What to merge into the current branch. |
+| `--abort` | Optional recovery mode | Stop the merge and try to return to the pre-merge state. |
+| `--continue` | Optional recovery mode | Continue after resolving conflicts. |
+| `--no-ff` | Optional | Create a merge commit even if fast-forward is possible. |
+| `--ff-only` | Optional | Only merge if fast-forward is possible. |
+| `--squash` | Optional/advanced | Stage combined changes without a normal merge commit. |
+
+Common workflow:
+
+```bash
+git switch main
+git pull
+git merge update-guide
+git push
+```
+
+### `git rebase`
+
+`git rebase` replays commits from one branch onto another base.
+
+Beginner wording:
+
+> `git rebase` says, “Take my local commits and replay them as if I had started from the latest version of another branch.”
+
+Common commands:
+
+```bash
+git rebase origin/main
+git rebase main
+git rebase --continue
+git rebase --abort
+git rebase --skip
+git rebase -i HEAD~3
+```
+
+Common optional parts:
+
+| Syntax part | Required? | Meaning |
+|---|---:|---|
+| `git rebase` | Required | The command. |
+| `origin/main` or another upstream | Usually recommended | The new base to replay commits onto. |
+| branch name | Optional | Branch to rebase. If omitted, rebases the current branch. |
+| `--continue` | Optional recovery mode | Continue after resolving a conflict. |
+| `--abort` | Optional recovery mode | Stop rebase and return to the pre-rebase state. |
+| `--skip` | Optional recovery mode | Skip the patch/commit that caused the conflict. |
+| `-i` / `--interactive` | Optional/advanced | Edit, reorder, squash, or reword commits. |
+
+Common private-branch workflow:
+
+```bash
+git switch update-guide
+git fetch origin
+git rebase origin/main
+```
+
+Important warning:
+
+> Rebase rewrites commit IDs. That is why it is powerful, but also why it can confuse collaborators if used on shared history.
+
+Recommended beginner rule:
+
+> Merge is the safer beginner default. Rebase your own private branch if useful. Do not rebase shared branches unless you know exactly why you are doing it.
+
+### When does merging come up?
+
+Merging becomes relevant when there are two histories to combine.
+
+Common examples:
+
+- You are merging a working branch into `main`.
+- You pulled from GitHub and your local branch also has commits.
+- You opened a pull request and GitHub needs to combine branches.
+- Two people changed the same branch from different local clones.
+- You fetched remote changes and then manually ran `git merge origin/main`.
+
+Updating a file by yourself is usually just:
+
+```text
+edit
+add
+commit
+push
+```
+
+Merging appears when Git must combine:
+
+```text
+your local history
+remote or other branch history
+```
+
+### Two users editing the same file does not always create a conflict
+
+If User A edits line 10 and User B edits line 80, Git can often merge automatically.
+
+If User A and User B both edit the same paragraph, Git may report a conflict.
+
+Classic conflict markers look like this:
+
+```text
+<<<<<<< HEAD
+your current version
+=======
+incoming version
+>>>>>>> branch-name
+```
+
+Resolve the file so it contains the correct final content, then stage and continue:
+
+```bash
+git status
+git add conflicted-file.md
+git commit
+```
+
+For a conflicted rebase, use:
+
+```bash
+git add conflicted-file.md
+git rebase --continue
+```
+
+Abort if needed:
+
+```bash
+git merge --abort
+```
+
+or:
+
+```bash
+git rebase --abort
+```
+
+### Conflict prevention habits
+
+Good habits reduce conflicts:
+
+- Pull before starting work:
+
+```bash
+git switch main
+git pull
+```
+
+- Use short-lived branches.
+- Keep changes small and focused.
+- Communicate when multiple people edit the same file.
+- Split large documents into smaller files when practical.
+- Avoid formatting entire files unnecessarily.
+- Review diffs before committing.
+- Use pull requests for review.
+- Merge or rebase working branches regularly.
+- Use Git LFS or locking workflows for binary files when appropriate.
+
+### Recommended tools for diffing, merging, and conflict resolution
+
+For this guide, the recommended default is:
+
+```text
+VS Code built-in Git tools + VS Code merge editor + integrated terminal
+```
+
+Why:
+
+- It is free.
+- It is cross-platform.
+- It is already used elsewhere in the guide.
+- It handles staging, diffs, commits, branches, and merge conflicts.
+- It keeps exact Git commands available in the terminal.
+
+Ranked recommendations:
+
+| Rank | Tool | Best for | Pros | Cons |
+|---:|---|---|---|---|
+| 1 | Visual Studio Code built-in Git and merge editor | Best default for this guide | Free, cross-platform, integrated diff/merge UI, good terminal support | Not as specialized as a dedicated Git client |
+| 2 | VS Code + GitLens | Best VS Code enhancement | Strong history, blame, graph, and context features | Some advanced features may require account/sign-in or paid features |
+| 3 | Sublime Merge | Best dedicated Git GUI for speed and clarity | Fast, polished, focused Git experience | Separate commercial tool |
+| 4 | Visual Studio Git tools | Best for .NET/Visual Studio projects | Integrated with Visual Studio solutions | Heavier than needed for docs-only repos |
+| 5 | GitKraken Desktop | Best polished visual Git client | Strong visual history and merge/conflict tooling | Commercial product; may require account/licensing |
+| 6 | GitHub Desktop | Best simple GitHub-focused GUI | Beginner-friendly and official GitHub app | Less powerful for advanced merging |
+| 7 | Git Extensions | Best open-source Windows-focused Git GUI | Mature, configurable, strong command coverage | Interface can feel less modern |
+| 8 | Command line only | Best for precision and documentation | Universal, exact, scriptable | Harder for visual diff/merge conflict resolution |
+| 9 | External diff/merge tools such as Beyond Compare, WinMerge, Meld, KDiff3, or Araxis Merge | Specialized comparison needs | Powerful side-by-side comparison | Extra setup and sometimes extra cost |
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -2271,6 +2869,84 @@ Use this carefully to replay commits onto another base.
 
 Use this to inspect tracked files in a commit or tree.
 
+
+### `git rm`
+
+Purpose:
+
+Stages the removal of a tracked file.
+
+Example:
+
+```bash
+git rm old-notes.md
+git commit -m "Remove old notes file"
+```
+
+### `git mv`
+
+Purpose:
+
+Moves or renames a tracked file and stages that change.
+
+Example:
+
+```bash
+git mv old-name.md new-name.md
+git commit -m "Rename guide file"
+```
+
+### `git pull --ff-only`
+
+Purpose:
+
+Updates the current branch only if Git can fast-forward it. If histories have diverged, Git stops instead of creating a merge commit.
+
+Example:
+
+```bash
+git pull --ff-only
+```
+
+### `git merge --continue`
+
+Purpose:
+
+Continues a merge after conflicts have been resolved and staged.
+
+Example:
+
+```bash
+git add conflicted-file.md
+git merge --continue
+```
+
+### `git rebase --continue`
+
+Purpose:
+
+Continues a rebase after conflicts have been resolved and staged.
+
+Example:
+
+```bash
+git add conflicted-file.md
+git rebase --continue
+```
+
+### `git mergetool`
+
+Purpose:
+
+Opens the configured merge tool for resolving conflicts. [R43]
+
+Example:
+
+```bash
+git mergetool
+```
+
+
 # Appendix B: Expanded VS Code Reference
 
 ## B.1 Source Control view
@@ -2338,6 +3014,19 @@ git push origin v1.0.0
 ```
 
 This is clearer and more durable than relying on optional UI commands or extensions.
+
+
+## B.6 Merge conflict support
+
+VS Code supports reviewing changes, resolving merge conflicts, and using a 3-way merge editor. [R47]
+
+For this guide, VS Code is the recommended default tool for merge conflicts because it combines:
+
+- file editing;
+- Source Control;
+- inline diffing;
+- merge conflict UI;
+- integrated terminal commands.
 
 ---
 
@@ -3621,6 +4310,126 @@ After that, both are acceptable depending on clarity and tone.
 
 ---
 
+
+## F.51 Is adding a file the same as checking it in?
+
+No.
+
+In Git:
+
+```text
+git add    = stage the file
+git commit = save the staged change in local history
+git push   = send the commit to the remote
+```
+
+## F.52 If I replace a file locally, is it still the same file?
+
+If the path is the same, Git normally treats it as the same tracked file path with changed contents.
+
+Example:
+
+```text
+guide.md before
+guide.md after
+```
+
+The next commit records the new content.
+
+## F.53 Why did the updated file just appear on GitHub?
+
+Because your push was a fast-forward update. The remote branch had not diverged from your local branch.
+
+## F.54 Why did Git not ask me to merge?
+
+Because there was no competing history to combine.
+
+Merging is about combining histories, not merely saving a newer local file.
+
+## F.55 When does merging happen?
+
+Merging happens when Git combines histories, commonly during:
+
+```text
+git pull
+git merge
+pull request merge
+some rebase workflows
+```
+
+## F.56 Is `git add` checking the file back into the repository?
+
+No.
+
+`git add` stages the current file content for the next commit.
+
+## F.57 Can two people edit the same file?
+
+Yes.
+
+Git usually allows it. Conflicts are detected later when histories are combined.
+
+## F.58 Does two people editing the same file always cause a conflict?
+
+No.
+
+If the edits are in different parts of the file, Git may merge them automatically.
+
+## F.59 What causes a merge conflict?
+
+A merge conflict happens when Git cannot safely combine changes automatically.
+
+The classic case is two histories changing the same lines in the same file.
+
+## F.60 What should I do before resolving a conflict?
+
+Run:
+
+```bash
+git status
+```
+
+Then inspect the conflicted files and decide the correct final content.
+
+## F.61 What if I am not sure which version is correct?
+
+Ask the other person or review the project intent. Do not blindly choose “ours” or “theirs.”
+
+## F.62 What is `git fetch`?
+
+`git fetch` downloads remote history and updates remote-tracking branches, but does not integrate those changes into your current branch.
+
+## F.63 What is `git pull`?
+
+`git pull` fetches remote changes and integrates them into your current branch.
+
+## F.64 Is `git pull` the same as `git fetch` plus `git merge`?
+
+Conceptually, often yes.
+
+By default, `git pull` fetches first, then integrates, commonly by merge. With `--rebase`, it fetches and rebases instead.
+
+## F.65 When should I use `git fetch` instead of `git pull`?
+
+Use `git fetch` when you want to inspect remote changes before integrating them.
+
+## F.66 Should beginners use merge or rebase?
+
+Use merge as the safer beginner default. Use rebase later, mostly on private branches.
+
+## F.67 Is a push rejection the same as a merge conflict?
+
+No.
+
+A push rejection means the remote has commits you do not have locally. A merge conflict may happen later when you pull, merge, or rebase.
+
+## F.68 What tool should I use to resolve merge conflicts?
+
+Start with VS Code's built-in Git tools and merge editor.
+
+Use a dedicated Git GUI later if you want a more specialized visual Git experience.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -3902,7 +4711,711 @@ git diff --cached --stat
 ```
 
 
-# Appendix H: References
+
+---
+
+# Appendix H: File Update, Merge, and Conflict Scenarios
+
+This appendix expands the main guide with detailed scenarios.
+
+The goal is to make the difference clear between:
+
+```text
+updating a file
+adding a file
+replacing a file
+pushing a commit
+pulling remote work
+merging histories
+resolving merge conflicts
+```
+
+## H.1 Scenario A: one user adds a new file
+
+Starting state:
+
+```text
+remote/main: A
+local/main:  A
+```
+
+You create:
+
+```text
+notes.md
+```
+
+Commands:
+
+```bash
+git status
+git add notes.md
+git status
+git commit -m "Add notes file"
+git push
+```
+
+Result:
+
+```text
+remote/main: A -- B
+```
+
+No merge conflict.
+
+Why:
+
+> Nobody else changed the remote branch. Git can move the branch forward.
+
+## H.2 Scenario B: one user updates an existing file
+
+Starting state:
+
+```text
+remote/main: A
+local/main:  A
+```
+
+You edit:
+
+```text
+guide.md
+```
+
+Commands:
+
+```bash
+git status
+git add guide.md
+git status
+git commit -m "Update guide"
+git push
+```
+
+Result:
+
+```text
+remote/main: A -- B
+```
+
+No merge conflict.
+
+Why:
+
+> This is the same tracked file path with newer content in a newer commit.
+
+## H.3 Scenario C: one user replaces an existing file with the same filename
+
+Starting state:
+
+```text
+guide.md exists in commit A
+```
+
+You copy a newer local file over the old local file:
+
+```text
+guide.md
+```
+
+Commands:
+
+```bash
+git status
+git add guide.md
+git status
+git commit -m "Replace guide with updated version"
+git push
+```
+
+Result:
+
+```text
+remote/main: A -- B
+```
+
+No merge conflict.
+
+Why:
+
+> Git sees a tracked file path with changed content. Since there is no competing remote update, Git commits and pushes normally.
+
+## H.4 Scenario D: two users edit different files
+
+Starting state:
+
+```text
+remote/main: A
+User A local: A
+User B local: A
+```
+
+User A edits:
+
+```text
+chapter-1.md
+```
+
+User A commits and pushes:
+
+```bash
+git add chapter-1.md
+git commit -m "Update chapter 1"
+git push
+```
+
+Remote becomes:
+
+```text
+remote/main: A -- B
+```
+
+User B edits:
+
+```text
+chapter-2.md
+```
+
+User B commits locally:
+
+```bash
+git add chapter-2.md
+git commit -m "Update chapter 2"
+```
+
+User B tries:
+
+```bash
+git push
+```
+
+Possible result:
+
+```text
+rejected because remote contains work that you do not have
+```
+
+User B should run:
+
+```bash
+git pull
+```
+
+If there is no conflict, Git integrates User A's change and User B can push:
+
+```bash
+git push
+```
+
+Why no conflict:
+
+> The users changed different files, so Git can usually combine the changes automatically.
+
+Important distinction:
+
+> User B may still have to pull before pushing, but that is not necessarily a merge conflict. It may just be Git requiring User B to include the remote commit before pushing.
+
+## H.5 Scenario E: two users edit different lines in the same file
+
+Starting state:
+
+```text
+remote/main: A
+User A local: A
+User B local: A
+```
+
+Both edit:
+
+```text
+guide.md
+```
+
+User A edits line 10.
+
+User B edits line 80.
+
+User A pushes first:
+
+```text
+remote/main: A -- B
+```
+
+User B commits locally:
+
+```text
+User B local: A -- C
+```
+
+User B pushes and gets rejected because remote has `B`.
+
+User B runs:
+
+```bash
+git pull
+```
+
+Possible result:
+
+> Git automatically merges because the changes are in different parts of the file.
+
+Then User B pushes:
+
+```bash
+git push
+```
+
+No manual conflict resolution may be needed.
+
+Key wording:
+
+> Two users editing the same file does not always mean a conflict. Git may merge automatically if the edits do not overlap.
+
+## H.6 Scenario F: two users edit the same lines in the same file
+
+Starting state:
+
+```text
+remote/main: A
+User A local: A
+User B local: A
+```
+
+Both edit the same paragraph in:
+
+```text
+guide.md
+```
+
+User A pushes first:
+
+```text
+remote/main: A -- B
+```
+
+User B commits locally:
+
+```text
+User B local: A -- C
+```
+
+User B tries:
+
+```bash
+git push
+```
+
+Push is rejected because the remote has new work.
+
+User B runs:
+
+```bash
+git pull
+```
+
+Git tries to merge `B` and `C`, but cannot safely combine the same changed lines.
+
+Conflict markers appear:
+
+```text
+<<<<<<< HEAD
+User B's local version
+=======
+User A's remote version
+>>>>>>> origin/main
+```
+
+User B must edit the file to the correct final version.
+
+Then:
+
+```bash
+git add guide.md
+git commit
+git push
+```
+
+Key wording:
+
+> This is the classic merge conflict scenario: two histories changed overlapping parts of the same file.
+
+## H.7 Scenario G: one user deletes a file while another edits it
+
+Starting state:
+
+```text
+remote/main: A
+User A local: A
+User B local: A
+```
+
+User A deletes:
+
+```text
+old-guide.md
+```
+
+User B edits:
+
+```text
+old-guide.md
+```
+
+When histories are combined, Git may report a delete/modify conflict.
+
+Resolution options:
+
+1. Keep the deletion.
+2. Keep the edited file.
+3. Restore part of the file elsewhere.
+4. Rename the edited file.
+5. Ask the team which intent is correct.
+
+If the file should remain, stage the resolved file:
+
+```bash
+git status
+git add old-guide.md
+git commit
+```
+
+If the file should remain deleted:
+
+```bash
+git rm old-guide.md
+git commit
+```
+
+## H.8 Scenario H: both users add a file with the same name
+
+Example:
+
+```text
+User A adds notes.md
+User B also adds notes.md
+```
+
+If the file contents differ, Git may report an add/add conflict.
+
+Resolution options:
+
+1. Keep User A's version.
+2. Keep User B's version.
+3. Combine both.
+4. Rename one file.
+5. Create two separate files.
+
+## H.9 Scenario I: one user renames a file while another edits it
+
+Example:
+
+```text
+User A renames guide.md to git-guide.md
+User B edits guide.md
+```
+
+Git may detect the rename and apply User B's edit to the renamed file, or it may need help if the file changed heavily.
+
+Resolution options:
+
+1. Keep the rename and include the edit.
+2. Undo the rename.
+3. Keep both files temporarily and reconcile manually.
+4. Use a merge tool to inspect both sides.
+
+## H.10 Scenario J: binary files
+
+Binary files include:
+
+```text
+images
+PDFs
+Word documents
+compiled assets
+some design files
+```
+
+Git usually cannot merge binary files line-by-line.
+
+If two users change the same binary file, resolution often means choosing one version or manually recreating a combined file outside Git.
+
+For frequently edited binary files, consider Git LFS, locking workflows, or clearer team coordination. [R54]
+
+## H.11 Types of merge conflicts
+
+| Conflict type | Example | Typical resolution |
+|---|---|---|
+| Same-line edit | Two users edit the same sentence | Manually choose or combine text |
+| Nearby edit | Two users edit adjacent paragraphs | Review context carefully |
+| Different-file changes | User A edits A.md, User B edits B.md | Usually auto-merges |
+| Same file, different lines | User A edits top, User B edits bottom | Usually auto-merges, but review |
+| Delete/modify | One deletes file, one edits it | Decide whether file should exist |
+| Add/add | Two users create same filename differently | Combine, choose one, or rename |
+| Rename/edit | One renames, one edits old path | Keep rename and apply edit, or decide manually |
+| Rename/rename | Two users rename same file differently | Pick final name |
+| Binary conflict | Two users edit same image/PDF/DOCX | Choose one, manually combine, or coordinate |
+| Semantic/logical conflict | Git merges text cleanly but meaning is wrong | Review, test, and proofread manually |
+
+Not all bad merges produce visible conflict markers. Git can merge text successfully while still producing a logically wrong document or program. Always review important merges.
+
+## H.12 Ways to reduce merge conflicts
+
+- Pull before starting work:
+
+```bash
+git switch main
+git pull
+```
+
+- Use short-lived branches.
+- Keep changes small and focused.
+- Avoid long-running branches when possible.
+- Communicate when editing the same file.
+- Split large documents into multiple files when practical.
+- Avoid multiple people editing generated files.
+- Avoid repeatedly reformatting entire files.
+- Commit logical chunks.
+- Use pull requests for review.
+- Merge or rebase your branch regularly.
+- Use Git LFS or locking for binary files when appropriate. [R54]
+- Review diffs before committing.
+
+## H.13 Ways to resolve merge conflicts
+
+### Manual text editing
+
+Use the conflict markers:
+
+```text
+<<<<<<< HEAD
+your current version
+=======
+incoming version
+>>>>>>> branch-name
+```
+
+Edit to the correct final content.
+
+Then:
+
+```bash
+git add conflicted-file.md
+git commit
+```
+
+### VS Code merge editor
+
+VS Code supports inline conflict actions and a 3-way merge editor. [R47]
+
+This is the recommended default for most readers of this guide.
+
+### Dedicated Git GUI
+
+A dedicated Git GUI can make history, staging, diffing, and conflicts easier to visualize.
+
+Examples:
+
+- Sublime Merge [R50]
+- GitKraken Desktop [R52]
+- Git Extensions [R51]
+- GitHub Desktop [R49]
+
+### Git mergetool
+
+Use:
+
+```bash
+git mergetool
+```
+
+This opens the configured merge tool. [R43]
+
+### Choose one side
+
+Sometimes one side is clearly correct.
+
+Keep the current branch version:
+
+```bash
+git checkout --ours conflicted-file.md
+git add conflicted-file.md
+git commit
+```
+
+Keep the incoming version:
+
+```bash
+git checkout --theirs conflicted-file.md
+git add conflicted-file.md
+git commit
+```
+
+Use `--ours` and `--theirs` carefully. Their meaning can feel reversed during rebase compared with merge.
+
+### Abort and try again
+
+Abort a merge:
+
+```bash
+git merge --abort
+```
+
+Abort a rebase:
+
+```bash
+git rebase --abort
+```
+
+Then inspect, pull, coordinate, or retry.
+
+### Resolve on GitHub
+
+GitHub can resolve some simple line-based conflicts in the web UI. More complex conflicts must be resolved locally. [R45] [R46]
+
+### Ask before resolving
+
+For team work:
+
+> If the conflict involves another person's intent, ask them before guessing.
+
+## H.14 Fetch, pull, merge, and rebase decision guide
+
+### I just want the latest remote changes on my current branch
+
+Use:
+
+```bash
+git pull
+```
+
+If you want to avoid automatic merge commits:
+
+```bash
+git pull --ff-only
+```
+
+### I want to see what changed on GitHub before integrating
+
+Use:
+
+```bash
+git fetch origin
+git log --oneline --decorate --graph --all
+git diff main..origin/main
+```
+
+Then decide whether to merge or rebase.
+
+### I want to combine my working branch into `main`
+
+Use:
+
+```bash
+git switch main
+git pull
+git merge work-branch-name
+git push
+```
+
+### I want to update my private working branch with the latest `main`
+
+Use:
+
+```bash
+git switch work-branch-name
+git fetch origin
+git rebase origin/main
+```
+
+Safer beginner alternative:
+
+```bash
+git switch work-branch-name
+git fetch origin
+git merge origin/main
+```
+
+### My push was rejected because the remote has new commits
+
+Simple beginner path:
+
+```bash
+git pull
+git push
+```
+
+More careful path:
+
+```bash
+git fetch origin
+git log --oneline --decorate --graph --all
+git diff main..origin/main
+```
+
+Then:
+
+```bash
+git merge origin/main
+```
+
+Or, for a private branch:
+
+```bash
+git rebase origin/main
+```
+
+### My pull request branch is out of date
+
+Beginner merge-based path:
+
+```bash
+git switch work-branch-name
+git fetch origin
+git merge origin/main
+git push
+```
+
+Linear-history path:
+
+```bash
+git switch work-branch-name
+git fetch origin
+git rebase origin/main
+git push --force-with-lease
+```
+
+`git push --force-with-lease` is safer than plain `--force`, but it is still a history-rewriting push. Do not use it casually.
+
+## H.15 Diff, comparison, merge, and conflict-resolution tools
+
+Recommended ranking for this guide:
+
+| Rank | Tool | Best for | Pros | Cons |
+|---:|---|---|---|---|
+| 1 | Visual Studio Code built-in Git and merge editor | Best default for this guide | Free, cross-platform, integrated diff/merge UI, good terminal support | Not as specialized as a dedicated Git client |
+| 2 | VS Code + GitLens | Best VS Code enhancement | Strong history, blame, graph, and context features | Some advanced features may require account/sign-in or paid features |
+| 3 | Sublime Merge | Best dedicated Git GUI for speed and clarity | Fast, polished, focused Git experience | Separate commercial tool |
+| 4 | Visual Studio Git tools | Best for .NET/Visual Studio projects | Integrated with Visual Studio solutions | Heavier than needed for docs-only repositories |
+| 5 | GitKraken Desktop | Best polished visual Git client | Strong visual history and merge/conflict tooling | Commercial product; may require account/licensing |
+| 6 | GitHub Desktop | Best simple GitHub-focused GUI | Beginner-friendly and official GitHub app | Less powerful for advanced merging |
+| 7 | Git Extensions | Best open-source Windows-focused Git GUI | Mature, configurable, strong command coverage | Interface can feel less modern |
+| 8 | Command line only | Best for precision and documentation | Universal, exact, scriptable | Harder for visual diff/merge conflict resolution |
+| 9 | External diff/merge tools such as Beyond Compare, WinMerge, Meld, KDiff3, or Araxis Merge | Specialized comparison needs | Powerful side-by-side comparison | Extra setup and sometimes extra cost |
+
+Best default recommendation:
+
+> Use VS Code built-in Git tools and the VS Code merge editor, plus the integrated terminal for exact Git commands.
+
+Why:
+
+- The guide already teaches VS Code.
+- It is free and widely available.
+- It is visual enough for merge conflicts.
+- It still lets you run exact Git commands.
+- It avoids making a beginner install a separate Git GUI too early.
+
+
+# Appendix I: References
 
 ## Core conceptual references
 
@@ -4039,9 +5552,75 @@ https://git-scm.com/docs/git-pull
 [R42] GitHub Docs, “Creating a pull request.”  
 https://docs.github.com/articles/creating-a-pull-request
 
+
+[R43] Git documentation, `git-mergetool`.  
+https://git-scm.com/docs/git-mergetool
+
+[R44] GitHub Docs, “About merge conflicts.”  
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts
+
+[R45] GitHub Docs, “Resolving a merge conflict using the command line.”  
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line
+
+[R46] GitHub Docs, “Resolving a merge conflict on GitHub.”  
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-on-github
+
+[R47] Visual Studio Code Docs, “Source Control: Merge conflicts.”  
+https://code.visualstudio.com/docs/sourcecontrol/overview#_merge-conflicts
+
+[R48] Microsoft Learn, “Use Git and GitHub in Visual Studio.”  
+https://learn.microsoft.com/en-us/visualstudio/version-control/git-with-visual-studio
+
+[R49] GitHub Docs, “Committing and reviewing changes to your project in GitHub Desktop.”  
+https://docs.github.com/en/desktop/making-changes-in-a-branch/committing-and-reviewing-changes-to-your-project-in-github-desktop
+
+[R50] Sublime Merge.  
+https://www.sublimemerge.com/
+
+[R51] Git Extensions documentation, “Merge Conflicts.”  
+https://git-extensions-documentation.readthedocs.io/
+
+[R52] GitKraken, “Merge Conflict Resolution Tool.”  
+https://www.gitkraken.com/features/merge-conflict-resolution-tool
+
+[R53] GitLens documentation.  
+https://help.gitkraken.com/gitlens/gitlens-home/
+
+[R54] Git Large File Storage documentation.  
+https://git-lfs.com/
+
 ---
 
 # Index
+
+
+## Adding files
+
+See [19. Adding, Updating, and Replacing Files](#19-adding-updating-and-replacing-files) and [Appendix H](#appendix-h-file-update-merge-and-conflict-scenarios).
+
+## Updating files
+
+See [19. Adding, Updating, and Replacing Files](#19-adding-updating-and-replacing-files) and [Appendix H](#appendix-h-file-update-merge-and-conflict-scenarios).
+
+## Replacing files
+
+See [19. Adding, Updating, and Replacing Files](#19-adding-updating-and-replacing-files) and [Appendix H](#appendix-h-file-update-merge-and-conflict-scenarios).
+
+## Fetch
+
+See [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics) and [Appendix H](#appendix-h-file-update-merge-and-conflict-scenarios).
+
+## Pull
+
+See [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics) and [Appendix H](#appendix-h-file-update-merge-and-conflict-scenarios).
+
+## Merge conflict
+
+See [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics), [Appendix B](#appendix-b-expanded-vs-code-reference), and [Appendix H](#appendix-h-file-update-merge-and-conflict-scenarios).
+
+## Git tools
+
+See [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics) and [Appendix H.15](#h15-diff-comparison-merge-and-conflict-resolution-tools).
 
 ## Branch workflow
 
