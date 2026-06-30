@@ -1,7 +1,10 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Final verified Markdown guide  
-Current as of: 2026-06-28
+Document version: v1.0.0  
+Version status: Locked standalone Markdown version  
+Versioning method: Document metadata only; no Git repository package required  
+Future edit policy: Do not overwrite this `v1.0.0` file. Save future changes as a new version, such as `v1.0.1` or `v1.1.0`.  
+Current as of: 2026-06-29
 
 ---
 
