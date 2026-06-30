@@ -1,10 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.0.0  
+Document version: v1.1.0  
+Previous locked version: v1.0.0  
 Version status: Locked standalone Markdown version  
+Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.0.0` file. Save future changes as a new version, such as `v1.0.1` or `v1.1.0`.  
+Future edit policy: Do not overwrite this `v1.1.0` file. Save future changes as a new version, such as `v1.1.1` or `v1.2.0`.  
 Current as of: 2026-06-29
+
+Revision note: This `v1.1.0` edition preserves the `v1.0.0` guide and additively incorporates supplemental Git tagging, repository naming, retrieval, and pager guidance from the uploaded reference file `git_tags_versioning_reference(1).md`.
 
 ---
 
@@ -29,7 +33,8 @@ Current as of: 2026-06-29
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
 - [Appendix D: Production Release and Deployment Details](#appendix-d-production-release-and-deployment-details)
 - [Appendix E: Troubleshooting](#appendix-e-troubleshooting)
-- [Appendix F: References](#appendix-f-references)
+- [Appendix F: Knowledge Base and How-To Reference](#appendix-f-knowledge-base-and-how-to-reference)
+- [Appendix G: References](#appendix-g-references)
 - [Index](#index)
 
 ---
@@ -82,7 +87,7 @@ edit files
 git status
 git add .
 git commit -m "Create version v1.0.0"
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
 Then later:
@@ -92,7 +97,7 @@ edit files
 git status
 git add .
 git commit -m "Create version v1.1.0"
-git tag -a v1.1.0 -m "Version v1.1.0"
+git tag -a v1.1.0 -m "Version 1.1.0"
 ```
 
 Now Git can tell the difference between the two snapshots.
@@ -155,7 +160,7 @@ An **annotated tag** is a Git tag object with metadata, including the tagger, da
 For meaningful versions, use annotated tags:
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
 ### Lightweight Tag
@@ -415,8 +420,10 @@ This is covered in more detail in [Section 11](#11-using-visual-studio-code).
 Once the `v1.0.0` file set has been committed, create an annotated tag:
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
+
+Message wording note: the tag name is `v1.0.0`, but the annotated tag message is written as `Version 1.0.0`. That is intentional. The leading `v` in the tag name already means “version,” so repeating it in the human-readable message is valid but slightly redundant. A clean pattern is `git tag -a v1.0.0 -m "Version 1.0.0"`.
 
 Push the tag to GitHub:
 
@@ -487,7 +494,7 @@ git commit -m "Create version v1.1.0"
 Tag the commit:
 
 ```bash
-git tag -a v1.1.0 -m "Version v1.1.0"
+git tag -a v1.1.0 -m "Version 1.1.0"
 ```
 
 Push the commit:
@@ -775,7 +782,7 @@ Ctrl+`
 Then run:
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 git push origin v1.0.0
 ```
 
@@ -814,7 +821,7 @@ Pick one style and stick to it.
 Recommended:
 
 ```bash
-git tag -a v1.1.0 -m "Version v1.1.0"
+git tag -a v1.1.0 -m "Version 1.1.0"
 ```
 
 Not recommended for meaningful shared versions:
@@ -909,7 +916,7 @@ git add .
 git commit -m "Create version v1.0.0"
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
 git push -u origin main
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 git push origin v1.0.0
 ```
 
@@ -919,7 +926,7 @@ git push origin v1.0.0
 git status
 git add .
 git commit -m "Create version v1.1.0"
-git tag -a v1.1.0 -m "Version v1.1.0"
+git tag -a v1.1.0 -m "Version 1.1.0"
 git push
 git push origin v1.1.0
 ```
@@ -1035,7 +1042,7 @@ Official reference: [R22]
 ### `git tag -a`
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
 Creates an annotated tag.
@@ -1287,7 +1294,7 @@ git tag --list
 Lists tags.
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
 Creates an annotated tag.
@@ -1372,7 +1379,7 @@ VS Code’s terminal documentation describes the integrated terminal as a way to
 For tags, run:
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 git push origin v1.0.0
 ```
 
@@ -1407,7 +1414,7 @@ The commit identifies the tracked state of the project. That is why tags are the
 Annotated tag:
 
 ```bash
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
 Best for:
@@ -1555,7 +1562,7 @@ If the tag is only local:
 
 ```bash
 git tag -d v1.0.0
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 ```
 
 If the tag was pushed:
@@ -1563,7 +1570,7 @@ If the tag was pushed:
 ```bash
 git push origin --delete v1.0.0
 git tag -d v1.0.0
-git tag -a v1.0.0 -m "Version v1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
 git push origin v1.0.0
 ```
 
@@ -1595,7 +1602,848 @@ Then inspect and commit if appropriate.
 
 ---
 
-# Appendix F: References
+
+# Appendix F: Knowledge Base and How-To Reference
+
+This appendix is intentionally more question-and-answer oriented than the main guide. It incorporates and expands the supplemental reference material supplied for the `v1.1.0` update. The purpose is to answer the practical questions that often come up immediately after a user creates a repository, commits the first files, and starts using tags for versions.
+
+## F.1 Is it GitHub, Github, github, or Git Hub?
+
+The official product/company styling is:
+
+```text
+GitHub
+```
+
+Use **GitHub** in documentation, README files, guides, and professional writing.
+
+| Form | Recommended? | Notes |
+|---|---:|---|
+| `GitHub` | Yes | Official capitalization used by GitHub documentation. [R4] |
+| `Github` | No | Common informal typo. |
+| `github` | Sometimes | Acceptable in lowercase contexts such as URLs, package names, usernames, or command-line text. |
+| `Git Hub` | No | Incorrect as the product/company name. |
+
+Example:
+
+```markdown
+This project is hosted on GitHub.
+```
+
+## F.2 What is a good repository name?
+
+A good repository name should be short, specific, descriptive, and durable.
+
+For a simple web calculator used as a Selenium testing target, this is better:
+
+```text
+selenium-calculator-example
+```
+
+than this:
+
+```text
+calculator
+```
+
+`calculator` is understandable, but it is generic. Six months later, you may not remember whether it was a production calculator, a learning exercise, a Selenium demo, a JavaScript experiment, or something else.
+
+Good repository names usually follow these guidelines:
+
+- Use lowercase unless there is a strong project convention otherwise.
+- Use hyphens between words: `selenium-calculator-example`.
+- Avoid spaces.
+- Avoid vague names like `test`, `demo`, `project`, or `calculator` unless the repo is private and temporary.
+- Name the repo for its purpose, not only its contents.
+- Prefer names that still make sense when seen in a GitHub URL.
+
+Examples:
+
+| Repository name | When it makes sense |
+|---|---|
+| `selenium-calculator-example` | Best general-purpose name for a calculator app used with Selenium examples. |
+| `web-calculator-selenium-demo` | Clear, but slightly longer. |
+| `calculator-selenium-tests` | Good if the repo mainly contains Selenium tests. |
+| `sample-web-calculator` | Good if the focus is the calculator app itself. |
+| `calculator` | Fine for a tiny private repo, but not very descriptive. |
+
+## F.3 What should the GitHub repository description be?
+
+A GitHub repository description should be a short, clear label that answers:
+
+> What is this repository?
+
+For the sample calculator project, a good description is:
+
+```text
+Sample web calculator used for Selenium automated testing examples
+```
+
+That description is specific, short, and purpose-oriented.
+
+Avoid making the description mostly about the tool that helped create the files. For example, instead of this:
+
+```text
+Claude: Web calculator
+```
+
+prefer this:
+
+```text
+Sample web calculator used for Selenium automated testing examples
+```
+
+If the project was created with help from Claude, ChatGPT, Copilot, or another AI tool, mention that in the README if it matters. GitHub’s README guidance says the README is where you explain why the project is useful, what people can do with it, and how to use it. [R36]
+
+Example README wording:
+
+```markdown
+This sample web calculator was created with assistance from Claude and is used as a simple target application for Selenium automated test cases.
+```
+
+## F.4 Should a GitHub repository description include a period?
+
+Usually, omit the period when the description is a short label-style phrase.
+
+Recommended:
+
+```text
+Sample web calculator used for Selenium automated testing examples
+```
+
+Also acceptable, but less common for a short GitHub description:
+
+```text
+Sample web calculator used for Selenium automated testing examples.
+```
+
+Rule of thumb:
+
+| Description style | Period? | Example |
+|---|---:|---|
+| Short phrase | Usually no | `Sample web calculator used for Selenium automated testing examples` |
+| Complete sentence | Usually yes | `This repository contains a sample web calculator used for Selenium automated testing examples.` |
+| Multiple sentences | Yes | `This repository contains a sample web calculator. It is used for Selenium testing examples.` |
+
+## F.5 What is the proper term for a commit “name”?
+
+The proper term is usually **commit message**.
+
+When you run this:
+
+```bash
+git commit -m "Update calculator behavior"
+```
+
+`Update calculator behavior` is the commit message.
+
+A commit also has a generated identifier, commonly called a **commit hash**, **commit SHA**, or **SHA**.
+
+Example:
+
+```text
+a1b2c3d Update calculator behavior
+```
+
+In that line:
+
+- `a1b2c3d` is the abbreviated commit hash/SHA.
+- `Update calculator behavior` is the commit message.
+
+For one-line commit messages, a common best practice is:
+
+- Use a short imperative phrase.
+- Start with a verb.
+- Do not usually end with a period.
+- Keep it specific enough to be useful later.
+
+Good examples:
+
+```text
+Add initial calculator files
+Update calculator behavior
+Fix division-by-zero test case
+Document version tag workflow
+```
+
+Less helpful examples:
+
+```text
+Update
+Changes
+Final
+More stuff
+Fixed things.
+```
+
+Periods are usually unnecessary in short one-line commit messages. If the commit message has a longer body with multiple sentences, normal sentence punctuation is fine.
+
+## F.6 What is the difference between a tag name and a tag message?
+
+This command has both:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+| Part | Proper term | Meaning |
+|---|---|---|
+| `v1.0.0` | Tag name | The name you use to refer to the version. |
+| `Version 1.0.0` | Annotated tag message | Human-readable message stored in the annotated tag. |
+
+The tag name commonly includes the leading `v`:
+
+```text
+v1.0.0
+```
+
+The human-readable tag message usually does not need to repeat the `v`:
+
+```text
+Version 1.0.0
+```
+
+This is valid but redundant:
+
+```bash
+git tag -a v1.0.0 -m "Version v1.0.0"
+```
+
+This is cleaner:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+The reason is simple: the `v` in `v1.0.0` already means “version.”
+
+## F.7 Does tagging apply to the whole repo?
+
+Yes.
+
+A Git tag points to a commit. A commit represents the tracked state of the repository at that moment. Therefore, a tag identifies the whole repository snapshot, not an individual file and not a loose subset of files. [R1] [R2]
+
+Suppose `v1.0.0` contains:
+
+```text
+index.html
+styles.css
+calculator.js
+```
+
+You commit those files and tag the commit:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+Now `v1.0.0` identifies the repository snapshot containing those tracked files as they existed at that commit.
+
+## F.8 If I add or update one file, does the next tag apply to all files?
+
+Yes.
+
+Suppose `v1.0.0` contains:
+
+```text
+index.html
+styles.css
+calculator.js
+```
+
+Then you edit only:
+
+```text
+calculator.js
+```
+
+You commit and tag the new version:
+
+```bash
+git add calculator.js
+git commit -m "Update calculator behavior"
+git tag -a v1.0.1 -m "Version 1.0.1"
+```
+
+The `v1.0.1` tag still identifies the whole repository snapshot:
+
+```text
+index.html       unchanged from v1.0.0
+styles.css      unchanged from v1.0.0
+calculator.js   changed in v1.0.1
+```
+
+That is normal and correct.
+
+A version tag means:
+
+> This whole committed repository state is version 1.0.1.
+
+It does not mean:
+
+> Only the file that changed is version 1.0.1.
+
+## F.9 Can I tag just a subset of files?
+
+Not directly.
+
+Git tags point to commits. Commits represent repository snapshots. Git does not directly support saying “tag only these three files as `v1.0.1`” while excluding the rest of the repository from the meaning of that tag.
+
+But there are several practical patterns depending on what you actually need.
+
+### Case A: You edited several files but only want some changes included in the version
+
+Stage only the files that belong in the version:
+
+```bash
+git status
+git add calculator.js
+git commit -m "Fix calculator behavior"
+git tag -a v1.0.1 -m "Version 1.0.1"
+```
+
+Other edited but unstaged files are not part of that commit, so they are not part of the `v1.0.1` snapshot.
+
+This is useful when you are working on a larger change but need to release a small fix first.
+
+### Case B: You want a ZIP that contains only selected files
+
+Tag the whole repository snapshot, but export only selected files:
+
+```bash
+git archive -o calculator-v1.0.1.zip v1.0.1 index.html styles.css calculator.js
+```
+
+This creates a ZIP containing only those paths from the tagged snapshot. Git’s archive command creates an archive from a named tree, and a tag can identify the tree to archive. [R16]
+
+### Case C: You have multiple components in one repository
+
+Example:
+
+```text
+calculator-app/
+selenium-tests/
+docs/
+```
+
+You can use component-specific tag names:
+
+```bash
+git tag -a calculator-v1.0.1 -m "Calculator version 1.0.1"
+git tag -a selenium-tests-v0.2.0 -m "Selenium tests version 0.2.0"
+```
+
+Technically, both tags still point to whole commits. The tag names tell humans which component the version refers to.
+
+### Case D: The components are truly independent
+
+If two parts of a project have independent lifecycles, separate repositories may be cleaner.
+
+Example:
+
+```text
+web-calculator
+web-calculator-selenium-tests
+```
+
+Separate repositories may make sense when:
+
+- Different teams own the parts.
+- The parts are released on different schedules.
+- One project can be reused without the other.
+- Each project needs separate issues, pull requests, releases, or permissions.
+- The combined repository is becoming confusing.
+
+For a small learning project, keep the app and tests together unless there is a clear reason to split them.
+
+## F.10 How should source code and test cases be versioned together?
+
+If the test cases are written specifically for the source code in the same repository, version them together.
+
+Example:
+
+```text
+v1.0.0 = calculator app + initial Selenium tests
+v1.0.1 = calculator bug fix + updated Selenium expectations
+v1.1.0 = new calculator feature + new Selenium tests
+```
+
+This is often the simplest and best model because the source code and tests form one working project snapshot.
+
+Use one repo when:
+
+- The tests are tightly coupled to the app.
+- The tests and app should change together.
+- A version should mean “this app and these tests go together.”
+- The project is small or educational.
+
+Consider multiple repos when:
+
+- The app and test suite evolve independently.
+- The test suite is used against multiple apps.
+- The app has one release cycle and the tests have another.
+- Separate teams own the app and tests.
+- Separate permissions or workflows are needed.
+
+For many projects, especially novice-to-intermediate projects, one repository with regular version tags is the best starting point.
+
+## F.11 What is the difference between tagging, versioning, and creating releases?
+
+These terms are related, but they are not the same.
+
+| Term | What it is | Example |
+|---|---|---|
+| Versioning | The overall practice of assigning version numbers to meaningful project states. | `1.0.0`, `1.0.1`, `1.1.0` |
+| Git tag | The Git mechanism used to name a specific commit. | `v1.0.0` |
+| Annotated tag | A tag with metadata and a message. | `git tag -a v1.0.0 -m "Version 1.0.0"` |
+| GitHub Release | A GitHub release page/package based on a tag. | Release notes for `v1.0.0` |
+| Production deployment | The act or record of putting a ref into production. | Deploy `v1.0.0` to production |
+
+GitHub’s release documentation says releases are based on Git tags, and tags mark points in repository history. [R8]
+
+Simple rule:
+
+- Use **versions** to communicate project meaning.
+- Use **Git tags** to mark versioned snapshots in Git.
+- Use **GitHub Releases** to publish or package tagged versions.
+- Use **deployment records** to track what actually went to production.
+
+## F.12 Should every commit get a tag?
+
+No.
+
+A commit is already a saved snapshot. Tag only the commits that matter as named versions, milestones, releases, review baselines, or stable checkpoints.
+
+Good reasons to tag:
+
+- First usable version.
+- Review-ready version.
+- Published release.
+- Production deployment candidate.
+- Before a major rewrite.
+- A version you expect to reference later.
+
+Poor reasons to tag:
+
+- Every small typo fix.
+- Every experimental commit.
+- Every commit just because Git allows it.
+
+For normal work, many commits will not have tags. That is good.
+
+## F.13 How do I retrieve or download a particular version?
+
+There are several good options.
+
+### Option A: View a tag locally
+
+Modern style:
+
+```bash
+git switch --detach v1.0.0
+```
+
+Older widely supported style:
+
+```bash
+git checkout v1.0.0
+```
+
+This puts you in detached HEAD mode, which is fine for inspecting, testing, or copying files. Git’s checkout documentation covers checking out branches or paths and is still widely used, while `git switch` is the clearer modern command for switching branches or detached states. [R33] [R28]
+
+Return to main:
+
+```bash
+git switch main
+```
+
+or:
+
+```bash
+git checkout main
+```
+
+### Option B: Create a branch from a tag
+
+Use this if you want to edit from an old version:
+
+```bash
+git switch -c fix-v1.0.0 v1.0.0
+```
+
+or:
+
+```bash
+git checkout -b fix-v1.0.0 v1.0.0
+```
+
+### Option C: Download a tag ZIP from GitHub
+
+On GitHub:
+
+1. Open the repository.
+2. Open **Tags** or **Releases**.
+3. Choose the tag, such as `v1.0.0`.
+4. Download the source code ZIP.
+
+GitHub’s releases/tags documentation explains that you can view a repository’s releases and tags by release name or tag version number. [R10]
+
+A common direct URL shape is:
+
+```text
+https://github.com/OWNER/REPOSITORY/archive/refs/tags/v1.0.0.zip
+```
+
+Replace `OWNER`, `REPOSITORY`, and `v1.0.0` with the actual values.
+
+### Option D: Create a ZIP locally with `git archive`
+
+```bash
+git archive -o project-v1.0.0.zip v1.0.0
+```
+
+Selected files only:
+
+```bash
+git archive -o calculator-v1.0.1.zip v1.0.1 index.html styles.css calculator.js
+```
+
+### Option E: Clone and check out a specific tag
+
+Explicit two-step approach:
+
+```bash
+git clone https://github.com/OWNER/REPOSITORY.git
+cd REPOSITORY
+git checkout v1.0.0
+```
+
+Single command shape:
+
+```bash
+git clone --branch v1.0.0 --single-branch https://github.com/OWNER/REPOSITORY.git
+```
+
+Git clone supports `--branch` and `--single-branch`; with tags, the result may be a detached HEAD, which is normal. [R34]
+
+## F.14 How do I compare two versions?
+
+Show all content differences:
+
+```bash
+git diff v1.0.0 v1.0.1
+```
+
+Show only changed file names:
+
+```bash
+git diff --name-only v1.0.0 v1.0.1
+```
+
+Show commits between the two tags:
+
+```bash
+git log v1.0.0..v1.0.1
+```
+
+Show compact one-line commit history:
+
+```bash
+git log --oneline v1.0.0..v1.0.1
+```
+
+This is useful when writing release notes. Git’s `diff` command compares changes between commits, trees, files, or the working tree, and `log` shows commit history. [R25] [R26]
+
+## F.15 What does `git show v1.0.0` do?
+
+This command displays information about the object named `v1.0.0`:
+
+```bash
+git show v1.0.0
+```
+
+If `v1.0.0` is an annotated tag, this usually shows:
+
+1. The tag information.
+2. The tag message.
+3. The commit the tag points to.
+4. The commit message.
+5. Often, the diff associated with that commit.
+
+`git show v1.0.0` does **not** switch your files to that version. It only displays information. Git’s `show` documentation describes showing objects such as commits and tags. [R27]
+
+Compare:
+
+```bash
+git show v1.0.0
+```
+
+Shows information.
+
+```bash
+git switch --detach v1.0.0
+```
+
+Changes your working tree to view that version.
+
+## F.16 Why did `git show v1.0.0` open in an interactive screen?
+
+Git probably opened the output in a **pager**.
+
+A pager displays long output one screen at a time. Git can pipe output into a pager and supports `--no-pager` to avoid doing so. [R30]
+
+Git’s configuration documentation says Git’s pager preference order is `$GIT_PAGER`, then `core.pager`, then `$PAGER`, then the default chosen at compile time, usually `less`. [R31]
+
+So on many systems, the pager is `less`.
+
+This can feel like a special Git mode, but it is usually just Git showing output through `less`.
+
+## F.17 How do I use Git’s pager?
+
+Most pager keys work immediately. You usually do **not** press Enter after them unless the command itself needs a search term.
+
+The most common keys are listed first.
+
+| Key | Case-sensitive? | What it does | Notes |
+|---|---:|---|---|
+| `q` | Yes | Quit the pager | Returns to the command prompt. |
+| `Space` | No | Move forward one page | Very common. |
+| `Enter` | No | Move forward one line | Useful for careful reading. |
+| `b` | Yes | Move backward one page | Lowercase `b`. |
+| `G` | Yes | Jump to the end | Uppercase `G`, usually `Shift+G`. Do not press Enter afterward. |
+| `g` | Yes | Jump to the beginning | Lowercase `g`. |
+| `/text` then `Enter` | The slash command is lowercase; search matching can depend on settings | Search forward for `text` | Type `/`, the search text, then press Enter. |
+| `n` | Yes | Next search result | Lowercase `n`. |
+| `N` | Yes | Previous search result | Uppercase `N`, usually `Shift+N`. |
+| `h` | Yes | Help | Shows less help if available. Press `q` to leave help. |
+
+Specific answers:
+
+- To jump to the end, press uppercase `G` (`Shift+G`).
+- `G` is case-sensitive. Lowercase `g` jumps to the beginning.
+- You do **not** need to press Enter after `G`.
+- After jumping to the end, you are still inside the pager. Press `q` when you want to return to the command prompt.
+- You can go from end to beginning with lowercase `g`.
+- You can move backward with `b` or forward with `Space`.
+
+The `less` manual describes `less` as a pager that can move backward and forward through output and does not need to read an entire file before starting. [R32]
+
+## F.18 How do I avoid the pager?
+
+For one command:
+
+```bash
+git --no-pager show v1.0.0
+```
+
+Save the output to a file:
+
+```bash
+git show v1.0.0 > v1.0.0.txt
+```
+
+Pipe to another command:
+
+```bash
+git show v1.0.0 | cat
+```
+
+Configure Git globally not to use a pager:
+
+```bash
+git config --global core.pager cat
+```
+
+That global setting is usually not recommended for beginners because the pager is useful for long diffs and logs. Prefer `git --no-pager ...` when you only want to bypass it once.
+
+On PowerShell, you can also set an environment variable for the current session:
+
+```powershell
+$env:GIT_PAGER = "cat"
+git show v1.0.0
+```
+
+Close and reopen the terminal to clear that temporary session variable.
+
+## F.19 How do I delete a tag?
+
+Delete a local tag:
+
+```bash
+git tag -d v1.0.0
+```
+
+Delete a remote tag from GitHub:
+
+```bash
+git push origin --delete v1.0.0
+```
+
+Use this carefully. Published version tags should usually be treated as stable.
+
+## F.20 How do I rename a tag?
+
+Git does not really rename tags directly. The usual workflow is:
+
+1. Create the corrected tag.
+2. Delete the old tag locally.
+3. Delete the old tag remotely if it was pushed.
+
+Example:
+
+```bash
+git tag -a v1.0.0-corrected -m "Version 1.0.0 corrected"
+git tag -d old-tag-name
+git push origin v1.0.0-corrected
+git push origin --delete old-tag-name
+```
+
+Be cautious if anyone else may already be using the old tag.
+
+## F.21 How do I see which commit a tag points to?
+
+Show the commit hash for the tag:
+
+```bash
+git rev-list -n 1 v1.0.0
+```
+
+Git’s `rev-list` command lists commit objects in reverse chronological order and is often used for plumbing-style history queries. [R35]
+
+Show the tag without the patch:
+
+```bash
+git show --no-patch v1.0.0
+```
+
+Show all tags with short messages:
+
+```bash
+git tag -n
+```
+
+Sort tags by creator date:
+
+```bash
+git tag --sort=creatordate
+```
+
+Reverse chronological:
+
+```bash
+git tag --sort=-creatordate
+```
+
+## F.22 Should I use branches or tags?
+
+Use both, but for different jobs.
+
+| Need | Best tool |
+|---|---|
+| Ongoing development | Branch |
+| Fixed version snapshot | Tag |
+| Experimental work | Branch |
+| Release marker | Tag |
+| Bug fix based on an old version | Branch from tag, then create a new tag |
+| Production deployment record | Deployment system, environment record, release notes, or release page |
+
+A branch moves as new commits are added.
+
+A version tag should not move.
+
+## F.23 Can I modify files while checked out at a tag?
+
+You can edit files while checked out at a tag, but you will usually be in detached HEAD mode.
+
+That is fine for temporary inspection, but not ideal for ongoing work.
+
+Better:
+
+```bash
+git switch -c fix-v1.0.0 v1.0.0
+```
+
+Then make changes on that branch.
+
+## F.24 Should I create GitHub Releases too?
+
+For a simple private project, tags may be enough.
+
+Create GitHub Releases when you want:
+
+- A release notes page.
+- Downloadable assets.
+- A polished public release history.
+- Source archives grouped by version.
+- A clearer distinction between “tagged internally” and “published externally.”
+
+Tags are the underlying Git version markers. GitHub Releases are a presentation and packaging layer on top of tags. [R8] [R9]
+
+## F.25 Recommended README section for a tagged project
+
+A simple README section could look like this:
+
+````markdown
+## Version Tags
+
+This repository uses Git tags to mark versioned snapshots of the project.
+
+Examples:
+
+- `v1.0.0` - Initial calculator example
+- `v1.0.1` - Small update or fix to the calculator
+
+To view a specific version:
+
+```bash
+git checkout v1.0.0
+```
+
+To return to the main branch:
+
+```bash
+git checkout main
+```
+````
+
+For a real README, you may prefer `git switch --detach v1.0.0` and `git switch main`, but `git checkout` is still common and widely recognized.
+
+## F.26 Recommended beginner workflow for a small calculator project
+
+Initial version:
+
+```bash
+git add .
+git commit -m "Add initial calculator example"
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin main
+git push origin v1.0.0
+```
+
+Patch version:
+
+```bash
+git status
+git add calculator.js
+git commit -m "Update calculator behavior"
+git tag -a v1.0.1 -m "Version 1.0.1"
+git push origin main
+git push origin v1.0.1
+```
+
+Result:
+
+```text
+v1.0.0 = first complete project snapshot
+v1.0.1 = small fix or update
+```
+
+Most important idea:
+
+> A tag labels a repository snapshot. A repository snapshot is the file set. That is why tags are a good way to version file sets in Git.
+
+
+# Appendix G: References
 
 ## Core conceptual references
 
@@ -1690,6 +2538,30 @@ https://git-scm.com/docs/git-switch
 [R29] Visual Studio Code Docs, “Quickstart: Use source control in VS Code.”  
 https://code.visualstudio.com/docs/sourcecontrol/quickstart
 
+## Additional references used in Appendix F
+
+
+[R30] Git documentation, `git` global options, including `--no-pager`.  
+https://git-scm.com/docs/git
+
+[R31] Git documentation, `git-config`, including `core.pager`.  
+https://git-scm.com/docs/git-config
+
+[R32] Linux manual page, `less(1)`.  
+https://man7.org/linux/man-pages/man1/less.1.html
+
+[R33] Git documentation, `git-checkout`.  
+https://git-scm.com/docs/git-checkout
+
+[R34] Git documentation, `git-clone`.  
+https://git-scm.com/docs/git-clone
+
+[R35] Git documentation, `git-rev-list`.  
+https://git-scm.com/docs/git-rev-list
+
+[R36] GitHub Docs, “About the repository README file.”  
+https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes
+
 ---
 
 # Index
@@ -1708,7 +2580,7 @@ See [2. The Core Concept](#2-the-core-concept), [3. Proper Terms](#3-proper-term
 
 ## Deployment
 
-See [10. Tags vs. Releases vs. Production Deployments](#10-tags-vs-releases-vs-production-deployments) and [Appendix D](#appendix-d-production-release-and-deployment-details).
+See [10. Tags vs. Releases vs. Production Deployments](#10-tags-vs-releases-vs-production-deployments), [Appendix D](#appendix-d-production-release-and-deployment-details), and [Appendix F](#appendix-f-knowledge-base-and-how-to-reference).
 
 ## File set
 
@@ -1717,6 +2589,26 @@ See [1. Purpose of This Guide](#1-purpose-of-this-guide), [2. The Core Concept](
 ## GitHub CLI
 
 See [6. Create the GitHub Repository](#6-create-the-github-repository) and [Appendix A](#appendix-a-expanded-git-command-reference).
+
+## GitHub repository description
+
+See [Appendix F.3](#f3-what-should-the-github-repository-description-be) and [Appendix F.4](#f4-should-a-github-repository-description-include-a-period).
+
+## Git pager
+
+See [Appendix F.16](#f16-why-did-git-show-v100-open-in-an-interactive-screen), [Appendix F.17](#f17-how-do-i-use-gits-pager), and [Appendix F.18](#f18-how-do-i-avoid-the-pager).
+
+## Knowledge Base
+
+See [Appendix F: Knowledge Base and How-To Reference](#appendix-f-knowledge-base-and-how-to-reference).
+
+## Repository naming
+
+See [Appendix F.2](#f2-what-is-a-good-repository-name).
+
+## Tag message
+
+See [Appendix F.6](#f6-what-is-the-difference-between-a-tag-name-and-a-tag-message).
 
 ## GitHub Release
 
