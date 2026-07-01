@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.4.0  
-Previous locked version: v1.3.0  
+Document version: v1.5.0  
+Previous locked version: v1.4.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.4.0` file. Save future changes as a new version, such as `v1.4.1` or `v1.5.0`.  
+Future edit policy: Do not overwrite this `v1.5.0` file. Save future changes as a new version, such as `v1.5.1` or `v1.6.0`.  
 Current as of: 2026-06-30
 
-Revision note: This `v1.4.0` edition preserves the `v1.3.0` guide and additively incorporates file/folder operation workflows, delete-and-replace edge cases, verification commands, and direct-to-main vs. working-branch push workflow guidance from the v1.4.0 update brief.
+Revision note: This `v1.5.0` edition preserves the `v1.4.0` guide and additively incorporates initial commit message vs. commit body guidance, multiple `-m` commit examples, and commit body vs. repository description clarification from the v1.5.0 update brief.
 
 ---
 
@@ -35,6 +35,7 @@ Revision note: This `v1.4.0` edition preserves the `v1.3.0` guide and additively
 - [19. Adding, Updating, and Replacing Files](#19-adding-updating-and-replacing-files)
 - [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics)
 - [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows)
+- [22. Commit Messages, Commit Bodies, and Repository Descriptions](#22-commit-messages-commit-bodies-and-repository-descriptions)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -44,7 +45,8 @@ Revision note: This `v1.4.0` edition preserves the `v1.3.0` guide and additively
 - [Appendix G: Command Sequences and Workflow Recipes](#appendix-g-command-sequences-and-workflow-recipes)
 - [Appendix H: File Update, Merge, and Conflict Scenarios](#appendix-h-file-update-merge-and-conflict-scenarios)
 - [Appendix I: File and Folder Operation Scenarios](#appendix-i-file-and-folder-operation-scenarios)
-- [Appendix J: References](#appendix-j-references)
+- [Appendix J: Commit Message and Commit Body Examples](#appendix-j-commit-message-and-commit-body-examples)
+- [Appendix K: References](#appendix-k-references)
 - [Index](#index)
 
 ---
@@ -56,7 +58,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1083,6 +1085,7 @@ Recommended history:
 | `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
 | `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
 | `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
+| `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -2888,6 +2891,175 @@ Recommended rule:
 > Start with direct-to-`main` for learning the basics. Use working branches once the project matters, the change is larger, or another person may need to review the work.
 
 
+
+---
+
+## 22. Commit Messages, Commit Bodies, and Repository Descriptions
+
+A common source of confusion is the difference between a short commit message, a longer commit body, and the GitHub repository description.
+
+The short answer:
+
+> A Git commit needs a commit message summary. A longer commit body is optional.
+
+A commit message can have two parts:
+
+```text
+Short summary line
+
+Optional longer description/body
+```
+
+The first line is the **commit message summary**, also called the **commit title**.
+
+The text below the blank line is the optional **commit body**, also called the **commit description**.
+
+Git's `git commit` command supports the `-m` option for providing a commit message from the command line. [R20]
+
+### Simple commit message only
+
+This command is valid and complete:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide"
+```
+
+It creates a commit with only this short summary:
+
+```text
+docs: add AWS S3 static website quick start guide
+```
+
+That is enough for Git. You are not missing a second required command.
+
+This is perfectly acceptable when the change is small, obvious, or already explained well in the changed files.
+
+### Commit message with an optional body
+
+To include both a short summary and a longer body from the command line, use multiple `-m` flags:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide" -m "Add the initial documentation set for hosting a simple static website on AWS.
+
+Includes the main S3 static website quick start guide, repository README, and changelog. The guide covers a minimal S3-only testing path and a recommended production-style path using CloudFront, AWS Certificate Manager, Cloudflare DNS, and a private S3 bucket."
+```
+
+How to read that:
+
+```text
+First -m  = commit summary/title
+Second -m = commit body/description
+```
+
+This pattern:
+
+```bash
+git commit -m "Summary" -m "Body"
+```
+
+creates this commit message:
+
+```text
+Summary
+
+Body
+```
+
+Git separates the summary and body with a blank line.
+
+### When to use only the summary
+
+Use only the short commit message when the change is simple or self-explanatory.
+
+Good cases:
+
+- small commits;
+- typo fixes;
+- clear documentation edits;
+- personal projects;
+- fast initial setup;
+- commits where the diff explains the change well.
+
+Example:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide"
+```
+
+### When to include a body
+
+Include a commit body when future readers would benefit from context.
+
+Good cases:
+
+- initial project setup;
+- major documentation update;
+- versioned release;
+- architecture decision;
+- change where the reason matters;
+- change that affects future maintenance;
+- change that includes several related files, such as the guide, README, and changelog.
+
+Rule of thumb:
+
+```text
+Commit summary = what changed
+Commit body    = why it changed, what is included, or anything future readers should know
+```
+
+### Commit body vs. repository description
+
+A commit body and a repository description are different things.
+
+| Thing | Where it lives | Purpose |
+|---|---|---|
+| Commit summary | Git history | Short title for one commit |
+| Commit body | Git history | Optional longer explanation for one commit |
+| Repository description | GitHub repository page/settings | Short public label for the whole repository |
+| README | Repository file | Main project overview and usage documentation |
+| CHANGELOG | Repository file | Human-readable version history |
+
+The **commit body** belongs inside Git history.
+
+The **repository description** belongs in the GitHub repository settings or repository header.
+
+Example commit body:
+
+```text
+Add the initial documentation set for hosting a simple static website on AWS.
+
+Includes the main S3 static website quick start guide, repository README, and changelog. The guide covers a minimal S3-only testing path and a recommended production-style path using CloudFront, AWS Certificate Manager, Cloudflare DNS, and a private S3 bucket.
+```
+
+Example repository description:
+
+```text
+Beginner-friendly guide for hosting a static website on AWS using S3, CloudFront, ACM, and Cloudflare DNS
+```
+
+The repository description should usually be shorter because it appears near the top of the GitHub repository page.
+
+### Initial commit recommendation
+
+For a well-documented first commit, use the two-part form:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide" -m "Add the initial documentation set for hosting a simple static website on AWS.
+
+Includes the main S3 static website quick start guide, repository README, and changelog. The guide covers a minimal S3-only testing path and a recommended production-style path using CloudFront, AWS Certificate Manager, Cloudflare DNS, and a private S3 bucket."
+```
+
+For a simpler first commit, this is also valid:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide"
+```
+
+Both are correct.
+
+The longer version is better when you want Git history to record the purpose and scope of the initial documentation set.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -2943,6 +3115,29 @@ git commit -m "Create version v1.0.0"
 Creates a commit from staged changes.
 
 Official reference: [R20]
+
+
+### `git commit -m "Summary" -m "Body"`
+
+Purpose:
+
+Creates a commit with a short summary and an optional longer body.
+
+Example:
+
+```bash
+git commit -m "docs: add Git repository guide" -m "Add the initial guide, README, and changelog for creating Git repositories and managing versioned file sets."
+```
+
+Explanation:
+
+```text
+First -m  = commit summary/title
+Second -m = commit body/description
+```
+
+Official reference: [R20]
+
 
 ### `git remote add origin`
 
@@ -5157,6 +5352,95 @@ Usually tag on `main` after the working branch has been merged and the final res
 No. It can be deleted after the pull request is merged or the work is abandoned.
 
 
+
+## F.87 Do I need a commit body?
+
+No.
+
+A Git commit needs a commit message summary. A longer commit body is optional.
+
+## F.88 What is the difference between a commit message and commit body?
+
+The commit message summary is the first line. The commit body is the optional longer explanation below a blank line.
+
+## F.89 Is the commit summary the same as the commit title?
+
+Yes. People often use commit summary, commit title, and short commit message to mean the first line of the commit message.
+
+## F.90 How do I create a commit with both a summary and body?
+
+Use multiple `-m` flags:
+
+```bash
+git commit -m "Summary" -m "Body"
+```
+
+## F.91 What does the first `-m` mean?
+
+The first `-m` provides the short commit summary or title.
+
+## F.92 What does the second `-m` mean?
+
+The second `-m` provides the optional longer commit body or description.
+
+## F.93 Is a repository description the same as a commit body?
+
+No.
+
+The repository description appears on the GitHub repository page. The commit body is stored in Git history for one commit.
+
+## F.94 Should the initial commit have a body?
+
+It is optional.
+
+A body is useful when the first commit establishes the project structure, documentation purpose, or important context for future readers.
+
+## F.95 When is a one-line commit enough?
+
+A one-line commit is enough for small, obvious, or self-explanatory changes.
+
+## F.96 When should I include a commit body?
+
+Include a body when the reason, scope, or context of the change matters.
+
+Good examples include initial project setup, major documentation updates, architecture decisions, versioned releases, and changes that affect future maintenance.
+
+## F.97 Does the README replace the commit body?
+
+No.
+
+The README explains the project. The commit body explains one commit.
+
+## F.98 Does the CHANGELOG replace the commit body?
+
+No.
+
+The changelog summarizes notable changes by version. The commit body explains a specific commit when extra context is useful.
+
+## F.99 What is the practical rule for commit summaries and bodies?
+
+Use this rule:
+
+```text
+Commit summary = what changed
+Commit body    = why it changed, what is included, or anything future readers should know
+```
+
+## F.100 What is a good commit message for adding this Git guide?
+
+A concise option is:
+
+```bash
+git commit -m "docs: add Git repository guide"
+```
+
+A more documented option is:
+
+```bash
+git commit -m "docs: add Git repository guide" -m "Add the initial guide, README, and changelog for creating Git repositories and managing versioned file sets."
+```
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -6428,7 +6712,114 @@ git push origin --delete update-guide
 | Version release | Merge to `main`, then tag |
 
 
-# Appendix J: References
+
+---
+
+# Appendix J: Commit Message and Commit Body Examples
+
+This appendix expands [Section 22](#22-commit-messages-commit-bodies-and-repository-descriptions) with copyable examples.
+
+## J.1 Minimal one-line commit
+
+Use this when the change is clear enough from the summary:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide"
+```
+
+Resulting commit message:
+
+```text
+docs: add AWS S3 static website quick start guide
+```
+
+This is valid and complete.
+
+## J.2 Two-part commit with summary and body
+
+Use this when the change benefits from context:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide" -m "Add the initial documentation set for hosting a simple static website on AWS.
+
+Includes the main S3 static website quick start guide, repository README, and changelog. The guide covers a minimal S3-only testing path and a recommended production-style path using CloudFront, AWS Certificate Manager, Cloudflare DNS, and a private S3 bucket."
+```
+
+Resulting commit message:
+
+```text
+docs: add AWS S3 static website quick start guide
+
+Add the initial documentation set for hosting a simple static website on AWS.
+
+Includes the main S3 static website quick start guide, repository README, and changelog. The guide covers a minimal S3-only testing path and a recommended production-style path using CloudFront, AWS Certificate Manager, Cloudflare DNS, and a private S3 bucket.
+```
+
+## J.3 Generic pattern
+
+Use this pattern:
+
+```bash
+git commit -m "Summary" -m "Body"
+```
+
+That creates:
+
+```text
+Summary
+
+Body
+```
+
+## J.4 Recommended initial commit for this guide project
+
+For this Git Repository Guide project, a good initial commit could be:
+
+```bash
+git commit -m "docs: add Git repository guide" -m "Add the initial guide, README, and changelog for creating Git repositories and managing versioned file sets.
+
+Includes beginner-friendly command-line workflows, VS Code guidance, annotated tag examples, repository packaging recommendations, and version-history documentation."
+```
+
+A shorter version is also fine:
+
+```bash
+git commit -m "docs: add Git repository guide"
+```
+
+## J.5 Recommended commit for a versioned guide update
+
+For a meaningful guide update, a one-line commit is usually enough if the changelog explains the details:
+
+```bash
+git commit -m "Expand guide with commit message and body guidance"
+```
+
+A longer version can include a body:
+
+```bash
+git commit -m "Expand guide with commit message and body guidance" -m "Add guidance explaining the difference between a commit summary, optional commit body, repository description, README summary, and changelog entry.
+
+Includes examples for one-line commits, two-part commits using multiple -m flags, and initial documentation commits."
+```
+
+## J.6 Summary vs. body vs. changelog
+
+| Item | Example | Best use |
+|---|---|---|
+| Commit summary | `Expand guide with commit message and body guidance` | One-commit summary |
+| Commit body | Longer optional explanation below the summary | Context for future Git history readers |
+| CHANGELOG entry | Bullets under `v1.5.0` | Version-level summary of notable changes |
+| README version history | `v1.5.0 = ...` | Very short release/version summary |
+
+The commit body is not a replacement for the changelog.
+
+The changelog is not a replacement for a useful commit summary.
+
+Use each one for its own purpose.
+
+
+# Appendix K: References
 
 ## Core conceptual references
 

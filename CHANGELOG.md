@@ -4,6 +4,37 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.5.0
+
+### Added
+
+- Added guidance explaining the difference between a commit message summary/title and an optional commit body/description.
+- Added clarification that a Git commit only requires a summary; a longer body is optional.
+- Added examples of one-line commits using a single `-m` flag.
+- Added examples of two-part commits using multiple `-m` flags.
+- Added explanation that the first `-m` creates the summary and the second `-m` creates the body.
+- Added practical guidance for when a one-line commit is enough and when a commit body is useful.
+- Added clarification that commit bodies, repository descriptions, README summaries, and changelog entries are different artifacts with different purposes.
+- Added a recommended initial-commit pattern for documentation projects.
+- Added a dedicated appendix with commit message and commit body examples.
+- Added Knowledge Base entries for commit summaries, commit bodies, commit descriptions, and repository descriptions.
+
+### Changed
+
+- Updated the guide metadata from `v1.4.0` to `v1.5.0`.
+- Expanded commit-message guidance beyond short commit summaries.
+- Clarified that a commit body is useful for context but is not required.
+- Clarified that the README and CHANGELOG do not replace a useful commit summary or optional commit body.
+- Added a new Appendix J for commit message and commit body examples.
+- Moved the references appendix from Appendix J to Appendix K so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.4.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.5.0.md`.
+
 ## v1.4.0
 
 ### Added

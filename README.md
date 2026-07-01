@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.4.0`
+Current guide version: `v1.5.0`
 
 Main guide file:
 
@@ -27,6 +27,9 @@ The active guide file should keep this stable filename. Version history should b
 - Using Git from the command line
 - Using Git from Visual Studio Code
 - Writing useful commit messages
+- Understanding commit summaries, commit bodies, and commit descriptions
+- Creating commits with one or multiple `-m` flags
+- Distinguishing commit bodies from GitHub repository descriptions
 - Creating annotated Git tags
 - Marking repository snapshots as versions
 - Understanding versioned file sets
@@ -82,17 +85,18 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 | `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
 | `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
 | `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
+| `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
 
 ## Versioning Policy
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.4.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.5.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Patch updates, such as `v1.5.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Minor updates, such as `v1.6.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.4.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.5.0`.
 
 ## Suggested Repository Structure
 
