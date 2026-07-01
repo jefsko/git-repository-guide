@@ -4,6 +4,54 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.4.0
+
+### Added
+
+- Added expanded guidance for adding files and folders to a repository.
+- Added explanation that Git tracks files and file paths, not empty folders directly.
+- Added guidance for adding empty folders using placeholder files such as `.gitkeep`.
+- Added expanded guidance for updating tracked files with verification commands.
+- Added expanded guidance for drop-in replacing existing files with newer local versions.
+- Added explanation of delete-then-replace behavior before staging or committing.
+- Added explanation of how delete-then-replace differs from committing a deletion and adding a replacement later.
+- Added guidance for removing/deleting files with `git rm`.
+- Added guidance for removing/deleting folders with `git rm -r`.
+- Added guidance for stopping tracking while keeping files locally with `git rm --cached`.
+- Added guidance for moving and renaming files and folders with `git mv`.
+- Added guidance for moving files or folders outside Git and staging the result with `git add -A`.
+- Added comparison of multiple file/folder move methods and when to use each.
+- Added verification commands for reviewing adds, updates, deletions, moves, renames, and replacements before committing.
+- Added guidance comparing direct pushes to `main` with pushing a working branch to `origin`.
+- Added explanation of `git push -u origin main` versus `git push -u origin <branch-name>`.
+- Added pros and cons for pushing directly to `main`.
+- Added pros and cons for pushing a working branch.
+- Added a decision table for when to push directly to `main` and when to use a working branch.
+- Added clarification that `origin/main` is a remote-tracking reference, while `main` is the local branch.
+- Added guidance that version tags should usually be created on `main` after the working branch has been merged.
+- Added a dedicated appendix for file and folder operation scenarios.
+- Added Knowledge Base entries for file/folder operations and push-target decisions.
+
+### Changed
+
+- Updated the guide metadata from `v1.3.0` to `v1.4.0`.
+- Expanded the existing file update workflow coverage beyond basic file examples.
+- Clarified the distinction between editing, replacing, deleting, removing, moving, renaming, and stopping tracking.
+- Clarified that Git records the final staged snapshot, not every intermediate local file-manager action.
+- Clarified that a same-path drop-in replacement is usually treated like a modification.
+- Clarified that the direct-to-`main` workflow is a beginner-friendly baseline, not the safest default for all projects.
+- Clarified that branch-based workflows are preferred for reviewed, collaborative, risky, or deployment-related changes.
+- Added a new Appendix I for file and folder operation scenarios.
+- Moved the references appendix from Appendix I to Appendix J so references remain last.
+- Cleaned up a duplicated introductory paragraph in the changelog source while preserving prior version entries.
+
+### Notes
+
+- This is an additive update from `v1.3.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.4.0.md`.
+
 ## v1.3.0
 
 ### Added
@@ -42,10 +90,6 @@ This project uses semantic versioning-style document versions. The active guide 
 - Existing guide content was preserved except for targeted version, structure, clarity, and consistency updates.
 - The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
 - Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.3.0.md`.
-
-All notable changes to this guide are documented here.
-
-This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
 ## v1.2.0
 

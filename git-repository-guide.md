@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.3.0  
-Previous locked version: v1.2.0  
+Document version: v1.4.0  
+Previous locked version: v1.3.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.3.0` file. Save future changes as a new version, such as `v1.3.1` or `v1.4.0`.  
+Future edit policy: Do not overwrite this `v1.4.0` file. Save future changes as a new version, such as `v1.4.1` or `v1.5.0`.  
 Current as of: 2026-06-30
 
-Revision note: This `v1.3.0` edition preserves the `v1.2.0` guide and additively incorporates file-add/update/replace workflows, fetch/pull/merge/rebase decision guidance, merge-conflict scenarios, conflict-resolution strategies, and Git tooling recommendations from the v1.3.0 update brief.
+Revision note: This `v1.4.0` edition preserves the `v1.3.0` guide and additively incorporates file/folder operation workflows, delete-and-replace edge cases, verification commands, and direct-to-main vs. working-branch push workflow guidance from the v1.4.0 update brief.
 
 ---
 
@@ -34,6 +34,7 @@ Revision note: This `v1.3.0` edition preserves the `v1.2.0` guide and additively
 - [18. Git Push Object Counts and Git Objects](#18-git-push-object-counts-and-git-objects)
 - [19. Adding, Updating, and Replacing Files](#19-adding-updating-and-replacing-files)
 - [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics)
+- [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -42,7 +43,8 @@ Revision note: This `v1.3.0` edition preserves the `v1.2.0` guide and additively
 - [Appendix F: Knowledge Base and How-To Reference](#appendix-f-knowledge-base-and-how-to-reference)
 - [Appendix G: Command Sequences and Workflow Recipes](#appendix-g-command-sequences-and-workflow-recipes)
 - [Appendix H: File Update, Merge, and Conflict Scenarios](#appendix-h-file-update-merge-and-conflict-scenarios)
-- [Appendix I: References](#appendix-i-references)
+- [Appendix I: File and Folder Operation Scenarios](#appendix-i-file-and-folder-operation-scenarios)
+- [Appendix J: References](#appendix-j-references)
 - [Index](#index)
 
 ---
@@ -54,7 +56,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1080,6 +1082,7 @@ Recommended history:
 | `v1.1.0` | Additive expansion with expanded Git reference and Knowledge Base |
 | `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
 | `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
+| `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -2374,6 +2377,517 @@ Ranked recommendations:
 | 9 | External diff/merge tools such as Beyond Compare, WinMerge, Meld, KDiff3, or Araxis Merge | Specialized comparison needs | Powerful side-by-side comparison | Extra setup and sometimes extra cost |
 
 
+
+---
+
+## 21. File and Folder Change Workflows
+
+Section 19 explains the basic file workflow. This section expands that model to include folders, delete-and-replace cases, verification commands, and the practical choice between pushing directly to `main` and pushing a working branch.
+
+The practical rule stays the same:
+
+```text
+make a change
+verify what Git sees
+stage the intended change
+verify what is staged
+commit
+push
+```
+
+### Git tracks files and file paths, not empty folders
+
+Git tracks files. A folder appears in the repository because tracked files exist inside it.
+
+Example:
+
+```text
+docs/guide.md
+```
+
+Git tracks the file path:
+
+```text
+docs/guide.md
+```
+
+The `docs/` folder appears because a tracked file exists inside it.
+
+If a folder is empty, Git normally does not track it. A common convention is to add a placeholder file:
+
+```text
+empty-folder/.gitkeep
+```
+
+or:
+
+```text
+empty-folder/.keep
+```
+
+`.gitkeep` is not a special Git feature. It is just a normal placeholder file that gives Git something to track inside an otherwise-empty folder.
+
+Example:
+
+```bash
+mkdir empty-folder
+touch empty-folder/.gitkeep
+git add empty-folder/.gitkeep
+git commit -m "Add empty folder placeholder"
+git push
+```
+
+Windows PowerShell example:
+
+```powershell
+New-Item -ItemType Directory -Path empty-folder
+New-Item -ItemType File -Path empty-folder/.gitkeep
+git add empty-folder/.gitkeep
+git commit -m "Add empty folder placeholder"
+git push
+```
+
+### Adding a folder with files
+
+Suppose you add this folder:
+
+```text
+docs/
+├─ guide.md
+└─ examples.md
+```
+
+Stage the folder path:
+
+```bash
+git status
+git add docs/
+git status
+git commit -m "Add docs folder"
+git push
+```
+
+`git add docs/` stages tracked changes under that folder. Git is not tracking the folder by itself; it is tracking the files inside the folder.
+
+### Updating a tracked file with verification
+
+For a tracked file:
+
+```text
+guide.md
+```
+
+A careful update workflow is:
+
+```bash
+git status
+git diff guide.md
+git add guide.md
+git status
+git diff --cached guide.md
+git commit -m "Update guide"
+git push
+```
+
+`git diff guide.md` shows unstaged changes. `git diff --cached guide.md` shows staged changes.
+
+### Drop-in replacing a file with the same path
+
+If you copy a newer file over an existing tracked file and the path stays the same, Git usually treats it like a modification.
+
+Example:
+
+```text
+before: docs/guide.md
+after:  docs/guide.md
+```
+
+Use:
+
+```bash
+git status
+git diff --stat
+git add docs/guide.md
+git status
+git diff --cached --stat
+git commit -m "Replace guide with updated version"
+git push
+```
+
+Git usually does not care whether the change came from hand-editing, copy/paste, exporting from another tool, or copying a newer file over the old file. Git compares the previous committed snapshot to the new staged snapshot.
+
+### Delete then replace before staging or committing
+
+Suppose you:
+
+1. Delete `docs/guide.md`.
+2. Copy a newer file back to `docs/guide.md`.
+3. Then run `git status`.
+
+If the final file exists at the same path, Git usually sees the final result as a modification:
+
+```text
+modified: docs/guide.md
+```
+
+Use:
+
+```bash
+git status
+git add docs/guide.md
+git commit -m "Replace guide with updated version"
+git push
+```
+
+Git records the final staged snapshot. It does not record every temporary file-manager action you performed locally.
+
+### Delete, commit, then add back later
+
+This is different:
+
+```bash
+git rm docs/guide.md
+git commit -m "Remove guide"
+
+# Later
+git add docs/guide.md
+git commit -m "Add replacement guide"
+git push
+```
+
+Now history contains a commit where the file did not exist, followed by a later commit where a file at that path exists again.
+
+That is different from deleting and replacing the file before the next commit.
+
+### Removing or deleting a file
+
+Preferred Git-aware command:
+
+```bash
+git status
+git rm old-notes.md
+git status
+git commit -m "Remove old notes file"
+git push
+```
+
+If you already deleted the file outside Git, stage the deletion:
+
+```bash
+git status
+git add old-notes.md
+git status
+git commit -m "Remove old notes file"
+git push
+```
+
+You can also use:
+
+```bash
+git add -A
+```
+
+`git add -A` stages additions, modifications, and deletions across the repository. Use it only when you intend to stage all of those changes.
+
+### Removing or deleting a folder
+
+For a folder with tracked files:
+
+```text
+old-docs/
+├─ draft.md
+└─ notes.md
+```
+
+Use:
+
+```bash
+git status
+git rm -r old-docs/
+git status
+git commit -m "Remove old docs folder"
+git push
+```
+
+If you deleted the folder in File Explorer, VS Code, or another tool, stage the deletion:
+
+```bash
+git status
+git add -A old-docs/
+git status
+git commit -m "Remove old docs folder"
+git push
+```
+
+From the repository root, you can stage all additions, modifications, and deletions:
+
+```bash
+git add -A
+```
+
+### Stop tracking a file or folder but keep it locally
+
+Sometimes you want Git to stop tracking something but keep it on your computer.
+
+For one file:
+
+```bash
+git rm --cached local-notes.md
+git commit -m "Stop tracking local notes"
+git push
+```
+
+For a folder:
+
+```bash
+git rm -r --cached local-folder/
+git commit -m "Stop tracking local folder"
+git push
+```
+
+Usually also add it to `.gitignore`:
+
+```gitignore
+local-notes.md
+local-folder/
+```
+
+`--cached` removes the file from Git's index but leaves the working copy on disk.
+
+### Moving or renaming a file
+
+Preferred Git-aware command:
+
+```bash
+git status
+git mv old-name.md new-name.md
+git status
+git commit -m "Rename guide file"
+git push
+```
+
+Alternative if you already moved it outside Git:
+
+```bash
+mv old-name.md new-name.md
+git status
+git add old-name.md new-name.md
+git status
+git commit -m "Rename guide file"
+git push
+```
+
+PowerShell:
+
+```powershell
+Move-Item old-name.md new-name.md
+git status
+git add old-name.md new-name.md
+git status
+git commit -m "Rename guide file"
+git push
+```
+
+`git mv` is usually cleaner because it moves or renames the file and stages the path change in one Git-aware step.
+
+### Moving or renaming a folder
+
+To rename a folder with tracked files:
+
+```bash
+git status
+git mv old-docs docs
+git status
+git commit -m "Rename docs folder"
+git push
+```
+
+Git does not track the folder as an independent object. This stages path changes for tracked files inside the folder.
+
+If you already moved or renamed the folder outside Git:
+
+```bash
+mv old-docs docs
+git status
+git add -A old-docs docs
+git status
+git commit -m "Rename docs folder"
+git push
+```
+
+PowerShell:
+
+```powershell
+Move-Item old-docs docs
+git status
+git add -A old-docs docs
+git status
+git commit -m "Rename docs folder"
+git push
+```
+
+When in doubt, run:
+
+```bash
+git status
+git diff --summary
+git diff --stat
+```
+
+### Multiple ways to move or rename
+
+| Method | Example | What it does | Best use |
+|---|---|---|---|
+| `git mv old new` | `git mv guide.md docs/guide.md` | Moves/renames and stages in one step | Best default for tracked files |
+| Move in file manager, then `git add -A` | Move in VS Code/File Explorer, then `git add -A` | Stages old-path deletions and new-path additions | Good if move already happened |
+| Move in file manager, then stage in VS Code | Use Source Control UI | Same idea, but visual | Good for VS Code users |
+| Delete old file, add new file | `git rm old`; `git add new` | May appear as delete/add or rename depending on similarity | Use when replacement is intentionally different |
+| Copy new file over same path | Overwrite `guide.md`; `git add guide.md` | Treats same path as modified | Best for updated versions with same filename |
+
+### How Git decides whether something was a rename
+
+Git often detects renames by comparing deleted files and added files. A rename is not always stored as a permanent separate event. Many Git commands infer it when showing history or diffs.
+
+Useful commands:
+
+```bash
+git status
+git diff --summary
+git diff --stat
+git log --follow -- path/to/file.md
+```
+
+`git log --follow -- path/to/file.md` can help follow a file's history across renames.
+
+### Verify what Git thinks happened
+
+Before committing a delete, move, rename, or drop-in replacement, verify what Git sees:
+
+```bash
+git status
+git diff --stat
+git diff --summary
+git diff --cached --stat
+git diff --cached --summary
+```
+
+Use:
+
+- `git status` to see changed, deleted, new, renamed, or staged files;
+- `git diff --stat` for a compact unstaged summary;
+- `git diff --summary` for create/delete/rename summaries;
+- `git diff --cached --stat` after staging;
+- `git diff --cached --summary` after staging.
+
+### Pushing directly to `main` vs. pushing a working branch
+
+The guide starts with direct pushes to `main` because that is the simplest way to learn Git.
+
+This is the first-time pattern:
+
+```bash
+git push -u origin main
+```
+
+After upstream tracking is set, later pushes from `main` usually use:
+
+```bash
+git push
+```
+
+Conceptually:
+
+```text
+local main -> remote main
+```
+
+or casually:
+
+```text
+main -> origin/main
+```
+
+But be precise:
+
+> `main` is your local branch. `origin/main` is your local remote-tracking view of the remote `main` branch. You usually push with `git push origin main` or plain `git push`, not by typing `origin/main` as the destination.
+
+Pushing directly to `main` is reasonable when:
+
+- you are the only person using the repository;
+- the repository is a learning project;
+- the change is small and low-risk;
+- you already reviewed the diff locally;
+- `main` is not protected;
+- breaking `main` temporarily is not a serious problem.
+
+Risks:
+
+- mistakes go straight to the primary branch;
+- `main` may become unstable;
+- collaborators may pull unfinished work;
+- no pull request review happens first;
+- branch protection may reject the push;
+- automatic deployment from `main` may be triggered.
+
+For safer real-world work, push a working branch:
+
+```bash
+git switch main
+git pull
+
+git switch -c update-guide
+git status
+git add .
+git status
+git commit -m "Update guide"
+git push -u origin update-guide
+```
+
+Conceptually:
+
+```text
+local update-guide -> remote update-guide
+```
+
+or:
+
+```text
+update-guide -> origin/update-guide
+```
+
+This publishes the branch to GitHub without changing `main` yet.
+
+Use a working branch when:
+
+- you want review before changing `main`;
+- you want to open a pull request;
+- the change is large or experimental;
+- you are collaborating with others;
+- tests or checks should run before merge;
+- `main` should stay stable;
+- `main` is protected;
+- deployment may be triggered from `main`.
+
+Decision table:
+
+| Situation | Recommended push target | Why |
+|---|---|---|
+| First time pushing a brand-new solo repo | `origin main` | You need to publish the initial primary branch. |
+| Tiny solo typo fix | `main`, then `git push` | Simple and low risk. |
+| Small private learning project | `main`, then `git push` | Direct workflow is easier to learn. |
+| Important documentation update | Working branch | Allows review and comparison before changing `main`. |
+| Code change that needs tests | Working branch | Tests/checks can run before merge. |
+| Collaborative repository | Working branch | Avoids surprise changes on `main`. |
+| Experimental work | Working branch | Easy to abandon or revise. |
+| Repository with protected `main` | Working branch | Direct pushes may be blocked. |
+| Deployment triggered from `main` | Working branch | Avoid accidental deployment. |
+| Version release/tag | Merge to `main`, then tag | Version tags should usually mark the final merged state. |
+
+Recommended rule:
+
+> Start with direct-to-`main` for learning the basics. Use working branches once the project matters, the change is larger, or another person may need to review the work.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -2944,6 +3458,100 @@ Example:
 
 ```bash
 git mergetool
+```
+
+
+
+### `git add -A`
+
+Purpose:
+
+Stages additions, modifications, and deletions across the repository.
+
+Example:
+
+```bash
+git add -A
+```
+
+Use it carefully. It can stage more than you intended if unrelated files changed.
+
+### `git rm -r`
+
+Purpose:
+
+Removes tracked files under a folder and stages the deletions.
+
+Example:
+
+```bash
+git rm -r old-docs/
+```
+
+### `git rm --cached`
+
+Purpose:
+
+Stops tracking a file while keeping the local working copy on disk.
+
+Example:
+
+```bash
+git rm --cached local-notes.md
+```
+
+For a folder:
+
+```bash
+git rm -r --cached local-folder/
+```
+
+### `git mv`
+
+Purpose:
+
+Moves or renames a tracked file or folder path and stages the path change.
+
+Example:
+
+```bash
+git mv old-name.md new-name.md
+```
+
+Folder example:
+
+```bash
+git mv old-docs docs
+```
+
+### `git diff --summary`
+
+Purpose:
+
+Shows a summary of creates, deletes, renames, and mode changes.
+
+Example:
+
+```bash
+git diff --summary
+```
+
+After staging:
+
+```bash
+git diff --cached --summary
+```
+
+### `git log --follow`
+
+Purpose:
+
+Follows file history across renames when possible.
+
+Example:
+
+```bash
+git log --follow -- path/to/file.md
 ```
 
 
@@ -4430,6 +5038,125 @@ Start with VS Code's built-in Git tools and merge editor.
 Use a dedicated Git GUI later if you want a more specialized visual Git experience.
 
 
+
+## F.69 Does Git track folders?
+
+Git tracks files and file paths. Empty folders are not tracked unless they contain a tracked placeholder file such as `.gitkeep`.
+
+## F.70 How do I add a folder to Git?
+
+Add files inside the folder:
+
+```bash
+git add docs/
+git commit -m "Add docs folder"
+git push
+```
+
+## F.71 How do I add an empty folder?
+
+Add a placeholder file:
+
+```bash
+mkdir empty-folder
+touch empty-folder/.gitkeep
+git add empty-folder/.gitkeep
+git commit -m "Add empty folder placeholder"
+git push
+```
+
+## F.72 How do I delete a folder from Git?
+
+Use:
+
+```bash
+git rm -r old-folder/
+git commit -m "Remove old folder"
+git push
+```
+
+## F.73 How do I stop tracking a file but keep it locally?
+
+Use:
+
+```bash
+git rm --cached local-file.txt
+git commit -m "Stop tracking local file"
+```
+
+Then add it to `.gitignore` if needed.
+
+## F.74 How do I stop tracking a folder but keep it locally?
+
+Use:
+
+```bash
+git rm -r --cached local-folder/
+git commit -m "Stop tracking local folder"
+```
+
+Then add it to `.gitignore` if needed.
+
+## F.75 Is moving a file different from renaming it?
+
+In Git, both are path changes. A rename is a move where only the filename changes. A move may also change folders.
+
+## F.76 Is `git mv` required?
+
+No, but it is often the cleanest command for tracked files because it moves or renames the file and stages the change in one step.
+
+## F.77 What if I already moved the file in File Explorer or VS Code?
+
+Use:
+
+```bash
+git status
+git add -A
+git status
+git commit -m "Move files"
+```
+
+or stage the old and new paths specifically.
+
+## F.78 If I delete and replace a file before committing, does Git remember both actions?
+
+No. Git records the final staged snapshot, not every intermediate local action.
+
+## F.79 If I delete and commit, then add a replacement later, is that different?
+
+Yes. The history now has one commit where the file was removed and a later commit where a file at that path was added again.
+
+## F.80 Should I push directly to `main`?
+
+Sometimes. It is acceptable for first-time setup, solo learning, tiny changes, and low-risk private projects.
+
+## F.81 When should I avoid pushing directly to `main`?
+
+Avoid direct pushes to `main` for shared repositories, important projects, protected branches, deployment-triggering branches, large changes, and changes needing review.
+
+## F.82 What does `git push -u origin main` do?
+
+It pushes local `main` to the remote named `origin` and sets upstream tracking so later `git push` and `git pull` can infer the branch.
+
+## F.83 What does `git push -u origin update-guide` do?
+
+It pushes your local `update-guide` branch to the remote named `origin` and sets upstream tracking for that branch.
+
+## F.84 Is `origin/main` the same as `main`?
+
+No.
+
+`main` is your local branch. `origin/main` is your local remote-tracking reference representing the last fetched state of the remote `main` branch.
+
+## F.85 Should I tag on a working branch or on `main`?
+
+Usually tag on `main` after the working branch has been merged and the final result is correct.
+
+## F.86 Is a remote working branch permanent?
+
+No. It can be deleted after the pull request is merged or the work is abandoned.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -5415,7 +6142,293 @@ Why:
 - It avoids making a beginner install a separate Git GUI too early.
 
 
-# Appendix I: References
+
+---
+
+# Appendix I: File and Folder Operation Scenarios
+
+This appendix expands [Section 21](#21-file-and-folder-change-workflows) with scenario-based command recipes.
+
+## I.1 Add one file
+
+```bash
+git status
+git add notes.md
+git status
+git commit -m "Add notes file"
+git push
+```
+
+## I.2 Add a folder with files
+
+```bash
+git status
+git add docs/
+git status
+git commit -m "Add docs folder"
+git push
+```
+
+Git tracks the files inside `docs/`, not the empty folder itself.
+
+## I.3 Add an empty folder with a placeholder
+
+```bash
+mkdir empty-folder
+touch empty-folder/.gitkeep
+git add empty-folder/.gitkeep
+git commit -m "Add empty folder placeholder"
+git push
+```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Path empty-folder
+New-Item -ItemType File -Path empty-folder/.gitkeep
+git add empty-folder/.gitkeep
+git commit -m "Add empty folder placeholder"
+git push
+```
+
+## I.4 Update one tracked file
+
+```bash
+git status
+git diff guide.md
+git add guide.md
+git status
+git diff --cached guide.md
+git commit -m "Update guide"
+git push
+```
+
+## I.5 Overwrite same path with a newer version
+
+```bash
+git status
+git diff --stat
+git add docs/guide.md
+git status
+git diff --cached --stat
+git commit -m "Replace guide with updated version"
+git push
+```
+
+If the path is the same, Git usually treats the drop-in replacement like a modification.
+
+## I.6 Delete then replace same path before staging
+
+If you delete `docs/guide.md`, copy a newer file back to `docs/guide.md`, and then stage the final result:
+
+```bash
+git status
+git add docs/guide.md
+git commit -m "Replace guide with updated version"
+git push
+```
+
+Git records the final staged snapshot.
+
+## I.7 Delete, commit, then add back later
+
+```bash
+git rm docs/guide.md
+git commit -m "Remove guide"
+
+git add docs/guide.md
+git commit -m "Add replacement guide"
+git push
+```
+
+This creates a history where the file was removed in one commit and added back in a later commit.
+
+## I.8 Delete a file with `git rm`
+
+```bash
+git status
+git rm old-notes.md
+git status
+git commit -m "Remove old notes file"
+git push
+```
+
+## I.9 Delete a folder with `git rm -r`
+
+```bash
+git status
+git rm -r old-docs/
+git status
+git commit -m "Remove old docs folder"
+git push
+```
+
+## I.10 Stop tracking a file but keep it locally
+
+```bash
+git rm --cached local-notes.md
+git commit -m "Stop tracking local notes"
+git push
+```
+
+Usually add it to `.gitignore` too:
+
+```gitignore
+local-notes.md
+```
+
+## I.11 Stop tracking a folder but keep it locally
+
+```bash
+git rm -r --cached local-folder/
+git commit -m "Stop tracking local folder"
+git push
+```
+
+Usually add it to `.gitignore` too:
+
+```gitignore
+local-folder/
+```
+
+## I.12 Move or rename a file with `git mv`
+
+```bash
+git status
+git mv old-name.md new-name.md
+git status
+git commit -m "Rename guide file"
+git push
+```
+
+## I.13 Move a file into a folder
+
+```bash
+mkdir docs
+git mv guide.md docs/guide.md
+git commit -m "Move guide into docs folder"
+git push
+```
+
+## I.14 Move or rename a folder with `git mv`
+
+```bash
+git status
+git mv old-docs docs
+git status
+git commit -m "Rename docs folder"
+git push
+```
+
+## I.15 Move outside Git and stage with `git add -A`
+
+```bash
+mv old-docs docs
+git status
+git add -A old-docs docs
+git status
+git commit -m "Rename docs folder"
+git push
+```
+
+PowerShell:
+
+```powershell
+Move-Item old-docs docs
+git status
+git add -A old-docs docs
+git status
+git commit -m "Rename docs folder"
+git push
+```
+
+## I.16 Compare `git mv` with file-manager moves
+
+| Method | Command pattern | Notes |
+|---|---|---|
+| Git-aware move | `git mv old new` | Moves and stages in one step. |
+| File-manager move | Move in Explorer/VS Code, then `git add -A` | Works well if staged correctly. |
+| Delete/add | `git rm old`, then `git add new` | May appear as delete/add or rename depending on similarity. |
+
+## I.17 Verify changes before committing
+
+Before committing, check:
+
+```bash
+git status
+git diff --stat
+git diff --summary
+git diff --cached --stat
+git diff --cached --summary
+```
+
+## I.18 Direct-to-`main` push workflow
+
+```bash
+git switch main
+git pull
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+```
+
+Best for solo learning, tiny low-risk changes, private repositories, and first-time repository setup.
+
+## I.19 Working-branch push workflow
+
+```bash
+git switch main
+git pull
+
+git switch -c update-guide
+git status
+git add .
+git status
+git commit -m "Update guide"
+git push -u origin update-guide
+```
+
+Then open a pull request or merge later.
+
+After merge:
+
+```bash
+git switch main
+git pull
+```
+
+If the merged result is a version:
+
+```bash
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Optional cleanup:
+
+```bash
+git branch -d update-guide
+git push origin --delete update-guide
+```
+
+## I.20 Direct-to-`main` vs. working branch
+
+| Situation | Recommended workflow |
+|---|---|
+| First push of a new solo repo | Direct to `main` |
+| Tiny solo typo fix | Direct to `main` |
+| Learning project | Direct to `main` |
+| Large documentation update | Working branch |
+| Code change needing tests | Working branch |
+| Collaborative repository | Working branch |
+| Protected `main` branch | Working branch |
+| Deployment from `main` | Working branch |
+| Version release | Merge to `main`, then tag |
+
+
+# Appendix J: References
 
 ## Core conceptual references
 
@@ -5589,9 +6602,45 @@ https://help.gitkraken.com/gitlens/gitlens-home/
 [R54] Git Large File Storage documentation.  
 https://git-lfs.com/
 
+
+[R55] Git documentation, `git-rm`.  
+https://git-scm.com/docs/git-rm
+
+[R56] Git documentation, `git-mv`.  
+https://git-scm.com/docs/git-mv
+
 ---
 
 # Index
+
+
+## File and folder operations
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows) and [Appendix I](#appendix-i-file-and-folder-operation-scenarios).
+
+## Empty folders
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows).
+
+## Drop-in replacement
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows) and [Appendix I](#appendix-i-file-and-folder-operation-scenarios).
+
+## Delete then replace
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows) and [Appendix I](#appendix-i-file-and-folder-operation-scenarios).
+
+## Stop tracking
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows).
+
+## Direct push to main
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows).
+
+## Working branch push
+
+See [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows), [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing), and [Appendix I](#appendix-i-file-and-folder-operation-scenarios).
 
 
 ## Adding files

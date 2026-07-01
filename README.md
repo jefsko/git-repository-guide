@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.3.0`
+Current guide version: `v1.4.0`
 
 Main guide file:
 
@@ -42,9 +42,14 @@ The active guide file should keep this stable filename. Version history should b
 - Understanding first-time setup vs. later update workflows
 - Adding new files to a repository
 - Updating or replacing existing tracked files
+- Adding, deleting, moving, renaming, and replacing folders and files
+- Understanding empty folders and `.gitkeep` placeholder conventions
+- Understanding delete-then-replace behavior
+- Verifying staged and unstaged changes before committing
 - Understanding why ordinary file updates usually do not require merging
-- Understanding `origin`, `main`, and `master`
+- Understanding `origin`, `main`, `origin/main`, and working branches
 - Creating and using working branches
+- Choosing between direct-to-`main` pushes and working-branch pushes
 - Understanding `fetch`, `pull`, `merge`, and `rebase`
 - Merging with and without conflicts
 - Understanding push rejection vs. merge conflicts
@@ -76,17 +81,18 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 | `v1.1.0` | Additive expansion with expanded Git reference and Knowledge Base |
 | `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
 | `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
+| `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
 
 ## Versioning Policy
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.3.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.4.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Patch updates, such as `v1.4.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Minor updates, such as `v1.5.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.3.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.4.0`.
 
 ## Suggested Repository Structure
 
