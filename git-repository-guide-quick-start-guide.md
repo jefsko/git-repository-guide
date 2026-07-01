@@ -1,7 +1,7 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.6.0  
-**Based on full guide:** [`git-repository-guide-v1.6.0.md`](git-repository-guide-v1.6.0.md)  
+**Version:** v1.7.0  
+**Based on full guide:** [`git-repository-guide-v1.7.0.md`](git-repository-guide-v1.7.0.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.6.0
+annotated version tags such as v1.0.0, v1.1.0, v1.7.0
 ```
 
 End result:
@@ -406,6 +406,75 @@ Tag versions from `main` after the final merged result is correct.
 
 ---
 
+---
+
+## Compare two versions
+
+To see which files changed between two tags:
+
+```bash
+git diff --name-status v1.1.0..v1.1.1
+```
+
+To see only added files:
+
+```bash
+git diff --name-status --diff-filter=A v1.1.0..v1.1.1
+```
+
+To see all files contained in one tag:
+
+```bash
+git ls-tree -r --name-only v1.1.1
+```
+
+On GitHub.com, open the repository and add `/compare` to the end of the repository URL. Then set the earlier tag as the base and the newer tag as the compare target.
+
+Example:
+
+```text
+base: v1.1.0
+compare: v1.1.1
+```
+
+---
+
+## Use a Pull Request for reviewed changes
+
+For larger or reviewed changes, use a working branch and Pull Request instead of committing directly to `main`.
+
+```bash
+git switch main
+git pull
+
+git switch -c update-guide
+git status
+git add .
+git status
+git commit -m "Update guide"
+git push -u origin update-guide
+```
+
+Then on GitHub:
+
+1. Open the repository.
+2. Click **Compare & pull request**, or go to **Pull requests** > **New pull request**.
+3. Set `main` as the base branch.
+4. Set your working branch as the compare branch.
+5. Review the diff.
+6. Create the Pull Request.
+7. Review, update, and merge when ready.
+
+After the Pull Request is merged, tag from `main`:
+
+```bash
+git switch main
+git pull
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+
 ## If something fails
 
 | Problem | Most likely fix |
@@ -432,6 +501,8 @@ Use the full guide when you need:
 - file/folder move, rename, delete, and replace scenarios;
 - commit message body examples;
 - practical staging and tag download scenarios;
+- comparing tags locally and on GitHub.com;
+- Pull Request workflows;
 - troubleshooting and reference commands.
 
-Full guide: [`git-repository-guide-v1.6.0.md`](git-repository-guide-v1.6.0.md)
+Full guide: [`git-repository-guide-v1.7.0.md`](git-repository-guide-v1.7.0.md)

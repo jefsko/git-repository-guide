@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.6.0  
-Previous locked version: v1.5.0  
+Document version: v1.7.0  
+Previous locked version: v1.6.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.6.0` file. Save future changes as a new version, such as `v1.6.1` or `v1.7.0`.  
-Current as of: 2026-06-30
+Future edit policy: Do not overwrite this `v1.7.0` file. Save future changes as a new version, such as `v1.7.1` or `v1.8.0`.  
+Current as of: 2026-07-01
 
-Revision note: This `v1.6.0` edition preserves the `v1.5.0` guide and additively incorporates practical staging guidance, unchanged tracked file clarification, tag snapshot download behavior, and GitHub source ZIP vs. custom release asset ZIP distinctions from the v1.6.0 update brief.
+Revision note: This `v1.7.0` edition preserves the `v1.6.0` guide and additively incorporates GitHub.com tag comparison, version-diff workflows, and expanded Pull Request workflows from the v1.7.0 update brief.
 
 ---
 
@@ -37,6 +37,8 @@ Revision note: This `v1.6.0` edition preserves the `v1.5.0` guide and additively
 - [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows)
 - [22. Commit Messages, Commit Bodies, and Repository Descriptions](#22-commit-messages-commit-bodies-and-repository-descriptions)
 - [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example)
+- [24. Comparing Version Tags and Changed Files](#24-comparing-version-tags-and-changed-files)
+- [25. Pull Requests from Basic to Advanced](#25-pull-requests-from-basic-to-advanced)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -48,7 +50,9 @@ Revision note: This `v1.6.0` edition preserves the `v1.5.0` guide and additively
 - [Appendix I: File and Folder Operation Scenarios](#appendix-i-file-and-folder-operation-scenarios)
 - [Appendix J: Commit Message and Commit Body Examples](#appendix-j-commit-message-and-commit-body-examples)
 - [Appendix K: Practical Staging, Tag, and Download Scenarios](#appendix-k-practical-staging-tag-and-download-scenarios)
-- [Appendix L: References](#appendix-l-references)
+- [Appendix L: Compare, Diff, and Tag Inspection Scenarios](#appendix-l-compare-diff-and-tag-inspection-scenarios)
+- [Appendix M: Pull Request Scenarios](#appendix-m-pull-request-scenarios)
+- [Appendix N: References](#appendix-n-references)
 - [Index](#index)
 
 ---
@@ -60,7 +64,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1089,6 +1093,7 @@ Recommended history:
 | `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
 | `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
 | `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, and source ZIP vs. release asset ZIP behavior |
+| `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -3327,6 +3332,456 @@ If you manually create and upload a ZIP file as a release asset, that ZIP contai
 Important distinction:
 
 > A GitHub automatic source ZIP is generated from the tagged repository snapshot. A custom release asset ZIP is manually created and can contain any selected files.
+
+
+
+---
+
+## 24. Comparing Version Tags and Changed Files
+
+After you create version tags, you often need to answer two different questions:
+
+1. What files exist in tag `v1.1.1`?
+2. What files changed between `v1.1.0` and `v1.1.1`?
+
+For version-to-version review, you usually want the second question.
+
+### Best command for changed files between tags
+
+Use:
+
+```bash
+git diff --name-status v1.1.0..v1.1.1
+```
+
+Example output:
+
+```text
+M       README.md
+M       CHANGELOG.md
+A       git-repository-guide-quick-start-guide-v1.6.0.md
+A       git-repository-guide-cheat-sheet-v1.6.0.md
+```
+
+Status meanings:
+
+| Status | Meaning |
+|---|---|
+| `A` | Added |
+| `M` | Modified |
+| `D` | Deleted |
+| `R` | Renamed |
+| `C` | Copied |
+
+This answers:
+
+> What files were added, modified, deleted, renamed, or copied between these two tags?
+
+### Show only added files
+
+```bash
+git diff --name-status --diff-filter=A v1.1.0..v1.1.1
+```
+
+### Show only modified files
+
+```bash
+git diff --name-status --diff-filter=M v1.1.0..v1.1.1
+```
+
+### Show added and modified files only
+
+```bash
+git diff --name-status --diff-filter=AM v1.1.0..v1.1.1
+```
+
+### Show a summary with line counts
+
+```bash
+git diff --stat v1.1.0..v1.1.1
+```
+
+Use this when you want a quick summary of how much changed.
+
+### Show the actual content differences
+
+```bash
+git diff v1.1.0..v1.1.1
+```
+
+Use this when you need the full patch/diff.
+
+### Show commits between two tags
+
+```bash
+git log --oneline v1.1.0..v1.1.1
+```
+
+This answers:
+
+> What commits are included between the old version tag and the new version tag?
+
+### Show all tracked files contained in a tag
+
+This is a different question.
+
+Use:
+
+```bash
+git ls-tree -r --name-only v1.1.1
+```
+
+This answers:
+
+> What files are in the repository snapshot at `v1.1.1`?
+
+It does not answer:
+
+> What files changed from `v1.1.0` to `v1.1.1`?
+
+### Compare tags on GitHub.com
+
+GitHub's Compare view can compare repository states across branches, tags, commits, forks, and dates. [R57]
+
+Direct URL pattern:
+
+```text
+https://github.com/OWNER/REPO/compare/v1.1.0...v1.1.1
+```
+
+Example pattern:
+
+```text
+https://github.com/YOUR-USERNAME/YOUR-REPO/compare/v1.1.0...v1.1.1
+```
+
+Replace `OWNER` and `REPO` with the actual GitHub owner and repository name.
+
+### Manual navigation to GitHub Compare
+
+If the direct URL does not work, navigate manually:
+
+1. Open the repository home page on GitHub.
+2. Click in the browser address bar.
+3. Add `/compare` to the end of the repository URL.
+4. Press Enter.
+5. On the Compare page, use the selectors near the top.
+6. Set the earlier tag as the base.
+7. Set the newer tag as the compare target.
+8. Review the commits and file changes.
+
+Example:
+
+```text
+base: v1.1.0
+compare: v1.1.1
+```
+
+Then look for the commit list and changed-files/diff area.
+
+### Explicit tag comparison when names are ambiguous
+
+If a branch and a tag have the same name, GitHub may interpret the name as a branch by default. Use `tags/` to force tag comparison:
+
+```text
+https://github.com/OWNER/REPO/compare/tags/v1.1.0...tags/v1.1.1
+```
+
+### Compare releases from GitHub Releases
+
+If you created GitHub Releases, you can compare releases from the Releases page. GitHub's release comparison documentation says to use the Compare dropdown next to the release you want as the base, then choose the tag you want to compare. [R58]
+
+This works best when actual GitHub Releases exist, not just bare Git tags.
+
+### Why a GitHub compare URL might not work
+
+| Problem | Likely cause | Fix |
+|---|---|---|
+| Page says not found | Owner or repo name is wrong | Open the repo first, then add `/compare` manually |
+| Tag is missing | Tag was not pushed to GitHub | Run `git push origin vX.Y.Z` |
+| Tag name is wrong | Typo, or `1.1.1` used instead of `v1.1.1` | Check the tag list |
+| Private repo cannot be viewed | You are not signed in or lack permission | Sign in with an account that has access |
+| Branch and tag have same name | GitHub may interpret the branch first | Use `tags/vX.Y.Z` in the compare URL |
+| Releases comparison is missing | Tags exist but GitHub Releases do not | Use the normal Compare page instead |
+
+### Verify tags exist on GitHub
+
+1. Open the repository on GitHub.
+2. Find the branch/tag selector near the file list.
+3. Switch from **Branches** to **Tags**.
+4. Confirm both tags appear.
+5. If a tag is missing, push it:
+
+```bash
+git push origin v1.1.1
+```
+
+### Practical rule
+
+Use this command when you want to know which files changed between versions:
+
+```bash
+git diff --name-status old-tag..new-tag
+```
+
+Use this command when you want to know which files exist in a tag:
+
+```bash
+git ls-tree -r --name-only tag-name
+```
+
+
+
+---
+
+## 25. Pull Requests from Basic to Advanced
+
+A Pull Request, often abbreviated **PR**, is a GitHub workflow for proposing that changes from one branch should be merged into another branch. Most commonly, a working branch is proposed for merge into `main`.
+
+Despite the name, a Pull Request is not mainly about running the `git pull` command.
+
+A Pull Request is a review, discussion, comparison, and merge workflow on GitHub. GitHub describes Pull Requests as a way to propose, review, and merge code changes. [R59]
+
+### Why use a Pull Request?
+
+Use a Pull Request when:
+
+- you want to review changes before they land on `main`;
+- you want to see a GitHub diff before merging;
+- you want comments, suggestions, or approval;
+- you want checks or automated tests to run before merging;
+- you want to keep `main` stable;
+- you are collaborating with other people;
+- you are making a larger documentation update;
+- you want a clear review record.
+
+Direct commits to `main` may be acceptable when:
+
+- you are working alone;
+- the change is tiny;
+- the repository is low-risk;
+- no review is needed;
+- the project does not use branch protection.
+
+### Basic Pull Request workflow
+
+Start from an up-to-date `main`:
+
+```bash
+git switch main
+git pull
+```
+
+Create a working branch:
+
+```bash
+git switch -c update-v1.7.0-guide
+```
+
+Make changes, then stage and commit them:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Expand guide with compare and pull request workflows"
+```
+
+Push the branch:
+
+```bash
+git push -u origin update-v1.7.0-guide
+```
+
+Then on GitHub:
+
+1. Open the repository.
+2. GitHub may show a banner for the recently pushed branch.
+3. Click **Compare & pull request**, or go to **Pull requests** > **New pull request**.
+4. Set the base branch to `main`.
+5. Set the compare branch to `update-v1.7.0-guide`.
+6. Review the diff.
+7. Add a clear Pull Request title and description.
+8. Create the Pull Request.
+9. Review or request review.
+10. Resolve comments or make follow-up commits if needed.
+11. Merge when ready.
+12. Pull the updated `main` locally.
+13. Tag the final version from `main` if appropriate.
+
+GitHub's Pull Request creation flow uses a base branch and a compare branch. [R60]
+
+### Pull Request title and description
+
+The Pull Request title should summarize what the change does.
+
+The Pull Request description should explain:
+
+- what changed;
+- why it changed;
+- what reviewers should check;
+- whether the update is additive;
+- what verification was performed;
+- any known limitations.
+
+Example title:
+
+```text
+Expand Git guide with compare and pull request workflows
+```
+
+Example description:
+
+```markdown
+## Summary
+
+Adds v1.7.0 guidance for comparing version tags locally and on GitHub.com, plus expanded Pull Request workflows.
+
+## Changes
+
+- Adds Git command examples for changed files between tags.
+- Adds GitHub Compare UI navigation.
+- Adds Pull Request workflow guidance from branch creation through merge and tagging.
+- Updates README and CHANGELOG.
+
+## Verification
+
+- Checked Markdown formatting.
+- Confirmed links and version references.
+- Confirmed additive structure.
+```
+
+### Reviewing a Pull Request
+
+On GitHub, use the Pull Request's **Files changed** tab to inspect the diff.
+
+GitHub's review documentation says Pull Requests let you review and discuss commits, changed files, and differences between files in the base and compare branches. [R61]
+
+Review actions may include:
+
+- leaving comments;
+- requesting changes;
+- approving;
+- asking questions;
+- making suggestions;
+- pushing follow-up commits to the same branch.
+
+### Updating a Pull Request after review comments
+
+If edits are needed, keep working on the same branch:
+
+```bash
+git switch update-v1.7.0-guide
+# edit files
+git status
+git add .
+git status
+git commit -m "Address review feedback"
+git push
+```
+
+The existing Pull Request updates automatically because the branch received a new commit.
+
+### Updating an out-of-date Pull Request branch
+
+Beginner merge-based path:
+
+```bash
+git switch update-v1.7.0-guide
+git fetch origin
+git merge origin/main
+git push
+```
+
+Alternative rebase path for a private branch:
+
+```bash
+git switch update-v1.7.0-guide
+git fetch origin
+git rebase origin/main
+git push --force-with-lease
+```
+
+Warning:
+
+> Use `git push --force-with-lease` only when you understand that rebasing rewrites commit history. Avoid rebasing shared branches unless everyone agrees.
+
+### Pull Request merge options
+
+GitHub supports different Pull Request merge methods, depending on repository settings. GitHub's merge documentation describes retaining commits with a merge commit, squashing commits into one commit, or rebasing commits. [R62]
+
+| Option | What it means | Beginner guidance |
+|---|---|---|
+| Create a merge commit | Preserves branch history and adds a merge commit | Good default when you want full history |
+| Squash and merge | Combines all PR commits into one commit on `main` | Useful for cleaning up many small commits |
+| Rebase and merge | Replays PR commits onto `main` without a merge commit | Cleaner linear history, but more advanced |
+
+Available merge options depend on repository settings.
+
+### When to tag after a Pull Request
+
+Usually tag the final merged result on `main`, not the temporary working branch.
+
+After the Pull Request is merged:
+
+```bash
+git switch main
+git pull
+
+git tag -a v1.7.0 -m "Version 1.7.0"
+git push origin v1.7.0
+```
+
+Reason:
+
+> The version tag should identify the final accepted repository snapshot.
+
+### Cleanup after merging
+
+After the Pull Request is merged and local `main` is updated, you can usually delete the working branch.
+
+Delete the local branch:
+
+```bash
+git branch -d update-v1.7.0-guide
+```
+
+Delete the remote branch:
+
+```bash
+git push origin --delete update-v1.7.0-guide
+```
+
+Do not delete a branch before you are sure the work was merged or is no longer needed.
+
+### Draft Pull Requests
+
+A draft Pull Request is useful when you want early visibility or feedback but the work is not ready to merge.
+
+GitHub documents that a draft Pull Request cannot be merged until it is marked ready for review again. [R63]
+
+Use a draft PR when:
+
+- you want feedback before the work is complete;
+- you want CI/checks to run early;
+- you want to show progress without requesting final review.
+
+### Pull Requests and branch protection
+
+Repositories can use branch protection rules to require Pull Requests, reviews, passing checks, or up-to-date branches before merging into `main`.
+
+Do not treat branch protection as a beginner requirement. Treat it as a useful safety feature for more important, shared, or production-connected repositories.
+
+### Pull Request decision table
+
+| Situation | Recommended workflow |
+|---|---|
+| Tiny solo edit | Direct commit to `main` can be fine |
+| Solo but meaningful guide update | Branch + Pull Request is safer |
+| Team project | Pull Requests by default |
+| Risky change | Pull Request with review |
+| Protected `main` branch | Pull Request required |
+| Versioned documentation release | Pull Request first, tag after merge |
 
 
 # Appendix A: Expanded Git Command Reference
@@ -5711,41 +6166,100 @@ git commit -m "docs: add Git repository guide" -m "Add the initial guide, README
 
 
 
-## F.87 If unchanged tracked files do not appear in `git status`, is that good?
+## F.101 If unchanged tracked files do not appear in `git status`, is that good?
 
 Yes. It means Git sees no changes to those files. They are still tracked and still part of the repository.
 
-## F.88 Do I need to run `git add` on unchanged files?
+## F.102 Do I need to run `git add` on unchanged files?
 
 No. Unchanged tracked files are already part of the current repository snapshot. They do not need to be staged again.
 
-## F.89 Does `git add .` include unchanged files?
+## F.103 Does `git add .` include unchanged files?
 
 No meaningful change is staged for unchanged tracked files. `git add .` stages new files, modified files, and deleted tracked files under the current directory.
 
-## F.90 Does `git add .` check subfolders?
+## F.104 Does `git add .` check subfolders?
 
 Yes. It stages changes under the current directory, including subfolders, subject to `.gitignore`.
 
-## F.91 If I delete a tracked file locally, will `git add .` stage its deletion?
+## F.105 If I delete a tracked file locally, will `git add .` stage its deletion?
 
 Yes. Deleting a tracked file is a change. If you run `git add .`, Git can stage that deletion.
 
-## F.92 Should I delete unchanged files locally before running `git add .`?
+## F.106 Should I delete unchanged files locally before running `git add .`?
 
 No. Leave unchanged tracked files in place unless you intentionally want to remove them from the repository.
 
-## F.93 If I tag `v1.1.1`, does the tag apply only to the files I staged?
+## F.107 If I tag `v1.1.1`, does the tag apply only to the files I staged?
 
 No. The tag points to a commit. The commit represents the full tracked repository snapshot.
 
-## F.94 If six files changed but the repository has eight tracked files, how many files are in the tag download?
+## F.108 If six files changed but the repository has eight tracked files, how many files are in the tag download?
 
 Usually eight, assuming all eight are tracked at that tag and none were deleted.
 
-## F.95 Is GitHub's source ZIP the same as a custom release asset ZIP?
+## F.109 Is GitHub's source ZIP the same as a custom release asset ZIP?
 
 No. GitHub's automatic source ZIP is generated from the tagged repository snapshot. A custom release asset ZIP contains whatever files were manually placed in it.
+
+
+
+## F.110 How do I see which files changed between two version tags?
+
+Use:
+
+```bash
+git diff --name-status old-tag..new-tag
+```
+
+Example:
+
+```bash
+git diff --name-status v1.1.0..v1.1.1
+```
+
+## F.111 How do I see only added files between two tags?
+
+```bash
+git diff --name-status --diff-filter=A v1.1.0..v1.1.1
+```
+
+## F.112 How do I see all files contained in a tag?
+
+```bash
+git ls-tree -r --name-only v1.1.1
+```
+
+## F.113 Can I compare tags on GitHub.com?
+
+Yes. Open the repository's Compare page, then select the earlier tag as the base and the newer tag as the compare target.
+
+## F.114 Why did my GitHub compare URL not work?
+
+Common causes include wrong owner or repository name, a missing pushed tag, typo in the tag name, private repository access, or branch/tag name ambiguity.
+
+## F.115 What is a Pull Request?
+
+A Pull Request is a GitHub workflow for proposing, reviewing, discussing, and merging changes from one branch into another.
+
+## F.116 Is a Pull Request the same as `git pull`?
+
+No. Despite the name, a Pull Request is not mainly the `git pull` command. It is a GitHub review and merge workflow.
+
+## F.117 When should I use a Pull Request?
+
+Use one for reviewed work, collaboration, larger changes, risky changes, branch protection, or whenever you want a clear review record before merging into `main`.
+
+## F.118 When should I tag after using a Pull Request?
+
+After the Pull Request is merged, update local `main`, then tag from `main`.
+
+```bash
+git switch main
+git pull
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
 
 
 # Appendix G: Command Sequences and Workflow Recipes
@@ -7281,7 +7795,272 @@ It might contain:
 | Does a custom release asset ZIP have to match the source ZIP? | No. It contains whatever was manually uploaded. |
 
 
-# Appendix L: References
+
+---
+
+# Appendix L: Compare, Diff, and Tag Inspection Scenarios
+
+This appendix expands [Section 24](#24-comparing-version-tags-and-changed-files).
+
+## L.1 Show which files changed between two tags
+
+```bash
+git diff --name-status v1.1.0..v1.1.1
+```
+
+Use this for version-to-version review.
+
+## L.2 Show only added files
+
+```bash
+git diff --name-status --diff-filter=A v1.1.0..v1.1.1
+```
+
+## L.3 Show only modified files
+
+```bash
+git diff --name-status --diff-filter=M v1.1.0..v1.1.1
+```
+
+## L.4 Show added and modified files only
+
+```bash
+git diff --name-status --diff-filter=AM v1.1.0..v1.1.1
+```
+
+## L.5 Show deleted files only
+
+```bash
+git diff --name-status --diff-filter=D v1.1.0..v1.1.1
+```
+
+## L.6 Show renamed files
+
+```bash
+git diff --name-status --diff-filter=R v1.1.0..v1.1.1
+```
+
+## L.7 Show a compact summary
+
+```bash
+git diff --stat v1.1.0..v1.1.1
+```
+
+## L.8 Show full content differences
+
+```bash
+git diff v1.1.0..v1.1.1
+```
+
+## L.9 Show commits between tags
+
+```bash
+git log --oneline v1.1.0..v1.1.1
+```
+
+## L.10 Show all files contained in a tag
+
+```bash
+git ls-tree -r --name-only v1.1.1
+```
+
+Remember:
+
+```text
+git diff old..new      = what changed between snapshots
+git ls-tree tag        = what exists inside one snapshot
+```
+
+## L.11 Compare tags on GitHub.com
+
+URL pattern:
+
+```text
+https://github.com/OWNER/REPO/compare/v1.1.0...v1.1.1
+```
+
+Manual path:
+
+1. Open the repository.
+2. Add `/compare` to the URL.
+3. Choose the old tag as the base.
+4. Choose the new tag as the compare target.
+5. Review commits and changed files.
+
+## L.12 Force tag comparison with `tags/`
+
+If names are ambiguous:
+
+```text
+https://github.com/OWNER/REPO/compare/tags/v1.1.0...tags/v1.1.1
+```
+
+## L.13 Compare releases
+
+If the repository uses GitHub Releases:
+
+1. Open the repository.
+2. Click **Releases**.
+3. Find the base release.
+4. Use the **Compare** dropdown.
+5. Choose the newer tag.
+6. Review the comparison.
+
+## L.14 Troubleshooting compare problems
+
+| Problem | Try this |
+|---|---|
+| URL does not work | Open the repo first, then add `/compare` manually |
+| Tag missing | Push it with `git push origin vX.Y.Z` |
+| Wrong tag name | Check whether the tag uses a leading `v` |
+| Private repo issue | Sign in with an account that has access |
+| Branch/tag ambiguity | Use `tags/vX.Y.Z` |
+| Releases compare missing | Use the normal Compare page |
+
+
+
+---
+
+# Appendix M: Pull Request Scenarios
+
+This appendix expands [Section 25](#25-pull-requests-from-basic-to-advanced).
+
+## M.1 Solo project, tiny edit
+
+For a tiny solo edit, a direct commit to `main` can be acceptable:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Fix typo"
+git push
+```
+
+Use a Pull Request if you want a review record or a safer checkpoint.
+
+## M.2 Solo project, major guide update
+
+For a larger documentation update, use a branch and Pull Request:
+
+```bash
+git switch main
+git pull
+git switch -c update-v1.7.0-guide
+git add .
+git commit -m "Expand guide with compare and pull request workflows"
+git push -u origin update-v1.7.0-guide
+```
+
+Then open a Pull Request from `update-v1.7.0-guide` into `main`.
+
+## M.3 Team project
+
+Use Pull Requests by default.
+
+Benefits:
+
+- review;
+- discussion;
+- checks;
+- branch protection;
+- better shared understanding;
+- safer `main` branch.
+
+## M.4 Pull Request needs corrections
+
+```bash
+git switch update-v1.7.0-guide
+# edit files
+git status
+git add .
+git status
+git commit -m "Address review feedback"
+git push
+```
+
+The existing Pull Request updates automatically.
+
+## M.5 Pull Request branch is out of date
+
+Merge-based path:
+
+```bash
+git switch update-v1.7.0-guide
+git fetch origin
+git merge origin/main
+git push
+```
+
+Rebase path for private branches:
+
+```bash
+git switch update-v1.7.0-guide
+git fetch origin
+git rebase origin/main
+git push --force-with-lease
+```
+
+Beginner rule:
+
+> Prefer the merge-based path unless you understand rebase and history rewriting.
+
+## M.6 Pull Request was merged and now you need to tag
+
+```bash
+git switch main
+git pull
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Tag the final merged result on `main`.
+
+## M.7 Pull Request was closed without merging
+
+If a Pull Request is closed without merging:
+
+- the branch may still exist;
+- the work is not on `main`;
+- you can reopen it, create a new Pull Request, or delete the branch;
+- do not tag from `main` unless the change was actually merged.
+
+## M.8 Draft Pull Request
+
+Use a draft Pull Request when the work is visible but not ready to merge.
+
+Good uses:
+
+- early feedback;
+- CI/check testing;
+- showing progress;
+- collecting comments before final review.
+
+## M.9 Choosing a merge method
+
+| Goal | Merge method to consider |
+|---|---|
+| Preserve all branch commits | Create a merge commit |
+| Turn many small commits into one clean commit | Squash and merge |
+| Keep linear history with individual commits | Rebase and merge |
+
+Repository settings control which options are available.
+
+## M.10 Pull Request checklist
+
+Before merging:
+
+- Confirm the base branch is correct.
+- Review the changed files.
+- Confirm the README and CHANGELOG are updated if needed.
+- Confirm version references are correct.
+- Confirm checks pass, if the project uses checks.
+- Confirm no secrets or unintended files are included.
+- Decide whether to delete the branch after merge.
+- Tag from `main` after merge if this is a versioned release.
+
+
+# Appendix N: References
 
 ## Core conceptual references
 
@@ -7464,7 +8243,37 @@ https://git-scm.com/docs/git-mv
 
 ---
 
+
+[R57] GitHub Docs, “Viewing and comparing commits.”  
+[R58] GitHub Docs, “Comparing releases.”  
+[R59] GitHub Docs, “About pull requests.”  
+[R60] GitHub Docs, “Creating a pull request.”  
+[R61] GitHub Docs, “Reviewing changes in pull requests.”  
+[R62] GitHub Docs, “About pull request merges.”  
+[R63] GitHub Docs, “Changing the stage of a pull request.”  
+
 # Index
+
+
+## Comparing tags
+
+See [24. Comparing Version Tags and Changed Files](#24-comparing-version-tags-and-changed-files) and [Appendix L](#appendix-l-compare-diff-and-tag-inspection-scenarios).
+
+## Changed files between tags
+
+See [24. Comparing Version Tags and Changed Files](#24-comparing-version-tags-and-changed-files).
+
+## GitHub Compare
+
+See [24. Comparing Version Tags and Changed Files](#24-comparing-version-tags-and-changed-files) and [Appendix L](#appendix-l-compare-diff-and-tag-inspection-scenarios).
+
+## Pull Requests
+
+See [25. Pull Requests from Basic to Advanced](#25-pull-requests-from-basic-to-advanced) and [Appendix M](#appendix-m-pull-request-scenarios).
+
+## Draft Pull Requests
+
+See [25. Pull Requests from Basic to Advanced](#25-pull-requests-from-basic-to-advanced) and [Appendix M](#appendix-m-pull-request-scenarios).
 
 
 ## Practical staging

@@ -1,8 +1,8 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.6.0  
-**Full guide:** [`git-repository-guide-v1.6.0.md`](git-repository-guide-v1.6.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.6.0.md`](git-repository-guide-quick-start-guide-v1.6.0.md)
+**Version:** v1.7.0  
+**Full guide:** [`git-repository-guide-v1.7.0.md`](git-repository-guide-v1.7.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.7.0.md`](git-repository-guide-quick-start-guide-v1.7.0.md)
 
 ## Path
 
@@ -264,6 +264,37 @@ git diff v1.0.0..v1.1.0
 git diff --name-only v1.0.0..v1.1.0
 ```
 
+
+### Show files changed between tags
+
+```bash
+git diff --name-status v1.1.0..v1.1.1
+```
+
+### Show only added files
+
+```bash
+git diff --name-status --diff-filter=A v1.1.0..v1.1.1
+```
+
+### Show all files in a tag
+
+```bash
+git ls-tree -r --name-only v1.1.1
+```
+
+### GitHub.com Compare
+
+```text
+https://github.com/OWNER/REPO/compare/v1.1.0...v1.1.1
+```
+
+If branch/tag names are ambiguous:
+
+```text
+https://github.com/OWNER/REPO/compare/tags/v1.1.0...tags/v1.1.1
+```
+
 ### Export a tag as ZIP
 
 ```bash
@@ -271,6 +302,48 @@ git archive --format=zip --output project-v1.0.0.zip v1.0.0
 ```
 
 ---
+
+---
+
+## Pull Request workflow
+
+Create branch and push:
+
+```bash
+git switch main
+git pull
+
+git switch -c update-guide
+git add .
+git commit -m "Update guide"
+git push -u origin update-guide
+```
+
+On GitHub:
+
+1. Open Pull Request from `update-guide` into `main`.
+2. Review the **Files changed** tab.
+3. Address comments with follow-up commits.
+4. Merge when ready.
+
+After merge, tag from `main`:
+
+```bash
+git switch main
+git pull
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+If the PR branch is out of date:
+
+```bash
+git switch update-guide
+git fetch origin
+git merge origin/main
+git push
+```
+
 
 ## Common fixes
 

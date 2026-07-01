@@ -4,10 +4,46 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
-## v1.6.0
+## v1.7.0
 
 ### Added
 
+- Added expanded guidance for identifying files changed between version tags.
+- Added `git diff --name-status` examples for added, modified, deleted, renamed, and copied files.
+- Added `--diff-filter` examples for showing only added, modified, or added-and-modified files.
+- Added clarification of the difference between files contained in a tag and files changed between tags.
+- Added GitHub.com Compare page navigation for comparing tags.
+- Added GitHub compare URL patterns, including explicit `tags/` comparison.
+- Added troubleshooting guidance for compare URLs that do not work.
+- Added guidance for comparing releases from GitHub's Releases page.
+- Added expanded Pull Request guidance from beginner workflows through more common and advanced scenarios.
+- Added guidance for Pull Request titles, descriptions, reviews, follow-up commits, out-of-date branches, merge options, cleanup, and tagging after merge.
+- Added dedicated appendixes for compare/diff/tag inspection scenarios and Pull Request scenarios.
+- Added Knowledge Base entries for tag comparison and Pull Request workflows.
+- Added official GitHub documentation references for comparing commits/tags, comparing releases, Pull Requests, reviews, merge options, and draft Pull Requests.
+
+### Changed
+
+- Updated the guide metadata from `v1.6.0` to `v1.7.0`.
+- Expanded existing compare guidance beyond command-line examples.
+- Expanded existing Pull Request coverage beyond the basic branch-and-merge workflow.
+- Clarified when direct-to-`main` is acceptable and when Pull Requests are preferred.
+- Clarified that version tags should usually be created from `main` after a Pull Request has been merged.
+- Moved the references appendix from Appendix L to Appendix N so references remain last.
+- Renumbered duplicate Knowledge Base entries so Appendix F remains sequential and unambiguous.
+- Updated README version, version history, topics, and companion-guide links for `v1.7.0`.
+- Updated quick-start and cheat-sheet companions to align with `v1.7.0` and include compare/Pull Request guidance.
+
+### Notes
+
+- This is an additive update from `v1.6.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, reference, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.7.0.md`.
+
+## v1.6.0
+
+### Added
 
 - Added quick-start companion guide `git-repository-guide-quick-start-guide-v1.6.0.md`.
 - Added compact cheat sheet `git-repository-guide-cheat-sheet-v1.6.0.md`.
@@ -26,7 +62,6 @@ This project uses semantic versioning-style document versions. The active guide 
 - Added Knowledge Base entries for `git add .`, unchanged files, staged deletions, tag downloads, and release asset ZIPs.
 
 ### Changed
-
 
 - Updated README repository contents and navigation for the new companion files.
 - Clarified the difference between the full guide, quick-start guide, and cheat sheet in README.
