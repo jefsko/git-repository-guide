@@ -1,0 +1,308 @@
+# Git Repository Cheat Sheet
+
+**Version:** v1.6.0  
+**Full guide:** [`git-repository-guide-v1.6.0.md`](git-repository-guide-v1.6.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.6.0.md`](git-repository-guide-quick-start-guide-v1.6.0.md)
+
+## Path
+
+```text
+create folder
+git init
+git add
+git commit
+create GitHub repo
+git remote add origin
+git push -u origin main
+git tag -a
+git push origin tag
+repeat for later versions
+```
+
+## Use this when
+
+Use this when you want a compact checklist for creating or updating a Git repository and marking file sets as versions with tags.
+
+For explanations, use the quick-start or full guide.
+
+---
+
+## Minimum prerequisites
+
+- Git installed.
+- GitHub account.
+- Local folder of files.
+- No secrets or sensitive files staged.
+- Repository name chosen.
+- Version number chosen, such as `v1.0.0`.
+
+---
+
+## First-time setup
+
+```bash
+cd "C:\Path\To\Your\Project"
+git init -b main
+git status
+git add .
+git status
+git commit -m "Create version v1.0.0"
+```
+
+Create an empty GitHub repo, then connect it:
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git remote -v
+git push -u origin main
+```
+
+Create and push the first tag:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+---
+
+## Later update with a new version tag
+
+```bash
+git status
+git add .
+git status
+git commit -m "Create version v1.1.0"
+git push
+
+git tag -a v1.1.0 -m "Version 1.1.0"
+git push origin v1.1.0
+```
+
+---
+
+## Later update without a new version tag
+
+```bash
+git status
+git add .
+git status
+git commit -m "Describe what changed"
+git push
+```
+
+---
+
+## Common file operations
+
+### Add a file
+
+```bash
+git add notes.md
+git commit -m "Add notes file"
+git push
+```
+
+### Update a file
+
+```bash
+git add guide.md
+git commit -m "Update guide"
+git push
+```
+
+### Replace same-path file
+
+```bash
+git add guide.md
+git commit -m "Replace guide with updated version"
+git push
+```
+
+### Delete a tracked file
+
+```bash
+git rm old-file.md
+git commit -m "Remove old file"
+git push
+```
+
+### Move or rename a file
+
+```bash
+git mv old-name.md new-name.md
+git commit -m "Rename file"
+git push
+```
+
+---
+
+## `git add .` rules
+
+`git add .` stages changes under the current folder, including subfolders.
+
+It can stage:
+
+- new files;
+- modified tracked files;
+- deleted tracked files.
+
+It does not need to stage unchanged tracked files again.
+
+Always check:
+
+```bash
+git status
+git add .
+git status
+```
+
+---
+
+## Do not share / avoid / warning
+
+- Do not commit passwords, API keys, `.env` files, certificates, or personal data.
+- Do not delete unchanged tracked files just to simplify `git add .`.
+- Do not tag before committing; tags point to commits.
+- Do not assume `git push` pushes tags; push tags explicitly.
+- Do not move a published version tag unless you fully understand the consequences.
+- Do not rely on a custom release asset ZIP to represent the whole repository unless you packaged it that way.
+
+---
+
+## Accident recovery
+
+### Restore accidentally deleted tracked file
+
+```bash
+git restore file-name.md
+```
+
+### If deletion was already staged
+
+```bash
+git restore --staged file-name.md
+git restore file-name.md
+```
+
+### Abort merge conflict attempt
+
+```bash
+git merge --abort
+```
+
+### Abort rebase conflict attempt
+
+```bash
+git rebase --abort
+```
+
+---
+
+## Branch workflow
+
+Create and push a working branch:
+
+```bash
+git switch main
+git pull
+
+git switch -c update-guide
+git add .
+git commit -m "Update guide"
+git push -u origin update-guide
+```
+
+Merge later:
+
+```bash
+git switch main
+git pull
+git merge update-guide
+git push
+```
+
+Tag after the final merged result is correct:
+
+```bash
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+---
+
+## Tag and download reminders
+
+| Question | Answer |
+|---|---|
+| Does a tag apply only to changed files? | No. It points to a full commit snapshot. |
+| Do unchanged tracked files appear in `git status`? | No, not unless something changed. |
+| Are unchanged tracked files included in a tag? | Yes, if they are tracked at that commit. |
+| Does GitHub source ZIP contain all tracked files at the tag? | Yes. |
+| Does a custom release asset ZIP contain all tracked files? | Only if you manually put them there. |
+
+---
+
+## Compare, inspect, and export
+
+### List tags
+
+```bash
+git tag --list
+```
+
+### Show a tag
+
+```bash
+git show v1.0.0
+```
+
+### Compare two tags
+
+```bash
+git diff v1.0.0..v1.1.0
+git diff --name-only v1.0.0..v1.1.0
+```
+
+### Export a tag as ZIP
+
+```bash
+git archive --format=zip --output project-v1.0.0.zip v1.0.0
+```
+
+---
+
+## Common fixes
+
+| Problem | Fix |
+|---|---|
+| Forgot to push tag | `git push origin vX.Y.Z` |
+| Staged wrong file | `git restore --staged file-name` |
+| Accidentally deleted tracked file | `git restore file-name` |
+| Push rejected | `git pull`, resolve issues, then `git push` |
+| Need to see what is staged | `git diff --cached --stat` |
+| Need to see tracked files | `git ls-tree -r --name-only HEAD` |
+| Need to see latest commit stats | `git show --stat --oneline HEAD` |
+
+---
+
+## Good commit-message patterns
+
+One-line commit:
+
+```bash
+git commit -m "Add quick-start guide"
+```
+
+Commit with body:
+
+```bash
+git commit -m "Add quick-start guide" -m "Add a concise setup path for creating a Git repository, pushing to GitHub, and tagging versioned file sets."
+```
+
+Rule of thumb:
+
+```text
+summary = what changed
+body = why it changed or what future readers should know
+```

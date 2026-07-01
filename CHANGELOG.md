@@ -8,6 +8,11 @@ This project uses semantic versioning-style document versions. The active guide 
 
 ### Added
 
+
+- Added quick-start companion guide `git-repository-guide-quick-start-guide-v1.6.0.md`.
+- Added compact cheat sheet `git-repository-guide-cheat-sheet-v1.6.0.md`.
+- Added README navigation showing which file to open first.
+- Added README repository contents table covering the full guide, quick-start guide, and cheat sheet.
 - Added a practical staging example showing modified files, new untracked files, and unchanged tracked files.
 - Added explanation that unchanged tracked files do not appear in `git status` but remain part of the repository snapshot.
 - Added clarification that `git add .` stages new, modified, and deleted files under the current directory, including subfolders.
@@ -22,6 +27,9 @@ This project uses semantic versioning-style document versions. The active guide 
 
 ### Changed
 
+
+- Updated README repository contents and navigation for the new companion files.
+- Clarified the difference between the full guide, quick-start guide, and cheat sheet in README.
 - Updated the guide metadata from `v1.5.0` to `v1.6.0`.
 - Expanded practical staging guidance with a real-world documentation repository example.
 - Clarified how repository snapshots explain why a tag download may include unchanged files.

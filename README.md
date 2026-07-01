@@ -20,6 +20,30 @@ git-repository-guide.md
 
 The active guide file should keep this stable filename. Version history should be tracked through Git commits, tags, releases, and this changelog rather than by renaming the file for each version.
 
+## Which file should I open first?
+
+| Goal | Start here |
+|---|---|
+| I want the fastest practical setup path. | [`git-repository-guide-quick-start-guide-v1.6.0.md`](git-repository-guide-quick-start-guide-v1.6.0.md) |
+| I want a compact repeat checklist. | [`git-repository-guide-cheat-sheet-v1.6.0.md`](git-repository-guide-cheat-sheet-v1.6.0.md) |
+| I need the full explanation and reference material. | [`git-repository-guide.md`](git-repository-guide.md) |
+
+## Repository Contents
+
+| File | Purpose |
+|---|---|
+| [`README.md`](README.md) | Repository overview and navigation. |
+| [`CHANGELOG.md`](CHANGELOG.md) | Version history and notable changes. |
+| [`git-repository-guide.md`](git-repository-guide.md) | Full guide with complete explanations, examples, appendixes, and references. |
+| [`git-repository-guide-quick-start-guide-v1.6.0.md`](git-repository-guide-quick-start-guide-v1.6.0.md) | Short, sequential companion guide for the most common Git repository/version-tag workflow. |
+| [`git-repository-guide-cheat-sheet-v1.6.0.md`](git-repository-guide-cheat-sheet-v1.6.0.md) | Compact checklist for repeating the common workflow after learning it. |
+
+## Full Guide vs. Quick-Start vs. Cheat Sheet
+
+- Use the **full guide** when you want complete explanations, edge cases, appendixes, and reference material.
+- Use the **quick-start guide** when you want the shortest practical path that is still complete enough to follow.
+- Use the **cheat sheet** when you already understand the workflow and want a compact repeat checklist.
+
 ## Topics Covered
 
 - Creating a local Git repository
@@ -66,6 +90,10 @@ The active guide file should keep this stable filename. Version history should b
 - Understanding GitHub source ZIP downloads versus custom release asset ZIPs
 - Understanding Git push object counts
 
+- Using the quick-start companion guide
+- Using the compact cheat sheet
+- Choosing between the full guide, quick-start guide, and cheat sheet
+
 ## Recommended Repository Details
 
 Recommended repository name:
@@ -91,7 +119,7 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 | `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
 | `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
 | `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
-| `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, and source ZIP vs. release asset ZIP behavior |
+| `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, source ZIP vs. release asset ZIP behavior, plus quick-start and cheat-sheet companions |
 
 ## Versioning Policy
 
@@ -110,7 +138,9 @@ Once this guide is managed in Git, the file should usually keep the stable filen
 git-repository-guide/
 ├─ README.md
 ├─ CHANGELOG.md
-└─ git-repository-guide.md
+├─ git-repository-guide.md
+├─ git-repository-guide-quick-start-guide-v1.6.0.md
+└─ git-repository-guide-cheat-sheet-v1.6.0.md
 ```
 
 ## Notes
