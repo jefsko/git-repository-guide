@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.5.0  
-Previous locked version: v1.4.0  
+Document version: v1.6.0  
+Previous locked version: v1.5.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.5.0` file. Save future changes as a new version, such as `v1.5.1` or `v1.6.0`.  
+Future edit policy: Do not overwrite this `v1.6.0` file. Save future changes as a new version, such as `v1.6.1` or `v1.7.0`.  
 Current as of: 2026-06-30
 
-Revision note: This `v1.5.0` edition preserves the `v1.4.0` guide and additively incorporates initial commit message vs. commit body guidance, multiple `-m` commit examples, and commit body vs. repository description clarification from the v1.5.0 update brief.
+Revision note: This `v1.6.0` edition preserves the `v1.5.0` guide and additively incorporates practical staging guidance, unchanged tracked file clarification, tag snapshot download behavior, and GitHub source ZIP vs. custom release asset ZIP distinctions from the v1.6.0 update brief.
 
 ---
 
@@ -36,6 +36,7 @@ Revision note: This `v1.5.0` edition preserves the `v1.4.0` guide and additively
 - [20. Fetch, Pull, Merge, Rebase, and Conflict Basics](#20-fetch-pull-merge-rebase-and-conflict-basics)
 - [21. File and Folder Change Workflows](#21-file-and-folder-change-workflows)
 - [22. Commit Messages, Commit Bodies, and Repository Descriptions](#22-commit-messages-commit-bodies-and-repository-descriptions)
+- [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -46,7 +47,8 @@ Revision note: This `v1.5.0` edition preserves the `v1.4.0` guide and additively
 - [Appendix H: File Update, Merge, and Conflict Scenarios](#appendix-h-file-update-merge-and-conflict-scenarios)
 - [Appendix I: File and Folder Operation Scenarios](#appendix-i-file-and-folder-operation-scenarios)
 - [Appendix J: Commit Message and Commit Body Examples](#appendix-j-commit-message-and-commit-body-examples)
-- [Appendix K: References](#appendix-k-references)
+- [Appendix K: Practical Staging, Tag, and Download Scenarios](#appendix-k-practical-staging-tag-and-download-scenarios)
+- [Appendix L: References](#appendix-l-references)
 - [Index](#index)
 
 ---
@@ -58,7 +60,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1086,6 +1088,7 @@ Recommended history:
 | `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
 | `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
 | `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
+| `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, and source ZIP vs. release asset ZIP behavior |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -3058,6 +3061,272 @@ git commit -m "docs: add AWS S3 static website quick start guide"
 Both are correct.
 
 The longer version is better when you want Git history to record the purpose and scope of the initial documentation set.
+
+
+
+---
+
+## 23. Practical Staging and Tag Snapshot Example
+
+This section shows a realistic update where some files are modified, some files are new, and other tracked files are unchanged.
+
+The key lesson:
+
+> Staging only changed or new files does not mean the tag contains only those files. A commit records the full tracked repository snapshot. A tag points to that commit.
+
+### Example repository
+
+Suppose a repository named:
+
+```text
+aws-live-streaming-guide
+```
+
+currently has four tracked files and is tagged `v1.1.0`:
+
+```text
+README.md
+CHANGELOG.md
+aws-live-streaming-guide-obs-ivs.md
+aws-live-streaming-guide-obs-medialive.md
+```
+
+Then you update two existing files:
+
+```text
+README.md
+CHANGELOG.md
+```
+
+And you create four new files:
+
+```text
+aws-live-streaming-cheat-sheet-obs-ivs.md
+aws-live-streaming-cheat-sheet-obs-medialive.md
+aws-live-streaming-quick-start-guide-obs-ivs.md
+aws-live-streaming-quick-start-guide-obs-medialive.md
+```
+
+The two original full guide files are unchanged:
+
+```text
+aws-live-streaming-guide-obs-ivs.md
+aws-live-streaming-guide-obs-medialive.md
+```
+
+### Expected `git status`
+
+Before staging, `git status` should show the two modified files and four untracked files.
+
+Example:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  modified:   CHANGELOG.md
+  modified:   README.md
+
+Untracked files:
+  aws-live-streaming-cheat-sheet-obs-ivs.md
+  aws-live-streaming-cheat-sheet-obs-medialive.md
+  aws-live-streaming-quick-start-guide-obs-ivs.md
+  aws-live-streaming-quick-start-guide-obs-medialive.md
+
+no changes added to commit
+```
+
+The unchanged full guide files do not appear in `git status` because Git sees no changes to them.
+
+That is good.
+
+They are still tracked. They are still part of the repository.
+
+### Safe `git add .` workflow
+
+From the repository root, this is a valid workflow:
+
+```bash
+git status
+git add .
+git status
+git commit -m "Add quick-start guides and cheat sheets"
+git push
+
+git tag -a v1.1.1 -m "Version 1.1.1"
+git push origin v1.1.1
+```
+
+The first `git status` verifies what changed before staging.
+
+`git add .` stages new files, modified files, and deleted tracked files under the current folder.
+
+The second `git status` confirms exactly what is staged before committing.
+
+The commit records the new full tracked repository snapshot.
+
+The tag marks that full repository snapshot as `v1.1.1`.
+
+### More explicit staging alternative
+
+If you know exactly which files should be included, you can stage them explicitly:
+
+```bash
+git status
+git add README.md CHANGELOG.md aws-live-streaming-cheat-sheet-obs-ivs.md aws-live-streaming-cheat-sheet-obs-medialive.md aws-live-streaming-quick-start-guide-obs-ivs.md aws-live-streaming-quick-start-guide-obs-medialive.md
+git status
+git commit -m "Add quick-start guides and cheat sheets"
+git push
+
+git tag -a v1.1.1 -m "Version 1.1.1"
+git push origin v1.1.1
+```
+
+Explicit paths are safer when you want maximum control.
+
+`git add .` is convenient when `git status` confirms that only intended changes are present.
+
+### Do not delete unchanged files just to simplify `git add .`
+
+Do not delete unchanged tracked files just to make staging feel simpler.
+
+If a tracked file is deleted locally, Git sees that as a deletion.
+
+If you then run:
+
+```bash
+git add .
+git commit -m "Add quick-start guides and cheat sheets"
+```
+
+the deletion can be included in the commit.
+
+That means the deleted files would be removed from the new repository snapshot and from the new tag.
+
+Correct approach:
+
+> Leave unchanged tracked files in the folder. If `git status` does not mention them, that means Git sees no change.
+
+### If you accidentally delete tracked files
+
+If you deleted tracked files locally but have not staged the deletion yet, restore them:
+
+```bash
+git restore aws-live-streaming-guide-obs-ivs.md
+git restore aws-live-streaming-guide-obs-medialive.md
+git status
+```
+
+If you already staged the deletion, unstage and restore:
+
+```bash
+git restore --staged aws-live-streaming-guide-obs-ivs.md
+git restore --staged aws-live-streaming-guide-obs-medialive.md
+
+git restore aws-live-streaming-guide-obs-ivs.md
+git restore aws-live-streaming-guide-obs-medialive.md
+
+git status
+```
+
+`git restore --staged` removes the deletion from the staging area.
+
+`git restore` restores the file in the working tree from the current commit.
+
+### If you intentionally want to remove files from the repository
+
+If your goal is to remove the two full guide files from the repository, use `git rm` intentionally:
+
+```bash
+git status
+git rm aws-live-streaming-guide-obs-ivs.md
+git rm aws-live-streaming-guide-obs-medialive.md
+git status
+git commit -m "Remove full guides"
+git push
+
+git tag -a v1.1.1 -m "Version 1.1.1"
+git push origin v1.1.1
+```
+
+That makes the new tag point to a repository snapshot that no longer includes those files.
+
+Consider the version number carefully when removing files. Removing tracked files may be more significant than a small patch update.
+
+### Does `git add .` check subfolders?
+
+Yes.
+
+`git add .` stages changes under the current directory, including subfolders, subject to `.gitignore`.
+
+If the terminal is at the repository root:
+
+```text
+C:\git\aws-live-streaming-guide
+```
+
+then:
+
+```bash
+git add .
+```
+
+will stage changes under the repository root and its subfolders.
+
+It can stage:
+
+- new files;
+- modified tracked files;
+- deleted tracked files;
+- changes in subfolders.
+
+It will not stage ignored files unless forced.
+
+### What should the tag contain?
+
+If you commit the two modified files and four new files while leaving the two original full guide files tracked and unchanged, then tag `v1.1.1` should identify a repository snapshot containing eight tracked files:
+
+```text
+README.md
+CHANGELOG.md
+aws-live-streaming-guide-obs-ivs.md
+aws-live-streaming-guide-obs-medialive.md
+aws-live-streaming-cheat-sheet-obs-ivs.md
+aws-live-streaming-cheat-sheet-obs-medialive.md
+aws-live-streaming-quick-start-guide-obs-ivs.md
+aws-live-streaming-quick-start-guide-obs-medialive.md
+```
+
+The tag is not limited to the six files that were added or modified.
+
+A tag points to a commit, and the commit represents the full tracked repository snapshot.
+
+### GitHub source ZIP vs. custom release asset ZIP
+
+A GitHub automatic source archive for a tag, such as:
+
+```text
+Source code (zip)
+```
+
+is generated from the tagged repository snapshot.
+
+So if the repository snapshot at `v1.1.1` contains eight tracked files, the automatic source ZIP for `v1.1.1` should contain those eight tracked files.
+
+A `git archive` command also exports the tracked repository snapshot at the tag:
+
+```bash
+git archive --format=zip --output aws-live-streaming-guide-v1.1.1.zip v1.1.1
+```
+
+A custom GitHub Release asset ZIP is different.
+
+If you manually create and upload a ZIP file as a release asset, that ZIP contains whatever you put into it. It could contain six files, eight files, PDFs, quick-start guides only, or any other custom package contents.
+
+Important distinction:
+
+> A GitHub automatic source ZIP is generated from the tagged repository snapshot. A custom release asset ZIP is manually created and can contain any selected files.
 
 
 # Appendix A: Expanded Git Command Reference
@@ -5441,6 +5710,44 @@ git commit -m "docs: add Git repository guide" -m "Add the initial guide, README
 ```
 
 
+
+## F.87 If unchanged tracked files do not appear in `git status`, is that good?
+
+Yes. It means Git sees no changes to those files. They are still tracked and still part of the repository.
+
+## F.88 Do I need to run `git add` on unchanged files?
+
+No. Unchanged tracked files are already part of the current repository snapshot. They do not need to be staged again.
+
+## F.89 Does `git add .` include unchanged files?
+
+No meaningful change is staged for unchanged tracked files. `git add .` stages new files, modified files, and deleted tracked files under the current directory.
+
+## F.90 Does `git add .` check subfolders?
+
+Yes. It stages changes under the current directory, including subfolders, subject to `.gitignore`.
+
+## F.91 If I delete a tracked file locally, will `git add .` stage its deletion?
+
+Yes. Deleting a tracked file is a change. If you run `git add .`, Git can stage that deletion.
+
+## F.92 Should I delete unchanged files locally before running `git add .`?
+
+No. Leave unchanged tracked files in place unless you intentionally want to remove them from the repository.
+
+## F.93 If I tag `v1.1.1`, does the tag apply only to the files I staged?
+
+No. The tag points to a commit. The commit represents the full tracked repository snapshot.
+
+## F.94 If six files changed but the repository has eight tracked files, how many files are in the tag download?
+
+Usually eight, assuming all eight are tracked at that tag and none were deleted.
+
+## F.95 Is GitHub's source ZIP the same as a custom release asset ZIP?
+
+No. GitHub's automatic source ZIP is generated from the tagged repository snapshot. A custom release asset ZIP contains whatever files were manually placed in it.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -6819,7 +7126,162 @@ The changelog is not a replacement for a useful commit summary.
 Use each one for its own purpose.
 
 
-# Appendix K: References
+
+---
+
+# Appendix K: Practical Staging, Tag, and Download Scenarios
+
+This appendix expands [Section 23](#23-practical-staging-and-tag-snapshot-example) with compact recipes and Q&A-style reminders.
+
+## K.1 Scenario summary
+
+Starting repository at `v1.1.0`:
+
+```text
+README.md
+CHANGELOG.md
+aws-live-streaming-guide-obs-ivs.md
+aws-live-streaming-guide-obs-medialive.md
+```
+
+Local changes before `v1.1.1`:
+
+```text
+modified: README.md
+modified: CHANGELOG.md
+
+new:
+aws-live-streaming-cheat-sheet-obs-ivs.md
+aws-live-streaming-cheat-sheet-obs-medialive.md
+aws-live-streaming-quick-start-guide-obs-ivs.md
+aws-live-streaming-quick-start-guide-obs-medialive.md
+
+unchanged:
+aws-live-streaming-guide-obs-ivs.md
+aws-live-streaming-guide-obs-medialive.md
+```
+
+## K.2 Safe staging workflow
+
+```bash
+git status
+git add .
+git status
+git commit -m "Add quick-start guides and cheat sheets"
+git push
+
+git tag -a v1.1.1 -m "Version 1.1.1"
+git push origin v1.1.1
+```
+
+Use this when `git status` confirms that only intended files are new, modified, or deleted.
+
+## K.3 Explicit staging workflow
+
+```bash
+git status
+git add README.md CHANGELOG.md aws-live-streaming-cheat-sheet-obs-ivs.md aws-live-streaming-cheat-sheet-obs-medialive.md aws-live-streaming-quick-start-guide-obs-ivs.md aws-live-streaming-quick-start-guide-obs-medialive.md
+git status
+git commit -m "Add quick-start guides and cheat sheets"
+git push
+
+git tag -a v1.1.1 -m "Version 1.1.1"
+git push origin v1.1.1
+```
+
+Use this when you want exact control over what is staged.
+
+## K.4 Do not delete unchanged tracked files
+
+If unchanged tracked files do not appear in `git status`, that is normal.
+
+They are already tracked and still part of the repository.
+
+Do not delete them locally just to simplify `git add .`.
+
+## K.5 Recover accidentally deleted tracked files
+
+If deletion is not staged:
+
+```bash
+git restore aws-live-streaming-guide-obs-ivs.md
+git restore aws-live-streaming-guide-obs-medialive.md
+git status
+```
+
+If deletion is already staged:
+
+```bash
+git restore --staged aws-live-streaming-guide-obs-ivs.md
+git restore --staged aws-live-streaming-guide-obs-medialive.md
+
+git restore aws-live-streaming-guide-obs-ivs.md
+git restore aws-live-streaming-guide-obs-medialive.md
+
+git status
+```
+
+## K.6 Intentionally remove tracked files
+
+```bash
+git status
+git rm aws-live-streaming-guide-obs-ivs.md
+git rm aws-live-streaming-guide-obs-medialive.md
+git status
+git commit -m "Remove full guides"
+git push
+
+git tag -a v1.1.1 -m "Version 1.1.1"
+git push origin v1.1.1
+```
+
+Use this only when the intended new repository snapshot should no longer include those files.
+
+## K.7 Tag download contents
+
+A tag identifies a commit.
+
+A commit represents a full tracked repository snapshot.
+
+Therefore, a tag download is not limited to the files changed in the tagged commit.
+
+If six files changed but eight files are tracked at the tagged commit, the tag source download should contain eight files.
+
+## K.8 GitHub automatic source ZIP
+
+GitHub's automatic source ZIP for a tag is generated from the tagged repository snapshot.
+
+It should contain the tracked files at that tag.
+
+## K.9 Custom release asset ZIP
+
+A manually uploaded release asset ZIP is different.
+
+It contains whatever was manually packaged and uploaded.
+
+It might contain:
+
+- all tracked files;
+- only selected files;
+- generated PDFs;
+- quick-start guides only;
+- any other custom package.
+
+## K.10 Quick decision table
+
+| Question | Answer |
+|---|---|
+| Do unchanged tracked files need to be staged again? | No. |
+| Is it good if unchanged tracked files do not appear in `git status`? | Yes. |
+| Does `git add .` check subfolders? | Yes, under the current directory. |
+| Can `git add .` stage deletions? | Yes, if tracked files were deleted. |
+| Should unchanged tracked files be deleted before staging? | No. |
+| Does a tag apply only to changed files? | No. It points to the full commit snapshot. |
+| Does GitHub's source ZIP contain only changed files? | No. It contains the tagged source snapshot. |
+| Does a custom release asset ZIP have to match the source ZIP? | No. It contains whatever was manually uploaded. |
+
+
+# Appendix L: References
 
 ## Core conceptual references
 
@@ -7003,6 +7465,27 @@ https://git-scm.com/docs/git-mv
 ---
 
 # Index
+
+
+## Practical staging
+
+See [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example) and [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios).
+
+## Unchanged tracked files
+
+See [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example) and [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios).
+
+## Tag snapshot downloads
+
+See [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example) and [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios).
+
+## Source ZIP
+
+See [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example) and [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios).
+
+## Release asset ZIP
+
+See [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example) and [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios).
 
 
 ## File and folder operations

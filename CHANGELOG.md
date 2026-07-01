@@ -4,6 +4,38 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.6.0
+
+### Added
+
+- Added a practical staging example showing modified files, new untracked files, and unchanged tracked files.
+- Added explanation that unchanged tracked files do not appear in `git status` but remain part of the repository snapshot.
+- Added clarification that `git add .` stages new, modified, and deleted files under the current directory, including subfolders.
+- Added warning not to delete unchanged tracked files just to simplify `git add .`.
+- Added recovery commands for accidentally deleted tracked files.
+- Added explicit `git rm` workflow for intentionally removing tracked files from the repository.
+- Added explanation that tags point to full repository snapshots, not only files changed in the tagged commit.
+- Added clarification that GitHub automatic source ZIP downloads for a tag contain the tracked repository snapshot at that tag.
+- Added distinction between GitHub automatic source ZIPs and custom release asset ZIPs.
+- Added a dedicated appendix for practical staging, tag, and download scenarios.
+- Added Knowledge Base entries for `git add .`, unchanged files, staged deletions, tag downloads, and release asset ZIPs.
+
+### Changed
+
+- Updated the guide metadata from `v1.5.0` to `v1.6.0`.
+- Expanded practical staging guidance with a real-world documentation repository example.
+- Clarified how repository snapshots explain why a tag download may include unchanged files.
+- Clarified the difference between source archive downloads and manually uploaded release assets.
+- Added a new Appendix K for practical staging, tag, and download scenarios.
+- Moved the references appendix from Appendix K to Appendix L so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.5.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.6.0.md`.
+
 ## v1.5.0
 
 ### Added
