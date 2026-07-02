@@ -4,6 +4,41 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.11.0
+
+### Added
+
+- Added guidance for quickly checking commit messages across a repository.
+- Added `git log --grep` examples for finding typo patterns in commit messages.
+- Added guidance for fixing the most recent commit message with `git commit --amend`.
+- Added guidance for fixing older commit messages with interactive rebase and `reword`.
+- Added guidance explaining that changing a commit message rewrites the commit and changes its hash.
+- Added pushed-commit guidance, including when `git push --force-with-lease` is appropriate.
+- Added warnings for when not to rewrite shared, protected, tagged, released, or deployed history.
+- Added guidance for tag and GitHub Release implications when rewriting a tagged commit.
+- Added PowerShell examples for amending commit messages with subject/body text.
+- Added a dedicated appendix for commit-message correction scenarios.
+- Added Knowledge Base entries for commit-message search, amend, reword, force-with-lease, and rebase recovery.
+- Added command quick-reference and cheat-sheet examples for commit-message typo workflows.
+
+### Changed
+
+- Updated the guide metadata from `v1.10.0` to `v1.11.0`.
+- Expanded commit-message guidance beyond message style and commit bodies to include correction workflows.
+- Clarified the difference between correcting commit messages and correcting annotated tag messages.
+- Moved the references appendix from Appendix S to Appendix T so references remain last.
+- Updated README version, version history, topics, and companion-guide links for `v1.11.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.11.0`.
+
+### Notes
+
+- This is an additive update from `v1.10.0`.
+- Existing tag-message correction guidance was preserved.
+- Duplicate tag-correction content was not re-added; this update focuses on commit-message correction.
+- Existing guide content was preserved except for targeted version, structure, clarity, reference, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.11.0.md`.
+
 ## v1.10.0
 
 ### Added

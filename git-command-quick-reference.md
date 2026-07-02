@@ -1,9 +1,9 @@
 # Git Command Quick Reference
 
-**Version:** v1.10.0  
-**Full guide:** [`git-repository-guide-v1.10.0.md`](git-repository-guide-v1.10.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.10.0.md`](git-repository-guide-quick-start-guide-v1.10.0.md)  
-**Cheat sheet:** [`git-repository-guide-cheat-sheet-v1.10.0.md`](git-repository-guide-cheat-sheet-v1.10.0.md)
+**Version:** v1.11.0  
+**Full guide:** [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.11.0.md`](git-repository-guide-quick-start-guide-v1.11.0.md)  
+**Cheat sheet:** [`git-repository-guide-cheat-sheet-v1.11.0.md`](git-repository-guide-cheat-sheet-v1.11.0.md)
 
 This is a practical quick reference for commonly used Git commands.
 
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.10.0.md
+git-command-quick-reference-v1.11.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -265,6 +265,7 @@ Saves staged changes into local Git history.
 ```bash
 git commit -m "Describe what changed"
 git commit -m "Summary" -m "Longer body explaining why."
+git commit --amend -m "Corrected commit message"
 ```
 
 ### Required parameters
@@ -453,6 +454,7 @@ Shows commit history.
 git log
 git log --oneline
 git log --oneline --decorate --graph --all
+git log --all --grep="Ve0sion" --oneline
 git log --follow -- file-name.md
 ```
 
@@ -470,6 +472,9 @@ git log --follow -- file-name.md
 | `--decorate` | Shows branch and tag names. |
 | `--graph` | Shows a text graph of branches/merges. |
 | `--all` | Shows all refs, not only the current branch. |
+| `--grep="pattern"` | Filters commit messages matching a pattern. |
+| `--regexp-ignore-case` | Makes grep matching case-insensitive. |
+| `--format="..."` | Customizes log output. |
 | `--follow -- file` | Follows file history across renames. |
 | `-p` | Shows patches/diffs for commits. |
 
@@ -748,6 +753,7 @@ git push
 git push -u origin main
 git push origin v1.0.0
 git push origin --delete branch-name
+git push --force-with-lease
 ```
 
 ### Required parameters
@@ -775,6 +781,8 @@ Plain `git push` does not necessarily push new tags. Push version tags explicitl
 git push origin v1.0.0
 ```
 
+Use `--force-with-lease` only when you intentionally rewrote history and it is safe to update the remote branch.
+
 ---
 
 ## `git rebase`
@@ -789,6 +797,7 @@ Replays commits onto a new base commit.
 git switch branch-name
 git fetch origin
 git rebase origin/main
+git rebase -i <bad-commit-sha>~1
 ```
 
 ### Required parameters
@@ -805,10 +814,13 @@ git rebase origin/main
 | `--abort` | Aborts the rebase. |
 | `--skip` | Skips the current patch. |
 | `-i` | Interactive rebase. Advanced. |
+| `--root` | Rebase from the root commit. Useful only for special history edits. |
 
 ### Notes
 
 Rebase rewrites commit IDs. Avoid rebasing shared branches unless everyone agrees.
+
+To fix an older commit message during interactive rebase, change `pick` to `reword` for that commit.
 
 ---
 
@@ -973,6 +985,7 @@ git show
 git show HEAD
 git show v1.0.0
 git show --stat --oneline HEAD
+git show --no-patch --format=fuller HEAD
 ```
 
 ### Required parameters
@@ -989,6 +1002,8 @@ git show --stat --oneline HEAD
 | `--oneline` | Condenses commit display. |
 | `--name-only` | Shows names of changed files. |
 | `--name-status` | Shows names and status codes for changed files. |
+| `--no-patch` | Shows metadata/message without a patch. |
+| `--format=fuller` | Shows fuller commit metadata. |
 
 ### Notes
 
@@ -1166,7 +1181,8 @@ to inspect the result.
 | `new-tag` | Later version tag | `v1.1.0` |
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
-| `vX.Y.Z` | Version tag placeholder | `v1.10.0` |
+| `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
+| `vX.Y.Z` | Version tag placeholder | `v1.11.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
@@ -1209,6 +1225,10 @@ git diff --name-status
 | Inspect line endings | `git ls-files --eol` |
 | Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
 | Save commit pointed to by a tag | `git rev-list -n 1 vX.Y.Z` |
+| Search commit messages for typo | `git log --all --grep="TYPO" --oneline` |
+| Fix latest commit message | `git commit --amend -m "Corrected message"` |
+| Fix older commit message | `git rebase -i <bad-commit-sha>~1`, then `reword` |
+| Push rewritten private branch | `git push --force-with-lease` |
 | Restore accidental file deletion | `git restore file-name.md` |
 | Unstage a file | `git restore --staged file-name.md` |
 | View history | `git log --oneline --decorate --graph --all` |

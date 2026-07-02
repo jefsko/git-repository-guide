@@ -1,9 +1,9 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.10.0  
-**Full guide:** [`git-repository-guide-v1.10.0.md`](git-repository-guide-v1.10.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.10.0.md`](git-repository-guide-quick-start-guide-v1.10.0.md)  
-**Command quick reference:** [`git-command-quick-reference-v1.10.0.md`](git-command-quick-reference-v1.10.0.md)
+**Version:** v1.11.0  
+**Full guide:** [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.11.0.md`](git-repository-guide-quick-start-guide-v1.11.0.md)  
+**Command quick reference:** [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md)
 
 ## Path
 
@@ -24,7 +24,7 @@ repeat for later versions
 
 Use this when you want a compact checklist for creating or updating a Git repository and marking file sets as versions with tags.
 
-For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference-v1.10.0.md`](git-command-quick-reference-v1.10.0.md).
+For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md).
 
 ---
 
@@ -506,6 +506,44 @@ YYYY-MM-DD
 | `IMPORT-NOTES.md` | Historical reconstruction notes |
 
 
+---
+
+## Commit-message typo fixes
+
+### Search commit messages
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+git log --all --regexp-ignore-case --grep="ve0sion" --oneline
+```
+
+### Fix latest unpushed commit message
+
+```bash
+git commit --amend -m "Corrected commit message"
+```
+
+### Fix older unpushed commit message
+
+```bash
+git rebase -i <bad-commit-sha>~1
+```
+
+Change `pick` to `reword`.
+
+### Push rewritten private branch
+
+```bash
+git push --force-with-lease
+```
+
+### Abort rebase
+
+```bash
+git rebase --abort
+```
+
+
 ## Common fixes
 
 | Problem | Fix |
@@ -519,6 +557,8 @@ YYYY-MM-DD
 | Need to see latest commit stats | `git show --stat --oneline HEAD` |
 | Need to verify a rename | `git diff --cached --summary` and `git diff --cached --name-status --find-renames` |
 | Need to inspect line endings | `git ls-files --eol` |
+| Need to search commit messages | `git log --all --grep="TYPO" --oneline` |
+| Need to fix latest commit message | `git commit --amend -m "Corrected message"` |
 
 ---
 

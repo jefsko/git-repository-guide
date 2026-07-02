@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.10.0  
-Previous locked version: v1.9.0  
+Document version: v1.11.0  
+Previous locked version: v1.10.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.10.0` file. Save future changes as a new version, such as `v1.10.1` or `v1.11.0`.  
+Future edit policy: Do not overwrite this `v1.11.0` file. Save future changes as a new version, such as `v1.11.1` or `v1.12.0`.  
 Current as of: 2026-07-02
 
-Revision note: This `v1.10.0` edition preserves the `v1.9.0` guide and additively expands the historical-reconstruction guidance with project identity, canonical URL, GitHub Release notes, release-documentation files, and import-note examples from the v1.10.0 update brief.
+Revision note: This `v1.11.0` edition preserves the `v1.10.0` guide and additively incorporates commit-message misspelling detection and correction workflows, including `git log --grep`, `git commit --amend`, interactive rebase with `reword`, pushed-history cautions, and `git push --force-with-lease` guidance.
 
 ---
 
@@ -43,6 +43,7 @@ Revision note: This `v1.10.0` edition preserves the `v1.9.0` guide and additivel
 - [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots)
 - [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages)
 - [29. Line Endings, LF, CRLF, and `.gitattributes`](#29-line-endings-lf-crlf-and-gitattributes)
+- [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -60,7 +61,8 @@ Revision note: This `v1.10.0` edition preserves the `v1.9.0` guide and additivel
 - [Appendix P: Historical Repository Reconstruction Scenario](#appendix-p-historical-repository-reconstruction-scenario)
 - [Appendix Q: Tag Correction and Release Repair Scenarios](#appendix-q-tag-correction-and-release-repair-scenarios)
 - [Appendix R: Line-Ending and `.gitattributes` Scenarios](#appendix-r-line-ending-and-gitattributes-scenarios)
-- [Appendix S: References](#appendix-s-references)
+- [Appendix S: Commit Message Correction Scenarios](#appendix-s-commit-message-correction-scenarios)
+- [Appendix T: References](#appendix-t-references)
 - [Index](#index)
 
 ---
@@ -72,7 +74,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1035,6 +1037,29 @@ git push origin vX.Y.Z
 git ls-files --eol
 ```
 
+
+### Search and fix commit-message typos
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+git log -1 --oneline
+git commit --amend -m "Corrected commit message"
+```
+
+For an older commit:
+
+```bash
+git rebase -i <bad-commit-sha>~1
+```
+
+Change `pick` to `reword`.
+
+If rewritten history was already pushed and it is safe to rewrite that branch:
+
+```bash
+git push --force-with-lease
+```
+
 ### Create a GitHub Release
 
 ```bash
@@ -1133,6 +1158,7 @@ Recommended history:
 | `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, and Markdown reference updates |
 | `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
 | `v1.10.0` | Additive expansion covering project identity, canonical URL, GitHub Release notes, release documentation files, and import-note examples for reconstructed repositories |
+| `v1.11.0` | Additive expansion covering commit-message typo detection, commit-message correction, amend/rebase workflows, pushed-history safety, and force-with-lease guidance |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -5037,6 +5063,457 @@ read it as:
 It is usually not fatal, but it is a good reason to add `.gitattributes` early.
 
 
+
+---
+
+## 30. Correcting Commit Message Mistakes
+
+Commit-message mistakes are different from tag-message mistakes.
+
+A commit message is part of the commit object. If you change a commit message, Git creates a replacement commit with a new commit hash. Even if the file content is unchanged, the commit hash changes because the commit metadata changed.
+
+The central rule is:
+
+> Fixing a commit message rewrites history for that commit and any descendant commits.
+
+So the safe method depends on whether the commit has already been pushed or shared.
+
+Git's `git commit` documentation describes `--amend` as replacing the tip of the current branch by creating a new commit. [R69] Git's interactive rebase documentation says that to edit a commit message during an interactive rebase, replace `pick` with `reword`. [R70]
+
+### Commit messages vs. tag messages vs. release notes
+
+Do not confuse these:
+
+| Thing | Stored where | Example | Correction method |
+|---|---|---|---|
+| Commit message | Git commit object | `feat: add Dice service link` | Amend or rebase/reword commit |
+| Annotated tag message | Git tag object | `Version 1.8.0` | Delete/recreate tag, preserving target commit if needed |
+| GitHub Release notes | GitHub Release page | Release summary/body | Edit GitHub Release notes |
+
+Changing a commit message is not the same thing as changing an annotated tag message.
+
+### Quickly check commit messages across a repository
+
+Show recent commit messages:
+
+```bash
+git log --oneline
+```
+
+Show all reachable commit messages:
+
+```bash
+git log --all --oneline
+```
+
+Show commit messages with short dates:
+
+```bash
+git log --all --date=short --format="%h %ad %s"
+```
+
+Show the full latest commit metadata and message:
+
+```bash
+git show --no-patch --format=fuller HEAD
+```
+
+Show a specific commit:
+
+```bash
+git show --no-patch --format=fuller <commit-sha>
+```
+
+Show only the latest commit message:
+
+```bash
+git log -1 --format=%B
+```
+
+Show only a specific commit message:
+
+```bash
+git log -1 --format=%B <commit-sha>
+```
+
+### Search commit messages for a typo
+
+Use `git log --grep`. Git's `git log` documentation describes `git log` as showing commit logs; its revision filtering options include grep-style message matching. [R68]
+
+Search all reachable commit messages for an exact typo:
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+```
+
+Search case-insensitively:
+
+```bash
+git log --all --regexp-ignore-case --grep="ve0sion" --oneline
+```
+
+Search with useful context:
+
+```bash
+git log --all --grep="Ve0sion" --date=short --format="%h %ad %an %s"
+```
+
+Search only the current branch:
+
+```bash
+git log --grep="Ve0sion" --oneline
+```
+
+Search all branches and tags:
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+```
+
+Search for several likely misspellings:
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+git log --all --grep="Versoin" --oneline
+git log --all --grep="Verison" --oneline
+git log --all --grep="Vesion" --oneline
+```
+
+PowerShell helper:
+
+```powershell
+$patterns = @("Ve0sion", "Versoin", "Verison", "Vesion")
+
+foreach ($pattern in $patterns) {
+    Write-Host ""
+    Write-Host "Searching for: $pattern"
+    git log --all --grep="$pattern" --date=short --format="%h %ad %an %s"
+}
+```
+
+Important:
+
+```text
+git log --grep searches commit messages.
+git grep searches tracked file contents.
+```
+
+For commit-message misspellings, use `git log --grep`.
+
+### Fix the most recent commit message
+
+Use this when the bad commit is the latest commit on the current branch.
+
+Check first:
+
+```bash
+git log -1 --oneline
+git show --no-patch --format=fuller HEAD
+```
+
+Fix with a one-line message:
+
+```bash
+git commit --amend -m "Corrected commit message"
+```
+
+Example:
+
+```bash
+git commit --amend -m "docs: update version references"
+```
+
+Fix with a subject and body:
+
+```bash
+git commit --amend -m "docs: update version references" -m "Correct misspelled version wording in the commit message and clarify the documentation update scope."
+```
+
+Verify:
+
+```bash
+git log -1 --oneline
+git show --no-patch --format=fuller HEAD
+```
+
+If the commit has not been pushed, this is usually safe.
+
+If it has already been pushed, amending it changes the commit hash and the remote branch will still point to the old commit until you push the rewritten history.
+
+### Fix an older commit message
+
+Use interactive rebase with `reword`.
+
+Find the bad commit:
+
+```bash
+git log --oneline
+```
+
+Example:
+
+```text
+9f8e7d6 docs: update changelog
+a1b2c3d docs: update versoin references
+123abcd docs: add quick-start guide
+```
+
+Start an interactive rebase from before the bad commit:
+
+```bash
+git rebase -i <bad-commit-sha>~1
+```
+
+Example:
+
+```bash
+git rebase -i a1b2c3d~1
+```
+
+Git opens an editor with a list like this:
+
+```text
+pick a1b2c3d docs: update versoin references
+pick 9f8e7d6 docs: update changelog
+```
+
+Change only the bad commit line from `pick` to `reword`:
+
+```text
+reword a1b2c3d docs: update versoin references
+pick 9f8e7d6 docs: update changelog
+```
+
+Save and close the editor.
+
+Git then opens the selected commit message. Correct the message, save, and close.
+
+Verify:
+
+```bash
+git log --oneline
+```
+
+Important:
+
+```text
+The corrected commit has a new hash.
+Any later commits replayed by the rebase also get new hashes.
+```
+
+### Fix the root commit message
+
+If the misspelled commit is the first commit in the repository, there is no earlier parent commit.
+
+Use:
+
+```bash
+git rebase -i --root
+```
+
+Then change `pick` to `reword` for the root commit.
+
+This rewrites the root commit and every later commit. Use this only before pushing, or only when you fully understand the impact.
+
+### What changes if the commit was already pushed?
+
+If the commit was already pushed, correcting its message rewrites published history.
+
+A normal push may fail:
+
+```bash
+git push
+```
+
+because your local branch history no longer matches the remote branch history.
+
+If it is safe to rewrite the remote branch, use:
+
+```bash
+git push --force-with-lease
+```
+
+Git's `git push` documentation says `--force-with-lease` protects remote refs being updated by requiring their current value to match what your local remote-tracking branch expects. [R71]
+
+Preferred:
+
+```bash
+git push --force-with-lease
+```
+
+Avoid unless you have a very specific reason:
+
+```bash
+git push --force
+```
+
+`--force-with-lease` is still a force push, but it adds a safety check that can prevent overwriting someone else's newer remote work.
+
+### When `git push --force-with-lease` is reasonable
+
+Use it only when all of these are true:
+
+```text
+1. You understand that commit hashes will change.
+2. The branch is your private branch, or everyone sharing it agrees.
+3. You have checked that nobody else pushed new work.
+4. The branch is not protected, or you have permission to rewrite it.
+5. No release, deployment, tag, or other process depends on the old commit hash.
+```
+
+Typical acceptable cases:
+
+- your own feature branch;
+- a branch nobody else uses;
+- a pull request branch where rebasing is accepted;
+- an unprotected documentation branch you control.
+
+### When not to rewrite history
+
+Do not rewrite history just to fix a commit-message typo when:
+
+- the branch is shared by other people;
+- the branch is `main` and already published;
+- the branch is protected;
+- a CI/CD process already built or deployed that commit;
+- a tag points to the old commit;
+- a GitHub Release points to a tag based on the old commit;
+- other people may have based work on the old commit;
+- the typo is minor and does not affect understanding;
+- the correction would cause more confusion than the typo.
+
+In those cases, prefer one of these:
+
+1. Leave the typo alone.
+2. Correct the wording in `CHANGELOG.md` or release notes.
+3. Add a later documentation commit if actual files need clarification.
+4. Mention the typo in import notes if historical accuracy matters.
+
+For a commit-message typo only, a follow-up commit that changes no files is usually not useful.
+
+### If a tag points to the commit being rewritten
+
+If a tag points to the old commit and you rewrite that commit, the tag still points to the old commit.
+
+Before rewriting a tagged commit, ask:
+
+```text
+Is this tag already pushed?
+Is this a production tag?
+Is there a GitHub Release attached to it?
+Has anything been deployed from it?
+```
+
+If the tag should move to the corrected commit, correct the tag separately after the commit rewrite. That may require deleting and recreating the tag, and it may also require updating a GitHub Release.
+
+Use the tag-correction guidance in [Section 28](#28-correcting-tag-mistakes-and-understanding-tag-messages) before replacing a pushed tag.
+
+### Safe workflow: latest unpushed commit
+
+```bash
+git log -1 --oneline
+git commit --amend -m "Corrected commit message"
+git log -1 --oneline
+git push
+```
+
+### Safe workflow: older unpushed commit
+
+```bash
+git log --oneline
+git rebase -i <bad-commit-sha>~1
+```
+
+In the editor, change:
+
+```text
+pick <bad-commit-sha> old misspelled message
+```
+
+to:
+
+```text
+reword <bad-commit-sha> old misspelled message
+```
+
+Then verify:
+
+```bash
+git log --oneline
+```
+
+If the branch has never been pushed, push normally:
+
+```bash
+git push -u origin branch-name
+```
+
+### Safe workflow: latest pushed commit on a private branch
+
+```bash
+git log -1 --oneline
+git commit --amend -m "Corrected commit message"
+git log -1 --oneline
+git push --force-with-lease
+```
+
+Use only when it is safe to rewrite that branch.
+
+### Safe workflow: older pushed commit on a private branch
+
+```bash
+git log --oneline
+git rebase -i <bad-commit-sha>~1
+git log --oneline
+git push --force-with-lease
+```
+
+Use only when it is safe to rewrite that branch.
+
+### Abort or continue an interactive rebase
+
+Abort if you decide not to continue:
+
+```bash
+git rebase --abort
+```
+
+Continue after resolving a stopped rebase:
+
+```bash
+git rebase --continue
+```
+
+### PowerShell examples
+
+Most Git commands are the same in PowerShell:
+
+```powershell
+git rebase -i a1b2c3d~1
+git commit --amend -m "docs: update version references"
+```
+
+For a commit subject and body:
+
+```powershell
+git commit --amend `
+  -m "docs: update version references" `
+  -m "Correct the commit message typo and clarify the documentation update scope."
+```
+
+PowerShell here-string body:
+
+```powershell
+$body = @"
+Correct the commit message typo and clarify the documentation update scope.
+
+This commit message was amended before the branch was shared.
+"@
+
+git commit --amend -m "docs: update version references" -m $body
+```
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -7671,6 +8148,78 @@ A useful release note includes a summary, production publish date, highlights, a
 `RELEASES.md` and `IMPORT-NOTES.md` can be useful. `RELEASES.md` summarizes production releases. `IMPORT-NOTES.md` explains how historical folders were reconstructed into Git history.
 
 
+
+## F.148 How do I search commit messages for a typo?
+
+Use `git log --grep`:
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+```
+
+## F.149 How do I search commit messages case-insensitively?
+
+Use:
+
+```bash
+git log --all --regexp-ignore-case --grep="ve0sion" --oneline
+```
+
+## F.150 How do I fix the latest commit message?
+
+Use:
+
+```bash
+git commit --amend -m "Corrected commit message"
+```
+
+## F.151 How do I fix an older commit message?
+
+Use interactive rebase:
+
+```bash
+git rebase -i <bad-commit-sha>~1
+```
+
+Then change `pick` to `reword` for the commit whose message you want to fix.
+
+## F.152 Does changing a commit message change the commit hash?
+
+Yes. The commit message is part of the commit object, so changing it creates a new commit hash.
+
+## F.153 What changes if the commit was already pushed?
+
+You have rewritten published history. A normal push may fail, and a force push may be required if rewriting the remote branch is safe.
+
+## F.154 Should I use `git push --force` or `git push --force-with-lease`?
+
+Prefer `git push --force-with-lease`. It is still a force push, but it checks that the remote ref has not changed unexpectedly.
+
+## F.155 When should I not rewrite a commit message?
+
+Avoid rewriting shared, protected, tagged, released, deployed, or widely used history just to fix a minor typo.
+
+## F.156 What if a tag points to the commit I want to rewrite?
+
+The tag will continue to point to the old commit unless you correct the tag separately. Be especially careful with pushed production tags and GitHub Releases.
+
+## F.157 How do I abort an interactive rebase?
+
+Use:
+
+```bash
+git rebase --abort
+```
+
+## F.158 How do I continue an interactive rebase?
+
+Use:
+
+```bash
+git rebase --continue
+```
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -10029,7 +10578,170 @@ Mark images and other binary files binary.
 ```
 
 
-# Appendix S: References
+
+---
+
+# Appendix S: Commit Message Correction Scenarios
+
+This appendix expands [Section 30](#30-correcting-commit-message-mistakes).
+
+## S.1 Search all commit messages for a typo
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+```
+
+Case-insensitive:
+
+```bash
+git log --all --regexp-ignore-case --grep="ve0sion" --oneline
+```
+
+With dates and authors:
+
+```bash
+git log --all --grep="Ve0sion" --date=short --format="%h %ad %an %s"
+```
+
+## S.2 Search multiple typo patterns in PowerShell
+
+```powershell
+$patterns = @("Ve0sion", "Versoin", "Verison", "Vesion")
+
+foreach ($pattern in $patterns) {
+    Write-Host ""
+    Write-Host "Searching for: $pattern"
+    git log --all --grep="$pattern" --date=short --format="%h %ad %an %s"
+}
+```
+
+## S.3 Inspect the latest commit message
+
+```bash
+git log -1 --oneline
+git log -1 --format=%B
+git show --no-patch --format=fuller HEAD
+```
+
+## S.4 Inspect a specific commit message
+
+```bash
+git log -1 --format=%B <commit-sha>
+git show --no-patch --format=fuller <commit-sha>
+```
+
+## S.5 Fix the latest unpushed commit message
+
+```bash
+git log -1 --oneline
+git commit --amend -m "Corrected commit message"
+git log -1 --oneline
+```
+
+With a body:
+
+```bash
+git commit --amend -m "docs: update version references" -m "Correct the commit message typo and clarify the documentation update scope."
+```
+
+## S.6 Fix an older unpushed commit message
+
+```bash
+git log --oneline
+git rebase -i <bad-commit-sha>~1
+```
+
+In the editor, change:
+
+```text
+pick <bad-commit-sha> old misspelled message
+```
+
+to:
+
+```text
+reword <bad-commit-sha> old misspelled message
+```
+
+Save, enter the corrected message, and verify:
+
+```bash
+git log --oneline
+```
+
+## S.7 Fix the root commit message
+
+```bash
+git rebase -i --root
+```
+
+Change `pick` to `reword` for the root commit.
+
+Use this carefully because it rewrites the root commit and every descendant commit.
+
+## S.8 Fix the latest pushed commit message on a private branch
+
+```bash
+git log -1 --oneline
+git commit --amend -m "Corrected commit message"
+git log -1 --oneline
+git push --force-with-lease
+```
+
+Use only when it is safe to rewrite the remote branch.
+
+## S.9 Fix an older pushed commit message on a private branch
+
+```bash
+git log --oneline
+git rebase -i <bad-commit-sha>~1
+git log --oneline
+git push --force-with-lease
+```
+
+Use only when it is safe to rewrite the remote branch.
+
+## S.10 Abort or continue rebase
+
+Abort:
+
+```bash
+git rebase --abort
+```
+
+Continue:
+
+```bash
+git rebase --continue
+```
+
+## S.11 Decision table
+
+| Situation | Recommended action |
+|---|---|
+| Latest commit, not pushed | `git commit --amend -m "Corrected message"` |
+| Older commit, not pushed | `git rebase -i <bad-commit-sha>~1`, then `reword` |
+| Latest commit, pushed private branch | Amend, then `git push --force-with-lease` |
+| Older commit, pushed private branch | Interactive rebase, then `git push --force-with-lease` |
+| Shared/protected/main branch | Usually do not rewrite history for a typo |
+| Tagged/released/deployed commit | Avoid rewriting unless you fully plan tag/release/deployment repair |
+
+## S.12 Rewrite safety checklist
+
+Before rewriting a pushed commit message, confirm:
+
+```text
+The branch is private or everyone agrees.
+No one else pushed new work.
+The branch is not protected, or rewriting is allowed.
+No production tag depends on the old commit.
+No GitHub Release depends on the old commit.
+No deployment depends on the old commit.
+The benefit is worth the disruption.
+```
+
+
+# Appendix T: References
 
 ## Core conceptual references
 
@@ -10227,7 +10939,34 @@ https://git-scm.com/docs/git-mv
 [R66] Git documentation, `gitattributes`.  
 [R67] Git documentation, `git-ls-files`, including `--eol`.  
 
+
+[R68] Git documentation, `git-log`, including commit log output and message filtering options such as `--grep`.  
+[R69] Git documentation, `git-commit`, including `--amend`.  
+[R70] Git documentation, `git-rebase`, including interactive rebase and `reword`.  
+[R71] Git documentation, `git-push`, including `--force-with-lease`.  
+
 # Index
+
+
+## Commit-message misspellings
+
+See [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes) and [Appendix S](#appendix-s-commit-message-correction-scenarios).
+
+## `git commit --amend`
+
+See [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes) and [Appendix S](#appendix-s-commit-message-correction-scenarios).
+
+## Interactive rebase
+
+See [17. Branching, Merging, and Rebasing](#17-branching-merging-and-rebasing), [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes), and [Appendix S](#appendix-s-commit-message-correction-scenarios).
+
+## `reword`
+
+See [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes) and [Appendix S](#appendix-s-commit-message-correction-scenarios).
+
+## `git push --force-with-lease`
+
+See [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes) and [Appendix S](#appendix-s-commit-message-correction-scenarios).
 
 
 ## Canonical URL

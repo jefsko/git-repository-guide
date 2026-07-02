@@ -1,13 +1,13 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.10.0  
-**Based on full guide:** [`git-repository-guide-v1.10.0.md`](git-repository-guide-v1.10.0.md)  
+**Version:** v1.11.0  
+**Based on full guide:** [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
 This is the short, practical version of the full Git Repository Guide. It focuses on the common successful path: create a local repo, connect it to GitHub, commit files, create annotated tags, and understand what is included when you download a tagged version.
 
-Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.10.0.md`](git-command-quick-reference-v1.10.0.md).
+Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md).
 
 ---
 
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.10.0
+annotated version tags such as v1.0.0, v1.1.0, v1.11.0
 ```
 
 End result:
@@ -658,6 +658,43 @@ IMPORT-NOTES.md
 Use `RELEASES.md` for production release summaries and `IMPORT-NOTES.md` to explain how historical backup folders were reconstructed into Git history.
 
 
+---
+
+## Fix commit-message typos
+
+Search commit messages:
+
+```bash
+git log --all --grep="Ve0sion" --oneline
+git log --all --regexp-ignore-case --grep="ve0sion" --oneline
+```
+
+Fix the latest unpushed commit message:
+
+```bash
+git log -1 --oneline
+git commit --amend -m "Corrected commit message"
+git log -1 --oneline
+```
+
+Fix an older unpushed commit message:
+
+```bash
+git log --oneline
+git rebase -i <bad-commit-sha>~1
+```
+
+In the editor, change `pick` to `reword` for the bad commit.
+
+If rewritten history was already pushed and it is safe to rewrite that branch:
+
+```bash
+git push --force-with-lease
+```
+
+Do not rewrite shared, protected, tagged, released, or deployed history just to fix a minor typo unless you fully understand the consequences.
+
+
 ## If something fails
 
 | Problem | Most likely fix |
@@ -692,10 +729,11 @@ Use the full guide when you need:
 - tag correction workflows;
 - LF/CRLF and `.gitattributes` guidance;
 - release notes and import documentation;
+- commit-message typo correction workflows;
 - canonical URL and repository identity planning;
 - command syntax and parameter meanings;
 - troubleshooting and reference commands.
 
-Full guide: [`git-repository-guide-v1.10.0.md`](git-repository-guide-v1.10.0.md)
+Full guide: [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)
 
-Command quick reference: [`git-command-quick-reference-v1.10.0.md`](git-command-quick-reference-v1.10.0.md)
+Command quick reference: [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md)
