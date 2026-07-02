@@ -1,13 +1,13 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.9.0  
-**Based on full guide:** [`git-repository-guide-v1.9.0.md`](git-repository-guide-v1.9.0.md)  
+**Version:** v1.10.0  
+**Based on full guide:** [`git-repository-guide-v1.10.0.md`](git-repository-guide-v1.10.0.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
 This is the short, practical version of the full Git Repository Guide. It focuses on the common successful path: create a local repo, connect it to GitHub, commit files, create annotated tags, and understand what is included when you download a tagged version.
 
-Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.9.0.md`](git-command-quick-reference-v1.9.0.md).
+Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.10.0.md`](git-command-quick-reference-v1.10.0.md).
 
 ---
 
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.9.0
+annotated version tags such as v1.0.0, v1.1.0, v1.10.0
 ```
 
 End result:
@@ -611,6 +611,53 @@ git ls-files --eol
 ```
 
 
+---
+
+## Document release identity
+
+For a reconstructed website repository, document these clearly:
+
+```text
+Repository name
+Canonical URL
+Optional alias
+Site heading
+Browser title
+Production release tags
+```
+
+Example:
+
+```text
+Repository name: demo-jeffskone-com
+Canonical URL: https://demo.jeffskone.com
+Optional alias: https://portfolio.jeffskone.com
+Site heading: Jeff Skone's AWS Portfolio
+Browser title: Jeff Skone's AWS Portfolio | AWS Demos
+```
+
+Recommended release-note sections:
+
+```markdown
+## Summary
+
+## Production Publish Date
+
+## Highlights
+
+## Notes
+```
+
+For reconstructed projects, consider adding:
+
+```text
+RELEASES.md
+IMPORT-NOTES.md
+```
+
+Use `RELEASES.md` for production release summaries and `IMPORT-NOTES.md` to explain how historical backup folders were reconstructed into Git history.
+
+
 ## If something fails
 
 | Problem | Most likely fix |
@@ -644,9 +691,11 @@ Use the full guide when you need:
 - historical version folder imports;
 - tag correction workflows;
 - LF/CRLF and `.gitattributes` guidance;
+- release notes and import documentation;
+- canonical URL and repository identity planning;
 - command syntax and parameter meanings;
 - troubleshooting and reference commands.
 
-Full guide: [`git-repository-guide-v1.9.0.md`](git-repository-guide-v1.9.0.md)
+Full guide: [`git-repository-guide-v1.10.0.md`](git-repository-guide-v1.10.0.md)
 
-Command quick reference: [`git-command-quick-reference-v1.9.0.md`](git-command-quick-reference-v1.9.0.md)
+Command quick reference: [`git-command-quick-reference-v1.10.0.md`](git-command-quick-reference-v1.10.0.md)

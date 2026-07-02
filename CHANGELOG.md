@@ -4,6 +4,35 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.10.0
+
+### Added
+
+- Added expanded project-identity guidance for reconstructed domain-based repositories.
+- Added canonical URL and optional alias guidance using the `demo-jeffskone-com` case study.
+- Added guidance for distinguishing repository name, production URL, site heading, browser title, and optional alias.
+- Added GitHub Release title and release-notes structure examples.
+- Added a practical release-notes template with summary, production publish date, highlights, and notes.
+- Added expanded documentation-file guidance for reconstructed repositories, including `RELEASES.md` and `IMPORT-NOTES.md`.
+- Added Appendix P examples for website identity, pre-import cleanup, release notes, GitHub Release titles, and documentation files.
+- Added Knowledge Base entries for domain-based repository names, canonical URLs, historical domain preservation, GitHub Release notes, and reconstructed-repository documentation files.
+
+### Changed
+
+- Updated the guide metadata from `v1.9.0` to `v1.10.0`.
+- Expanded existing historical repository reconstruction guidance without duplicating already-covered tag repair or line-ending material.
+- Updated README version, version history, topics, and companion-guide links for `v1.10.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.10.0`.
+- Clarified that some v1.10.0 addendum material was already covered in v1.9.0 and only relevant additional details were incorporated.
+
+### Notes
+
+- This is an additive update from `v1.9.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, reference, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.10.0.md`.
+- The v1.10.0 addendum overlapped heavily with v1.9.0 historical reconstruction content; duplicate material was not re-added unless it provided more detail or examples.
+
 ## v1.9.0
 
 ### Added

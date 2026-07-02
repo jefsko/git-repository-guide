@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.9.0  
-Previous locked version: v1.8.0  
+Document version: v1.10.0  
+Previous locked version: v1.9.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.9.0` file. Save future changes as a new version, such as `v1.9.1` or `v2.0.0`.  
+Future edit policy: Do not overwrite this `v1.10.0` file. Save future changes as a new version, such as `v1.10.1` or `v1.11.0`.  
 Current as of: 2026-07-02
 
-Revision note: This `v1.9.0` edition preserves the `v1.8.0` guide and additively incorporates historical repository reconstruction, production-tag strategy, tag correction workflows, GitHub Release guidance, and LF/CRLF line-ending guidance from the v1.9.0 update brief.
+Revision note: This `v1.10.0` edition preserves the `v1.9.0` guide and additively expands the historical-reconstruction guidance with project identity, canonical URL, GitHub Release notes, release-documentation files, and import-note examples from the v1.10.0 update brief.
 
 ---
 
@@ -72,7 +72,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1132,6 +1132,7 @@ Recommended history:
 | `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
 | `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, and Markdown reference updates |
 | `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
+| `v1.10.0` | Additive expansion covering project identity, canonical URL, GitHub Release notes, release documentation files, and import-note examples for reconstructed repositories |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -4165,6 +4166,35 @@ demo-jeffskone-com   = clean repository/folder name
 
 The hyphenated name is easier to use in GitHub URLs, local folder names, scripts, and command-line workflows.
 
+
+### Website branding and canonical URL planning
+
+A reconstructed repository should capture not only file history, but also the current project identity.
+
+For a portfolio/demo site, it can be useful to distinguish:
+
+| Item | Example | Purpose |
+|---|---|---|
+| Repository name | `demo-jeffskone-com` | Clean GitHub/local folder name |
+| Canonical URL | `https://demo.jeffskone.com` | Official public URL |
+| Site heading | `Jeff Skone's AWS Portfolio` | Human-facing branding |
+| Browser title | `Jeff Skone's AWS Portfolio \| AWS Demos` | Browser/search/social context |
+| Optional alias | `https://portfolio.jeffskone.com` | Friendly alternate address |
+
+A good rule is:
+
+> Use the word **portfolio** for professional positioning and the word **demo** for runnable examples and the established URL.
+
+If an optional alias is added, redirect it to the canonical URL:
+
+```text
+https://portfolio.jeffskone.com -> https://demo.jeffskone.com
+```
+
+Keep one canonical URL in README files, metadata, resume links, documentation, analytics, and release notes.
+
+Do not rewrite historical commits merely to change old domain references. The old domain may be part of the accurate project history.
+
 ### Recommended historical import strategy
 
 Use a truthful historical sequence:
@@ -4411,6 +4441,134 @@ Recommended workflow:
 ```
 
 Do not create GitHub Releases for offline development snapshots unless you explicitly want archival release pages for them.
+
+
+### Recommended GitHub Release titles
+
+For GitHub Releases, keep release titles simple and aligned with the tag.
+
+Recommended:
+
+```text
+v1.0.0
+v1.1.2
+v1.2.0
+```
+
+Also acceptable:
+
+```text
+Version 1.0.0
+Release v1.0.0
+```
+
+Avoid overloading the release title with too much detail. Put the detail in the release notes.
+
+### Recommended GitHub Release notes structure
+
+A useful release note structure is:
+
+```markdown
+## Summary
+
+Short explanation of what this release represents.
+
+## Production Publish Date
+
+YYYY-MM-DD
+
+## Highlights
+
+- Important change 1.
+- Important change 2.
+- Important change 3.
+
+## Notes
+
+- Any historical import notes.
+- Any domain or deployment notes.
+- Any known limitations.
+```
+
+Example:
+
+```markdown
+## Summary
+
+Initial production publish of the AWS portfolio/demo site.
+
+## Production Publish Date
+
+2026-03-17
+
+## Highlights
+
+- Added initial AWS microservices index.
+- Published the first production version.
+- Established the baseline site structure.
+
+## Notes
+
+- This release was reconstructed from historical backup folders.
+```
+
+### Recommended documentation files for reconstructed sites
+
+At minimum, use:
+
+```text
+README.md
+CHANGELOG.md
+```
+
+For reconstructed website history, these can also be useful:
+
+```text
+RELEASES.md
+IMPORT-NOTES.md
+```
+
+Purpose:
+
+| File | Purpose |
+|---|---|
+| `README.md` | Explains what the site is, where it is deployed, and how the repository is organized |
+| `CHANGELOG.md` | Summarizes notable changes by version |
+| `RELEASES.md` | Lists production publish dates, production tags, release summaries, and GitHub Release notes |
+| `IMPORT-NOTES.md` | Explains how historical backup folders were reconstructed into Git history |
+
+Do not force every historical folder to contain every documentation file.
+
+A practical policy is:
+
+| Snapshot type | Documentation expectation |
+|---|---|
+| Offline development snapshot | May have minimal documentation |
+| Production release snapshot | Should include release/documentation files if they existed at that stage |
+| Current/latest version | Should have the best README, CHANGELOG, and release/import notes |
+
+### Recommended future workflow after reconstruction
+
+After the historical repository is reconstructed, stop using folder backups as the primary versioning method.
+
+Use normal Git workflow:
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "Describe the change"
+git push
+```
+
+For a production release:
+
+```powershell
+git tag -a vX.Y.Z -m "Release vX.Y.Z: short release summary. Original production publish: YYYY-MM-DD."
+git push origin vX.Y.Z
+```
+
+Then optionally create a GitHub Release from the pushed tag.
 
 
 
@@ -7491,6 +7649,28 @@ Linux/Unix shell scripts can fail if they use CRLF line endings.
 No. Mark binary formats such as PNG, JPG, GIF, ICO, and WEBP as binary in `.gitattributes`.
 
 
+
+## F.143 What repository name should I use for a domain-based site?
+
+Use a clean hyphenated repository name based on the domain, such as `demo-jeffskone-com`, rather than a dotted name like `demo.jeffskone.com`.
+
+## F.144 What is a canonical URL?
+
+A canonical URL is the official preferred URL for a page or site when similar content could be reached through multiple addresses.
+
+## F.145 Should historical commits be rewritten to update an old domain?
+
+Usually no. If the old domain was accurate at the time, preserve it in the historical commit.
+
+## F.146 What should GitHub Release notes include?
+
+A useful release note includes a summary, production publish date, highlights, and notes.
+
+## F.147 What extra documentation files are useful for reconstructed repositories?
+
+`RELEASES.md` and `IMPORT-NOTES.md` can be useful. `RELEASES.md` summarizes production releases. `IMPORT-NOTES.md` explains how historical folders were reconstructed into Git history.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -9578,6 +9758,89 @@ Purpose:
 
 
 
+
+## P.8 Website identity checklist
+
+For a reconstructed website repository, document these decisions:
+
+| Item | Example |
+|---|---|
+| Repository name | `demo-jeffskone-com` |
+| Repository description | `Portfolio site showcasing AWS microservices, websites, and web applications` |
+| Canonical URL | `https://demo.jeffskone.com` |
+| Optional alias | `https://portfolio.jeffskone.com` |
+| Main heading | `Jeff Skone's AWS Portfolio` |
+| Browser title | `Jeff Skone's AWS Portfolio \| AWS Demos` |
+
+This helps future readers understand the difference between repository naming, site branding, and the production URL.
+
+## P.9 Pre-import cleanup checklist
+
+Before committing a historical snapshot, check for:
+
+| Item | Example | Recommended action |
+|---|---|---|
+| Accidental test files | `test.txt` | Remove before committing if confirmed accidental |
+| Expected old domains | `demo.trixareforkids.com` | Keep if historically accurate |
+| Broken intermediate references | old asset paths | Keep if they reflect actual offline development history |
+| Suspicious file extensions | `404trooper.gif` with JPEG content | Preserve if historical; clean only current/latest version if appropriate |
+
+This is about truthful reconstruction, not perfecting every old snapshot.
+
+## P.10 Release notes template
+
+```markdown
+## Summary
+
+Short explanation of what this release represents.
+
+## Production Publish Date
+
+YYYY-MM-DD
+
+## Highlights
+
+- Important change 1.
+- Important change 2.
+- Important change 3.
+
+## Notes
+
+- Historical import notes.
+- Domain or deployment notes.
+- Known limitations.
+```
+
+## P.11 GitHub Release title examples
+
+Recommended:
+
+```text
+v1.0.0
+v1.1.2
+v1.2.0
+```
+
+Also acceptable:
+
+```text
+Version 1.0.0
+Release v1.0.0
+```
+
+Keep detailed explanations in the release notes, not the title.
+
+## P.12 Documentation files for reconstructed projects
+
+| File | Purpose |
+|---|---|
+| `README.md` | Project overview, canonical URL, repository purpose, and navigation |
+| `CHANGELOG.md` | Notable changes by version |
+| `RELEASES.md` | Production publish dates, production tags, and release summaries |
+| `IMPORT-NOTES.md` | Explanation of the historical reconstruction process |
+
+Do not add documentation files retroactively to old snapshots unless they really existed in that snapshot or you intentionally document the import as part of a new current-state commit.
+
 ---
 
 # Appendix Q: Tag Correction and Release Repair Scenarios
@@ -9965,6 +10228,23 @@ https://git-scm.com/docs/git-mv
 [R67] Git documentation, `git-ls-files`, including `--eol`.  
 
 # Index
+
+
+## Canonical URL
+
+See [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots).
+
+## GitHub Release notes
+
+See [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots) and [Appendix P](#appendix-p-historical-repository-reconstruction-scenario).
+
+## `RELEASES.md`
+
+See [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots) and [Appendix P](#appendix-p-historical-repository-reconstruction-scenario).
+
+## `IMPORT-NOTES.md`
+
+See [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots) and [Appendix P](#appendix-p-historical-repository-reconstruction-scenario).
 
 
 ## Historical reconstruction
