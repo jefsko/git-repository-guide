@@ -1,13 +1,13 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.7.0  
-**Based on full guide:** [`git-repository-guide-v1.7.0.md`](git-repository-guide-v1.7.0.md)  
+**Version:** v1.8.0  
+**Based on full guide:** [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
 This is the short, practical version of the full Git Repository Guide. It focuses on the common successful path: create a local repo, connect it to GitHub, commit files, create annotated tags, and understand what is included when you download a tagged version.
 
-Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting.
+Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md).
 
 ---
 
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.7.0
+annotated version tags such as v1.0.0, v1.1.0, v1.8.0
 ```
 
 End result:
@@ -475,6 +475,53 @@ git push origin vX.Y.Z
 ```
 
 
+---
+
+## Rename a tracked file
+
+Use this when a tracked file has the wrong or confusing name.
+
+Preferred workflow:
+
+```powershell
+git mv old-name.md new-name.md
+```
+
+Then update any Markdown links or references that mention the old filename.
+
+Stage and verify:
+
+```powershell
+git add -A
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+Commit:
+
+```powershell
+git commit -m "Rename guide file"
+```
+
+If this rename is part of a versioned documentation update, tag after the final commit:
+
+```powershell
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+If you already deleted the old file and copied in the renamed file manually, try this first:
+
+```powershell
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+If Git detects a rename, you can usually continue. If it still shows delete plus add and you care about clean rename display, redo the rename with `git mv`.
+
+
 ## If something fails
 
 | Problem | Most likely fix |
@@ -503,6 +550,11 @@ Use the full guide when you need:
 - practical staging and tag download scenarios;
 - comparing tags locally and on GitHub.com;
 - Pull Request workflows;
+- renaming tracked files with `git mv`;
+- updating links after a file rename;
+- command syntax and parameter meanings;
 - troubleshooting and reference commands.
 
-Full guide: [`git-repository-guide-v1.7.0.md`](git-repository-guide-v1.7.0.md)
+Full guide: [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)
+
+Command quick reference: [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md)

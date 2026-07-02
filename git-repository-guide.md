@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.7.0  
-Previous locked version: v1.6.0  
+Document version: v1.8.0  
+Previous locked version: v1.7.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.7.0` file. Save future changes as a new version, such as `v1.7.1` or `v1.8.0`.  
+Future edit policy: Do not overwrite this `v1.8.0` file. Save future changes as a new version, such as `v1.8.1` or `v1.9.0`.  
 Current as of: 2026-07-01
 
-Revision note: This `v1.7.0` edition preserves the `v1.6.0` guide and additively incorporates GitHub.com tag comparison, version-diff workflows, and expanded Pull Request workflows from the v1.7.0 update brief.
+Revision note: This `v1.8.0` edition preserves the `v1.7.0` guide and additively incorporates tracked-file rename guidance, `git mv` workflows, rename detection checks, Markdown reference update guidance, and PowerShell rename examples from the v1.8.0 update brief.
 
 ---
 
@@ -39,6 +39,7 @@ Revision note: This `v1.7.0` edition preserves the `v1.6.0` guide and additively
 - [23. Practical Staging and Tag Snapshot Example](#23-practical-staging-and-tag-snapshot-example)
 - [24. Comparing Version Tags and Changed Files](#24-comparing-version-tags-and-changed-files)
 - [25. Pull Requests from Basic to Advanced](#25-pull-requests-from-basic-to-advanced)
+- [26. Renaming Files in a Git Repository](#26-renaming-files-in-a-git-repository)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -52,7 +53,8 @@ Revision note: This `v1.7.0` edition preserves the `v1.6.0` guide and additively
 - [Appendix K: Practical Staging, Tag, and Download Scenarios](#appendix-k-practical-staging-tag-and-download-scenarios)
 - [Appendix L: Compare, Diff, and Tag Inspection Scenarios](#appendix-l-compare-diff-and-tag-inspection-scenarios)
 - [Appendix M: Pull Request Scenarios](#appendix-m-pull-request-scenarios)
-- [Appendix N: References](#appendix-n-references)
+- [Appendix N: File Rename and Move Scenarios](#appendix-n-file-rename-and-move-scenarios)
+- [Appendix O: References](#appendix-o-references)
 - [Index](#index)
 
 ---
@@ -64,7 +66,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -993,6 +995,17 @@ git diff --name-only v1.0.0..v1.1.0
 git log --oneline v1.0.0..v1.1.0
 ```
 
+
+### Rename a tracked file
+
+```bash
+git mv old-name.md new-name.md
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "Rename file"
+```
+
 ### Export a version
 
 ```bash
@@ -1094,6 +1107,7 @@ Recommended history:
 | `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
 | `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, and source ZIP vs. release asset ZIP behavior |
 | `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
+| `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, and Markdown reference updates |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -3784,6 +3798,299 @@ Do not treat branch protection as a beginner requirement. Treat it as a useful s
 | Versioned documentation release | Pull Request first, tag after merge |
 
 
+
+---
+
+## 26. Renaming Files in a Git Repository
+
+Renaming a file in Git is a normal file-change workflow.
+
+The most important idea is:
+
+> Git stores snapshots. A rename is usually inferred later by comparing a deleted path and an added path for content similarity.
+
+That means Git can often show a rename, but the commit itself is still a before-and-after repository snapshot.
+
+### When to rename a file
+
+Rename a file when the existing name is misleading, outdated, too generic, or conflicts with newer companion files.
+
+Example:
+
+```text
+aws-s3-static-website-quick-start.md
+```
+
+This may have been fine when it was the only guide-like file. But after the repository gains a true quick-start companion, the old full-guide filename can become confusing:
+
+```text
+aws-s3-static-website-quick-start-guide-v1.2.2.md
+aws-s3-static-website-cheat-sheet-v1.2.2.md
+```
+
+A clearer full-guide filename might be:
+
+```text
+aws-s3-static-website-setup.md
+```
+
+This distinguishes the full setup guide from the shorter quick-start companion.
+
+### Recommended rename workflow
+
+Use `git mv` when you are intentionally renaming or moving a tracked file. Git's `git mv` documentation describes it as moving or renaming a file, directory, or symbolic link; after a successful move, the index is updated, but the change still needs to be committed. [R56]
+
+PowerShell example:
+
+```powershell
+git mv aws-s3-static-website-quick-start.md aws-s3-static-website-setup.md
+```
+
+Then update Markdown links and references from the old filename to the new filename.
+
+Likely files to check:
+
+```text
+README.md
+CHANGELOG.md
+the renamed full guide
+quick-start companion guide
+cheat sheet
+other Markdown files that link to the old file
+```
+
+Stage all rename-related changes:
+
+```powershell
+git add -A
+```
+
+`git add -A` is useful here because it stages additions, modifications, and removals across the working tree. [R19]
+
+Check the staged result:
+
+```powershell
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+Then commit:
+
+```powershell
+git commit -m "docs: update full guide filename references"
+```
+
+### `git mv` vs. manual PowerShell rename
+
+`git mv` is recommended because it makes your intent obvious and stages the move cleanly.
+
+This is preferred:
+
+```powershell
+git mv old-name.md new-name.md
+```
+
+But `git mv` is not strictly required.
+
+This manual PowerShell approach can also work:
+
+```powershell
+Rename-Item old-name.md new-name.md
+git add -A
+```
+
+The shorter PowerShell alias can also work:
+
+```powershell
+ren old-name.md new-name.md
+git add -A
+```
+
+The important part is that the final staged snapshot must show the old path removed and the new path added.
+
+### Why use `git add -A` after a rename?
+
+For rename workflows, prefer:
+
+```powershell
+git add -A
+```
+
+over only:
+
+```powershell
+git add .
+```
+
+`git add .` often works when you run it from the repository root, but `git add -A` is the safer beginner-friendly command when a change may include deletions, additions, and renamed paths across the repository.
+
+### Will Git recognize the rename?
+
+Usually, yes, if the file content remains substantially similar.
+
+Check the staged rename summary:
+
+```powershell
+git diff --cached --summary
+```
+
+Example output:
+
+```text
+rename aws-s3-static-website-quick-start.md => aws-s3-static-website-setup.md (98%)
+```
+
+Check name status with rename detection:
+
+```powershell
+git diff --cached --name-status --find-renames
+```
+
+Example output:
+
+```text
+R098    aws-s3-static-website-quick-start.md    aws-s3-static-website-setup.md
+```
+
+`R098` means Git detected a rename with about 98% similarity.
+
+Git's diff options include rename-detection behavior, including similarity thresholds for rename detection. [R25]
+
+### Rename vs. delete plus unrelated new file
+
+Git may show the change as a rename or as a delete plus add depending on similarity.
+
+Likely shown as a rename:
+
+```text
+old file removed
+new file added
+new file content is almost the same
+```
+
+More likely shown as delete plus add:
+
+```text
+old file removed
+new file added
+new file content is heavily rewritten
+```
+
+Best practice:
+
+> Rename first, commit the rename if it is important, then make large content changes in a separate commit.
+
+For small documentation rename updates, it is also reasonable to rename the file and update links in one commit.
+
+### How to view history after a rename
+
+To follow file history across a rename, use:
+
+```bash
+git log --follow -- new-name.md
+```
+
+To see patches too:
+
+```bash
+git log --follow -p -- new-name.md
+```
+
+Git's `git log` documentation supports history inspection, and `--follow` is commonly used to continue listing file history beyond renames. [R26]
+
+### Troubleshooting: deleted old file and copied in renamed file
+
+Sometimes you may delete the old file and drop in a new file with the new filename before using `git mv`.
+
+That is not automatically wrong.
+
+First, try:
+
+```powershell
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+If Git detects the rename, you can usually continue.
+
+If Git still shows a delete plus add and you care about clean rename display, redo the rename more explicitly.
+
+One possible cleanup workflow:
+
+```powershell
+git reset
+Copy-Item new-name.md new-name-temp.md
+git restore old-name.md
+Remove-Item new-name.md
+git mv old-name.md new-name.md
+Copy-Item new-name-temp.md new-name.md
+Remove-Item new-name-temp.md
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+What this does:
+
+1. Unstages the current delete/add state.
+2. Saves the updated renamed file as a temporary copy.
+3. Restores the old tracked file.
+4. Removes the manually copied renamed file.
+5. Uses `git mv` to perform the rename explicitly.
+6. Copies the updated content back over the renamed file.
+7. Removes the temporary file.
+8. Stages everything.
+9. Checks whether Git detects the rename.
+
+Only use the longer workflow if you care about Git or GitHub displaying the change as a clean rename.
+
+### Commit message and optional body for a rename
+
+A one-line commit message is often enough:
+
+```powershell
+git commit -m "docs: update full guide filename references"
+```
+
+A commit body is optional, but useful when you want to explain why the rename happened:
+
+```powershell
+git commit `
+  -m "docs: update full guide filename references" `
+  -m "Update README, CHANGELOG, quick-start companion, cheat sheet, and main guide filename metadata after renaming the full guide from aws-s3-static-website-quick-start.md to aws-s3-static-website-setup.md.
+
+This avoids confusion now that the repository has a separate quick-start guide and cheat sheet."
+```
+
+Alternative with a PowerShell here-string:
+
+```powershell
+$body = @"
+Update README, CHANGELOG, quick-start companion, cheat sheet, and main guide filename metadata after renaming the full guide from aws-s3-static-website-quick-start.md to aws-s3-static-website-setup.md.
+
+This avoids confusion now that the repository has a separate quick-start guide and cheat sheet.
+"@
+
+git commit -m "docs: update full guide filename references" -m $body
+```
+
+### Practical rename checklist
+
+Use this checklist:
+
+1. Choose the new filename.
+2. Rename with `git mv`.
+3. Update Markdown links and references.
+4. Run `git status`.
+5. Stage with `git add -A`.
+6. Run `git diff --cached --summary`.
+7. Run `git diff --cached --name-status --find-renames`.
+8. Commit.
+9. Tag the new version if this is a versioned documentation update.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -6262,6 +6569,53 @@ git push origin vX.Y.Z
 ```
 
 
+
+## F.119 Should I use `git mv` to rename files?
+
+Usually, yes. It is the clearest command when you intentionally rename or move a tracked file.
+
+## F.120 Is `git mv` required?
+
+No. You can rename the file outside Git and then stage with `git add -A`, but `git mv` makes the intent clearer.
+
+## F.121 Why use `git add -A` after a rename?
+
+Because a rename may include an addition, a deletion, and related file modifications. `git add -A` stages all of those changes across the working tree.
+
+## F.122 How do I check whether Git detected a rename?
+
+Use:
+
+```powershell
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+## F.123 Why does Git show a rename as delete plus add?
+
+Git may show delete plus add when the new file is not similar enough to the old file, or when rename detection is not being used.
+
+## F.124 How can I make a rename easier for Git and GitHub to detect?
+
+Rename first, then make large content changes in a separate commit.
+
+## F.125 How do I view file history after a rename?
+
+Use:
+
+```bash
+git log --follow -- new-name.md
+```
+
+## F.126 What should I do if I deleted the old file and copied in the renamed file manually?
+
+Try staging with `git add -A`, then check rename detection. If Git still does not detect the rename and you care about clean rename display, restore the old file and redo the rename with `git mv`.
+
+## F.127 Do I need a commit body for a rename?
+
+No. A one-line commit is often enough. A body is useful when you want to explain why the rename was needed.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -8060,7 +8414,166 @@ Before merging:
 - Tag from `main` after merge if this is a versioned release.
 
 
-# Appendix N: References
+
+---
+
+# Appendix N: File Rename and Move Scenarios
+
+This appendix expands [Section 26](#26-renaming-files-in-a-git-repository).
+
+## N.1 Rename a tracked file with `git mv`
+
+```powershell
+git mv old-name.md new-name.md
+git add -A
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "Rename guide file"
+```
+
+## N.2 Rename a file and update Markdown references
+
+```powershell
+git mv old-guide-name.md new-guide-name.md
+```
+
+Then search the repository for the old filename.
+
+In VS Code:
+
+```text
+Ctrl+Shift+F
+```
+
+Search for:
+
+```text
+old-guide-name.md
+```
+
+Replace with:
+
+```text
+new-guide-name.md
+```
+
+Then stage and verify:
+
+```powershell
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+## N.3 Manual PowerShell rename
+
+```powershell
+Rename-Item old-name.md new-name.md
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+This can work, but `git mv` is clearer when the file is already tracked.
+
+## N.4 Rename appears as delete plus add
+
+If Git shows:
+
+```text
+D       old-name.md
+A       new-name.md
+```
+
+try:
+
+```powershell
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+If rename detection still does not recognize the move, the file may have changed too much.
+
+Options:
+
+1. Accept the delete/add display if the final snapshot is correct.
+2. Redo the rename cleanly with `git mv`.
+3. Separate the rename and large content rewrite into two commits.
+
+## N.5 Clean redo after accidental delete/copy
+
+```powershell
+git reset
+Copy-Item new-name.md new-name-temp.md
+git restore old-name.md
+Remove-Item new-name.md
+git mv old-name.md new-name.md
+Copy-Item new-name-temp.md new-name.md
+Remove-Item new-name-temp.md
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+Use this only when you care about preserving a clean rename display.
+
+## N.6 Rename first, edit second
+
+For the cleanest history:
+
+```powershell
+git mv old-name.md new-name.md
+git commit -m "Rename guide file"
+```
+
+Then edit content and commit again:
+
+```powershell
+git add new-name.md
+git commit -m "Update guide content"
+```
+
+This makes the rename easy to see.
+
+## N.7 Rename plus reference updates in one commit
+
+For small documentation updates, this is usually fine:
+
+```powershell
+git mv old-name.md new-name.md
+# update README, CHANGELOG, quick-start, cheat sheet, and links
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "docs: update full guide filename references"
+```
+
+## N.8 View file history after a rename
+
+```bash
+git log --follow -- new-name.md
+```
+
+With patch output:
+
+```bash
+git log --follow -p -- new-name.md
+```
+
+## N.9 Rename workflow decision table
+
+| Situation | Recommended action |
+|---|---|
+| Simple tracked-file rename | Use `git mv` |
+| Rename plus small link updates | Use `git mv`, update links, stage with `git add -A` |
+| Rename plus major rewrite | Consider two commits: rename first, rewrite second |
+| Already deleted old file and copied new file | Try `git add -A` and check rename detection |
+| Git does not detect the rename | Accept delete/add or redo with `git mv` |
+| Need to prove what changed | Use `git diff --cached --summary` and `git diff --cached --name-status --find-renames` |
+
+
+# Appendix O: References
 
 ## Core conceptual references
 
@@ -8253,6 +8766,23 @@ https://git-scm.com/docs/git-mv
 [R63] GitHub Docs, “Changing the stage of a pull request.”  
 
 # Index
+
+
+## File renames
+
+See [26. Renaming Files in a Git Repository](#26-renaming-files-in-a-git-repository) and [Appendix N](#appendix-n-file-rename-and-move-scenarios).
+
+## `git mv`
+
+See [26. Renaming Files in a Git Repository](#26-renaming-files-in-a-git-repository).
+
+## Rename detection
+
+See [26. Renaming Files in a Git Repository](#26-renaming-files-in-a-git-repository) and [Appendix N](#appendix-n-file-rename-and-move-scenarios).
+
+## `git add -A`
+
+See [26. Renaming Files in a Git Repository](#26-renaming-files-in-a-git-repository) and [Appendix N](#appendix-n-file-rename-and-move-scenarios).
 
 
 ## Comparing tags

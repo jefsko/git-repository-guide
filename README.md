@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.7.0`
+Current guide version: `v1.8.0`
 
 Main guide file:
 
@@ -24,8 +24,9 @@ The active guide file should keep this stable filename. Version history should b
 
 | Goal | Start here |
 |---|---|
-| I want the fastest practical setup path. | [`git-repository-guide-quick-start-guide-v1.7.0.md`](git-repository-guide-quick-start-guide-v1.7.0.md) |
-| I want a compact repeat checklist. | [`git-repository-guide-cheat-sheet-v1.7.0.md`](git-repository-guide-cheat-sheet-v1.7.0.md) |
+| I want the fastest practical setup path. | [`git-repository-guide-quick-start-guide-v1.8.0.md`](git-repository-guide-quick-start-guide-v1.8.0.md) |
+| I want a compact repeat checklist. | [`git-repository-guide-cheat-sheet-v1.8.0.md`](git-repository-guide-cheat-sheet-v1.8.0.md) |
+| I want a command-by-command reference. | [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md) |
 | I need the full explanation and reference material. | [`git-repository-guide.md`](git-repository-guide.md) |
 
 ## Repository Contents
@@ -35,14 +36,16 @@ The active guide file should keep this stable filename. Version history should b
 | [`README.md`](README.md) | Repository overview and navigation. |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version history and notable changes. |
 | [`git-repository-guide.md`](git-repository-guide.md) | Full guide with complete explanations, examples, appendixes, and references. |
-| [`git-repository-guide-quick-start-guide-v1.7.0.md`](git-repository-guide-quick-start-guide-v1.7.0.md) | Short, sequential companion guide for the most common Git repository/version-tag workflow. |
-| [`git-repository-guide-cheat-sheet-v1.7.0.md`](git-repository-guide-cheat-sheet-v1.7.0.md) | Compact checklist for repeating the common workflow after learning it. |
+| [`git-repository-guide-quick-start-guide-v1.8.0.md`](git-repository-guide-quick-start-guide-v1.8.0.md) | Short, sequential companion guide for the most common Git repository/version-tag workflow. |
+| [`git-repository-guide-cheat-sheet-v1.8.0.md`](git-repository-guide-cheat-sheet-v1.8.0.md) | Compact checklist for repeating the common workflow after learning it. |
+| [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md) | Alphabetical Git command quick reference with syntax, required parameters, optional parameters, and practical notes. |
 
 ## Full Guide vs. Quick-Start vs. Cheat Sheet
 
 - Use the **full guide** when you want complete explanations, edge cases, appendixes, and reference material.
 - Use the **quick-start guide** when you want the shortest practical path that is still complete enough to follow.
 - Use the **cheat sheet** when you already understand the workflow and want a compact repeat checklist.
+- Use the **command quick reference** when you want command syntax, required parameters, optional parameters, and short explanations.
 
 ## Topics Covered
 
@@ -101,6 +104,17 @@ The active guide file should keep this stable filename. Version history should b
 - Creating and using Pull Requests
 - Reviewing, updating, merging, and tagging after Pull Requests
 
+- Renaming tracked files with `git mv`
+- Updating Markdown links after a file rename
+- Using `git add -A` for rename-related changes
+- Verifying rename detection with staged diff commands
+- Recovering from delete-and-copy rename workflows
+- Viewing history after a file rename
+
+- Using the Git command quick reference
+- Understanding common Git command syntax
+- Identifying required and optional Git command parameters
+
 ## Recommended Repository Details
 
 Recommended repository name:
@@ -128,17 +142,18 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 | `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
 | `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, source ZIP vs. release asset ZIP behavior, plus quick-start and cheat-sheet companions |
 | `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
+| `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, Markdown reference updates, and a Git command quick reference companion |
 
 ## Versioning Policy
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.7.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.8.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Patch updates, such as `v1.8.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Minor updates, such as `v1.9.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.7.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.8.0`.
 
 ## Suggested Repository Structure
 
@@ -147,8 +162,8 @@ git-repository-guide/
 ├─ README.md
 ├─ CHANGELOG.md
 ├─ git-repository-guide.md
-├─ git-repository-guide-quick-start-guide-v1.7.0.md
-└─ git-repository-guide-cheat-sheet-v1.7.0.md
+├─ git-repository-guide-quick-start-guide-v1.8.0.md
+└─ git-repository-guide-cheat-sheet-v1.8.0.md
 ```
 
 ## Notes

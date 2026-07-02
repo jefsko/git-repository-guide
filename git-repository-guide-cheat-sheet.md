@@ -1,8 +1,9 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.7.0  
-**Full guide:** [`git-repository-guide-v1.7.0.md`](git-repository-guide-v1.7.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.7.0.md`](git-repository-guide-quick-start-guide-v1.7.0.md)
+**Version:** v1.8.0  
+**Full guide:** [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.8.0.md`](git-repository-guide-quick-start-guide-v1.8.0.md)  
+**Command quick reference:** [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md)
 
 ## Path
 
@@ -23,7 +24,7 @@ repeat for later versions
 
 Use this when you want a compact checklist for creating or updating a Git repository and marking file sets as versions with tags.
 
-For explanations, use the quick-start or full guide.
+For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md).
 
 ---
 
@@ -345,6 +346,53 @@ git push
 ```
 
 
+---
+
+## Rename workflow
+
+### Preferred tracked-file rename
+
+```powershell
+git mv old-name.md new-name.md
+git add -A
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "Rename file"
+```
+
+### Manual PowerShell rename
+
+```powershell
+Rename-Item old-name.md new-name.md
+git add -A
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+### Short PowerShell alias
+
+```powershell
+ren old-name.md new-name.md
+git add -A
+```
+
+### View history after rename
+
+```bash
+git log --follow -- new-name.md
+```
+
+### Rename troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Rename shows as delete plus add | Try `git diff --cached --name-status --find-renames` |
+| Rename still not detected | Accept delete/add or redo with `git mv` |
+| File was heavily rewritten during rename | Consider two commits: rename first, rewrite second |
+| Links still point to old filename | Search repo for old filename and update references |
+
+
 ## Common fixes
 
 | Problem | Fix |
@@ -356,6 +404,7 @@ git push
 | Need to see what is staged | `git diff --cached --stat` |
 | Need to see tracked files | `git ls-tree -r --name-only HEAD` |
 | Need to see latest commit stats | `git show --stat --oneline HEAD` |
+| Need to verify a rename | `git diff --cached --summary` and `git diff --cached --name-status --find-renames` |
 
 ---
 

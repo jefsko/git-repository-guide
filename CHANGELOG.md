@@ -4,6 +4,48 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.8.0
+
+### Added
+
+- Added Git command quick reference `git-command-quick-reference-v1.8.0.md` with common commands, descriptions, syntax, required parameters, optional parameters, and practical notes.
+- Added top-ranked common Git command section in the command quick reference.
+- Added alphabetical Git command reference covering frequently used commands.
+- Added placeholder and status-code reference tables in the command quick reference.
+- Added expanded guidance for renaming tracked files in a Git repository.
+- Added `git mv` workflow examples for intentional file renames.
+- Added PowerShell rename examples using `git mv`, `Rename-Item`, and `ren`.
+- Added guidance for updating Markdown links and references after a file rename.
+- Added explanation of why `git add -A` is preferred for rename-related changes.
+- Added staged verification commands using `git diff --cached --summary` and `git diff --cached --name-status --find-renames`.
+- Added explanation that Git stores snapshots and usually infers renames from deleted and added paths with similar content.
+- Added guidance for when a rename may appear as delete plus add.
+- Added troubleshooting workflow for accidentally deleting the old file and copying in the renamed file manually.
+- Added guidance for viewing file history after a rename with `git log --follow`.
+- Added optional commit-body examples for rename commits.
+- Added a dedicated appendix for file rename and move scenarios.
+- Added Knowledge Base entries for `git mv`, `git add -A`, rename detection, delete/add displays, and rename history.
+
+### Changed
+
+- Updated the guide metadata from `v1.7.0` to `v1.8.0`.
+- Expanded existing file/folder rename coverage with a dedicated tracked-file rename workflow.
+- Clarified when `git mv` is recommended and when manual rename plus `git add -A` can still work.
+- Clarified that versioned standalone filenames are different from stable active repository filenames.
+- Moved the references appendix from Appendix N to Appendix O so references remain last.
+- Updated README version, version history, topics, and companion-guide links for `v1.8.0`.
+- Updated quick-start and cheat-sheet companions to align with `v1.8.0` and include practical rename guidance.
+- Updated README navigation and repository contents to include the command quick reference.
+- Updated quick-start and cheat sheet links to mention the command quick reference.
+
+### Notes
+
+- This is an additive update from `v1.7.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, reference, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.8.0.md`.
+- The command quick reference was added as an additional `v1.8.0` companion file rather than a new version bump.
+
 ## v1.7.0
 
 ### Added
