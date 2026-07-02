@@ -4,6 +4,43 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.9.0
+
+### Added
+
+- Added guidance for reconstructing a Git repository from historical version folders.
+- Added practical `demo-jeffskone-com` case-study guidance for repository naming, repository description, canonical domain context, and historical import decisions.
+- Added guidance for distinguishing production releases from offline development snapshots.
+- Added guidance to import each historical version folder as a sequential commit while tagging only production-release commits.
+- Added recommended production tag strategy using annotated tags.
+- Added guidance for optional GitHub Releases created from production tags.
+- Added tag correction workflows for local unpushed tags, pushed tags on the current commit, and pushed tags from older commits.
+- Added explanation of `$commit = git rev-list -n 1 vX.Y.Z` and why it prevents accidentally moving an older tag to `HEAD`.
+- Added guidance for `git tag -n99`, annotated tag messages, and checking tags locally.
+- Added guidance for LF vs. CRLF line-ending warnings on Windows.
+- Added recommended `.gitattributes` starter content for Windows-managed website/documentation repositories.
+- Added guidance for inspecting line endings with `git ls-files --eol`.
+- Added dedicated appendixes for historical repository reconstruction, tag correction scenarios, and line-ending scenarios.
+- Added Knowledge Base entries for historical imports, production tags, tag correction, `git tag -n99`, LF/CRLF, `.gitattributes`, and `git ls-files --eol`.
+- Added related command quick-reference entries for `git rev-list`, `git ls-remote`, `git ls-files`, and `.gitattributes` workflows.
+
+### Changed
+
+- Updated the guide metadata from `v1.8.0` to `v1.9.0`.
+- Expanded tag guidance beyond creating and pushing tags to include correction and repair workflows.
+- Expanded production-release guidance with a historical reconstruction case study.
+- Expanded line-ending guidance with a practical Windows-focused `.gitattributes` policy.
+- Moved the references appendix from Appendix O to Appendix S so references remain last.
+- Updated README version, version history, topics, and companion-guide links for `v1.9.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.9.0` and include the new practical guidance.
+
+### Notes
+
+- This is an additive update from `v1.8.0`.
+- Existing guide content was preserved except for targeted version, structure, clarity, reference, and consistency updates.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.9.0.md`.
+
 ## v1.8.0
 
 ### Added

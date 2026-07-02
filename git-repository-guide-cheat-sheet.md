@@ -1,9 +1,9 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.8.0  
-**Full guide:** [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.8.0.md`](git-repository-guide-quick-start-guide-v1.8.0.md)  
-**Command quick reference:** [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md)
+**Version:** v1.9.0  
+**Full guide:** [`git-repository-guide-v1.9.0.md`](git-repository-guide-v1.9.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.9.0.md`](git-repository-guide-quick-start-guide-v1.9.0.md)  
+**Command quick reference:** [`git-command-quick-reference-v1.9.0.md`](git-command-quick-reference-v1.9.0.md)
 
 ## Path
 
@@ -24,7 +24,7 @@ repeat for later versions
 
 Use this when you want a compact checklist for creating or updating a Git repository and marking file sets as versions with tags.
 
-For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md).
+For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference-v1.9.0.md`](git-command-quick-reference-v1.9.0.md).
 
 ---
 
@@ -393,6 +393,85 @@ git log --follow -- new-name.md
 | Links still point to old filename | Search repo for old filename and update references |
 
 
+---
+
+## Historical import and tag repair
+
+### Import a historical folder snapshot
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "message for that version"
+```
+
+### Tag a production release
+
+```powershell
+git tag -a vX.Y.Z -m "Release vX.Y.Z: short release summary. Original production publish: YYYY-MM-DD."
+git push origin vX.Y.Z
+```
+
+### Tag an older commit
+
+```powershell
+git log --oneline
+git tag -a vX.Y.Z <commit-sha> -m "Version X.Y.Z"
+```
+
+### Fix a local unpushed tag
+
+```powershell
+git tag -d vX.Y.Z
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+```
+
+### Fix an older pushed tag safely
+
+```powershell
+$commit = git rev-list -n 1 vX.Y.Z
+git push origin --delete vX.Y.Z
+git tag -d vX.Y.Z
+git tag -a vX.Y.Z $commit -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+### Verify tags
+
+```powershell
+git show vX.Y.Z
+git tag -n99 vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+```
+
+---
+
+## Line endings
+
+### Add basic `.gitattributes`
+
+```gitattributes
+* text=auto
+*.md   text eol=crlf
+*.html text eol=crlf
+*.css  text eol=crlf
+*.js   text eol=crlf
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.webp binary
+```
+
+### Inspect line endings
+
+```powershell
+git ls-files --eol
+```
+
+
 ## Common fixes
 
 | Problem | Fix |
@@ -405,6 +484,7 @@ git log --follow -- new-name.md
 | Need to see tracked files | `git ls-tree -r --name-only HEAD` |
 | Need to see latest commit stats | `git show --stat --oneline HEAD` |
 | Need to verify a rename | `git diff --cached --summary` and `git diff --cached --name-status --find-renames` |
+| Need to inspect line endings | `git ls-files --eol` |
 
 ---
 

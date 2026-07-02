@@ -1,13 +1,13 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.8.0  
-**Based on full guide:** [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)  
+**Version:** v1.9.0  
+**Based on full guide:** [`git-repository-guide-v1.9.0.md`](git-repository-guide-v1.9.0.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
 This is the short, practical version of the full Git Repository Guide. It focuses on the common successful path: create a local repo, connect it to GitHub, commit files, create annotated tags, and understand what is included when you download a tagged version.
 
-Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md).
+Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.9.0.md`](git-command-quick-reference-v1.9.0.md).
 
 ---
 
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.8.0
+annotated version tags such as v1.0.0, v1.1.0, v1.9.0
 ```
 
 End result:
@@ -522,6 +522,95 @@ git diff --cached --name-status --find-renames
 If Git detects a rename, you can usually continue. If it still shows delete plus add and you care about clean rename display, redo the rename with `git mv`.
 
 
+---
+
+## Import historical version folders
+
+Use this when you have old backup folders such as `v0.1.0`, `v0.1.1`, and `v1.0.0` and want to reconstruct Git history.
+
+Basic pattern:
+
+```powershell
+# Copy one historical version folder's contents into the repo first.
+git status
+git add -A
+git status
+git commit -m "message for that version"
+```
+
+Repeat for each version folder in order.
+
+Use annotated tags for production releases only:
+
+```powershell
+git tag -a v1.0.0 -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+```
+
+If you forget to tag before the next commit, find the old commit and tag it directly:
+
+```powershell
+git log --oneline
+git tag -a v1.0.0 <commit-sha> -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+```
+
+---
+
+## Fix a tag message mistake
+
+If the tag has not been pushed:
+
+```powershell
+git tag -d vX.Y.Z
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+```
+
+If an older pushed tag needs to be recreated without moving it to the latest commit:
+
+```powershell
+$commit = git rev-list -n 1 vX.Y.Z
+git push origin --delete vX.Y.Z
+git tag -d vX.Y.Z
+git tag -a vX.Y.Z $commit -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Verify:
+
+```powershell
+git show vX.Y.Z
+git tag -n99 vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+```
+
+---
+
+## Add line-ending rules
+
+Before the first commit of a new Windows-managed website or documentation repo, add `.gitattributes`.
+
+Minimal starter idea:
+
+```gitattributes
+* text=auto
+*.md   text eol=crlf
+*.html text eol=crlf
+*.css  text eol=crlf
+*.js   text eol=crlf
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.webp binary
+```
+
+Inspect line endings:
+
+```powershell
+git ls-files --eol
+```
+
+
 ## If something fails
 
 | Problem | Most likely fix |
@@ -552,9 +641,12 @@ Use the full guide when you need:
 - Pull Request workflows;
 - renaming tracked files with `git mv`;
 - updating links after a file rename;
+- historical version folder imports;
+- tag correction workflows;
+- LF/CRLF and `.gitattributes` guidance;
 - command syntax and parameter meanings;
 - troubleshooting and reference commands.
 
-Full guide: [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)
+Full guide: [`git-repository-guide-v1.9.0.md`](git-repository-guide-v1.9.0.md)
 
-Command quick reference: [`git-command-quick-reference-v1.8.0.md`](git-command-quick-reference-v1.8.0.md)
+Command quick reference: [`git-command-quick-reference-v1.9.0.md`](git-command-quick-reference-v1.9.0.md)

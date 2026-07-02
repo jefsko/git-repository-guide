@@ -1,9 +1,9 @@
 # Git Command Quick Reference
 
-**Version:** v1.8.0  
-**Full guide:** [`git-repository-guide-v1.8.0.md`](git-repository-guide-v1.8.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.8.0.md`](git-repository-guide-quick-start-guide-v1.8.0.md)  
-**Cheat sheet:** [`git-repository-guide-cheat-sheet-v1.8.0.md`](git-repository-guide-cheat-sheet-v1.8.0.md)
+**Version:** v1.9.0  
+**Full guide:** [`git-repository-guide-v1.9.0.md`](git-repository-guide-v1.9.0.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.9.0.md`](git-repository-guide-quick-start-guide-v1.9.0.md)  
+**Cheat sheet:** [`git-repository-guide-cheat-sheet-v1.9.0.md`](git-repository-guide-cheat-sheet-v1.9.0.md)
 
 This is a practical quick reference for commonly used Git commands.
 
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.8.0.md
+git-command-quick-reference-v1.9.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -516,6 +516,107 @@ Use this to answer:
 > What files are contained in this commit or tag?
 
 ---
+
+---
+
+## `git ls-files`
+
+### What it does
+
+Lists files in the index and can show end-of-line information.
+
+### Common syntax
+
+```powershell
+git ls-files --eol
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| None | No | Lists tracked/indexed files. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `--eol` | Shows index, working-tree, and attribute end-of-line information. |
+| Pathspec | Limits output to matching files. |
+
+### Notes
+
+Use this to inspect LF/CRLF behavior after adding `.gitattributes`.
+
+---
+
+## `git ls-remote`
+
+### What it does
+
+Shows references available in a remote repository.
+
+### Common syntax
+
+```powershell
+git ls-remote --tags origin v1.0.0
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Remote name or URL | Usually | Example: `origin`. |
+| Pattern | Optional | Example: `v1.0.0`. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `--tags` | Shows tags from the remote. |
+| `--heads` | Shows branches from the remote. |
+
+### Notes
+
+Useful after replacing a pushed tag to verify the remote tag exists.
+
+---
+
+## `git rev-list`
+
+### What it does
+
+Lists commit objects reachable from a commit, branch, or tag.
+
+### Common syntax
+
+```powershell
+git rev-list -n 1 v1.0.0
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Revision, branch, or tag | Yes | The starting point to inspect. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `-n 1` | Limits output to one commit. |
+| `--max-count=1` | Long-form style equivalent to limiting count. |
+
+### Notes
+
+In PowerShell, this safely stores the commit that a tag points to:
+
+```powershell
+$commit = git rev-list -n 1 v1.0.0
+```
+
+That is useful when deleting and recreating an older pushed tag without moving it to `HEAD`.
+
 
 ## `git merge`
 
@@ -1018,6 +1119,37 @@ git push origin v1.0.0
 
 ---
 
+---
+
+# `.gitattributes` quick reference
+
+`.gitattributes` is not a Git command. It is a repository file that tells Git how to treat matching paths.
+
+Common line-ending starter rules:
+
+```gitattributes
+* text=auto
+*.md   text eol=crlf
+*.html text eol=crlf
+*.css  text eol=crlf
+*.js   text eol=crlf
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.webp binary
+```
+
+Use:
+
+```powershell
+git ls-files --eol
+```
+
+to inspect the result.
+
+
 # Common placeholder meanings
 
 | Placeholder | Meaning | Example |
@@ -1034,7 +1166,7 @@ git push origin v1.0.0
 | `new-tag` | Later version tag | `v1.1.0` |
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
-| `vX.Y.Z` | Version tag placeholder | `v1.8.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.9.0` |
 
 ---
 
@@ -1072,6 +1204,9 @@ git diff --name-status
 | Compare version tags | `git diff --name-status old-tag..new-tag` |
 | List files in a tag | `git ls-tree -r --name-only tag-name` |
 | Rename a tracked file | `git mv old-name.md new-name.md` |
+| Inspect line endings | `git ls-files --eol` |
+| Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
+| Save commit pointed to by a tag | `git rev-list -n 1 vX.Y.Z` |
 | Restore accidental file deletion | `git restore file-name.md` |
 | Unstage a file | `git restore --staged file-name.md` |
 | View history | `git log --oneline --decorate --graph --all` |

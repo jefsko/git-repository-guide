@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.8.0  
-Previous locked version: v1.7.0  
+Document version: v1.9.0  
+Previous locked version: v1.8.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.8.0` file. Save future changes as a new version, such as `v1.8.1` or `v1.9.0`.  
-Current as of: 2026-07-01
+Future edit policy: Do not overwrite this `v1.9.0` file. Save future changes as a new version, such as `v1.9.1` or `v2.0.0`.  
+Current as of: 2026-07-02
 
-Revision note: This `v1.8.0` edition preserves the `v1.7.0` guide and additively incorporates tracked-file rename guidance, `git mv` workflows, rename detection checks, Markdown reference update guidance, and PowerShell rename examples from the v1.8.0 update brief.
+Revision note: This `v1.9.0` edition preserves the `v1.8.0` guide and additively incorporates historical repository reconstruction, production-tag strategy, tag correction workflows, GitHub Release guidance, and LF/CRLF line-ending guidance from the v1.9.0 update brief.
 
 ---
 
@@ -40,6 +40,9 @@ Revision note: This `v1.8.0` edition preserves the `v1.7.0` guide and additively
 - [24. Comparing Version Tags and Changed Files](#24-comparing-version-tags-and-changed-files)
 - [25. Pull Requests from Basic to Advanced](#25-pull-requests-from-basic-to-advanced)
 - [26. Renaming Files in a Git Repository](#26-renaming-files-in-a-git-repository)
+- [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots)
+- [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages)
+- [29. Line Endings, LF, CRLF, and `.gitattributes`](#29-line-endings-lf-crlf-and-gitattributes)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -54,7 +57,10 @@ Revision note: This `v1.8.0` edition preserves the `v1.7.0` guide and additively
 - [Appendix L: Compare, Diff, and Tag Inspection Scenarios](#appendix-l-compare-diff-and-tag-inspection-scenarios)
 - [Appendix M: Pull Request Scenarios](#appendix-m-pull-request-scenarios)
 - [Appendix N: File Rename and Move Scenarios](#appendix-n-file-rename-and-move-scenarios)
-- [Appendix O: References](#appendix-o-references)
+- [Appendix P: Historical Repository Reconstruction Scenario](#appendix-p-historical-repository-reconstruction-scenario)
+- [Appendix Q: Tag Correction and Release Repair Scenarios](#appendix-q-tag-correction-and-release-repair-scenarios)
+- [Appendix R: Line-Ending and `.gitattributes` Scenarios](#appendix-r-line-ending-and-gitattributes-scenarios)
+- [Appendix S: References](#appendix-s-references)
 - [Index](#index)
 
 ---
@@ -66,7 +72,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1012,6 +1018,23 @@ git commit -m "Rename file"
 git archive --format=zip --output project-v1.0.0.zip v1.0.0
 ```
 
+
+### Correct an older pushed tag safely
+
+```powershell
+$commit = git rev-list -n 1 vX.Y.Z
+git push origin --delete vX.Y.Z
+git tag -d vX.Y.Z
+git tag -a vX.Y.Z $commit -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+### Inspect line endings
+
+```powershell
+git ls-files --eol
+```
+
 ### Create a GitHub Release
 
 ```bash
@@ -1108,6 +1131,7 @@ Recommended history:
 | `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, and source ZIP vs. release asset ZIP behavior |
 | `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
 | `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, and Markdown reference updates |
+| `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -4091,6 +4115,770 @@ Use this checklist:
 9. Tag the new version if this is a versioned documentation update.
 
 
+
+---
+
+## 27. Reconstructing a Repository from Historical Snapshots
+
+Sometimes a project already exists outside Git as a series of saved folders or ZIP backups.
+
+Example:
+
+```text
+v0.1.0/
+v0.1.1/
+v0.1.2/
+...
+v1.4.0/
+```
+
+You can turn that folder history into a useful Git repository by importing each historical folder as a sequential commit.
+
+This is not the same as pretending the repository always existed. It is a practical reconstruction of the project history.
+
+### Example project: `demo-jeffskone-com`
+
+For a website deployed at:
+
+```text
+https://demo.jeffskone.com
+```
+
+a good repository name is:
+
+```text
+demo-jeffskone-com
+```
+
+Recommended GitHub repository description:
+
+```text
+Portfolio site showcasing AWS microservices, websites, and web applications
+```
+
+Why use hyphens instead of dots?
+
+```text
+demo.jeffskone.com   = actual domain
+demo-jeffskone-com   = clean repository/folder name
+```
+
+The hyphenated name is easier to use in GitHub URLs, local folder names, scripts, and command-line workflows.
+
+### Recommended historical import strategy
+
+Use a truthful historical sequence:
+
+```text
+1. Create an empty repository.
+2. Copy the files from the earliest version folder into the repo.
+3. Commit that version.
+4. Replace the repo contents with the next version folder.
+5. Commit that version.
+6. Continue until the latest version folder is imported.
+7. Add annotated tags to the production-release commits.
+8. Push the repository and tags to GitHub.
+9. Optionally create GitHub Releases from the production tags.
+```
+
+Important rule:
+
+> Each historical version folder should become one commit.
+
+Production versions should also receive annotated tags.
+
+Offline development snapshots can remain ordinary commits unless you have a specific reason to tag them.
+
+### Production releases vs. offline development snapshots
+
+A project may have many saved folders but only a few production releases.
+
+Example production versions:
+
+```text
+v1.0.0   2026-03-17
+v1.1.2   2026-03-22
+v1.2.0   2026-03-23
+v1.3.0   2026-03-24
+v1.4.0   2026-03-27
+```
+
+Example offline development snapshots:
+
+```text
+v0.1.0 through v0.1.8
+v1.1.0
+v1.1.1
+```
+
+Recommended interpretation:
+
+| Version type | Recommended Git treatment |
+|---|---|
+| Offline snapshot | Commit only |
+| Production release | Commit plus annotated tag |
+| GitHub Release | Optional; create for formal published releases |
+
+This preserves history without pretending every backup folder was formally published.
+
+### Do not rewrite truthful history unnecessarily
+
+If older snapshots referenced an old domain, keep that if it accurately reflects the historical state.
+
+Example:
+
+```text
+demo.trixareforkids.com
+```
+
+Later snapshots may correctly use:
+
+```text
+demo.jeffskone.com
+```
+
+Do not retroactively rewrite older commits just to make old versions match the current domain.
+
+Similarly, if an offline snapshot had an intermediate broken path that was fixed later, it can be preserved as part of the development history.
+
+### Clean accidental files before import
+
+If a historical folder contains an accidental file that should not be part of that version, remove it before committing that snapshot.
+
+Example:
+
+```text
+v1.4.0/test.txt
+```
+
+If the file is confirmed accidental, do not include it in the reconstructed commit.
+
+### Bulk-copy import vs. manual change import
+
+There are two common ways to reconstruct history.
+
+#### Method A: Bulk-copy each version folder
+
+This is simplest:
+
+```text
+copy v0.1.0 contents into repo
+git add -A
+git commit -m "feat: add initial AWS microservices index"
+
+replace contents with v0.1.1
+git add -A
+git commit -m "feat: add Dice microservice link"
+```
+
+Continue for each folder.
+
+With this method, `git mv` is not required. Git can often infer renames later by comparing snapshots.
+
+#### Method B: Manually apply each change
+
+If you manually perform each change, use `git mv` for file moves and renames.
+
+Example:
+
+```powershell
+git mv assets/images/errors/404/not-found.webp assets/images/errors/not-found.webp
+git mv assets/images/errors/404/not-found.png assets/images/errors/not-found.png
+git mv assets/images/errors/404/404trooper.gif assets/images/errors/404trooper.gif
+git add assets/images/demo-microservices-preview.png
+```
+
+Use this method when you want more control over the intermediate working tree.
+
+### Recommended commit-message style for reconstruction
+
+Use concise Conventional Commit-style messages:
+
+```text
+type: concise description
+```
+
+Examples:
+
+```text
+feat: add Dice microservice link
+fix: update canonical domain to demo.jeffskone.com
+docs: add author attribution and version history
+style: normalize HTML formatting
+chore: refresh metadata guidance and sitemap date
+```
+
+For historical reconstruction, the message should describe what that historical snapshot introduced, not what you are doing today.
+
+### Recommended production tag strategy
+
+Use annotated tags for production releases.
+
+Example:
+
+```powershell
+git tag -a v1.0.0 -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+```
+
+Do not put production dates in tag names.
+
+Recommended:
+
+```text
+v1.0.0
+```
+
+Avoid:
+
+```text
+v1.0.0-2026-03-17
+prod-v1.0.0
+```
+
+Keep the tag name clean and put production context in the tag message, changelog, release notes, or deployment documentation.
+
+### Tag immediately after committing a production version
+
+Best practice:
+
+```powershell
+git add -A
+git commit -m "chore: prepare initial production site snapshot"
+git tag -a v1.0.0 -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+```
+
+Then continue importing the next version.
+
+### If you forget to tag before the next commit
+
+That is not a problem.
+
+Find the old commit:
+
+```powershell
+git log --oneline
+```
+
+Then tag the correct historical commit directly:
+
+```powershell
+git tag -a v1.0.0 <commit-sha> -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+```
+
+The tag must point to the correct commit. The GitHub Release can be created later.
+
+### Push commits and tags
+
+Push the branch:
+
+```powershell
+git push -u origin main
+```
+
+Push one tag:
+
+```powershell
+git push origin v1.0.0
+```
+
+Push all intended tags only after checking them carefully:
+
+```powershell
+git push origin v1.0.0 v1.1.2 v1.2.0 v1.3.0 v1.4.0
+```
+
+Be careful with:
+
+```powershell
+git push --tags
+```
+
+It pushes all local tags, including tags you may not have intended to publish.
+
+### GitHub Releases for reconstructed production tags
+
+GitHub Releases are optional.
+
+Use them when you want a formal release page with release notes and downloadable assets.
+
+Recommended workflow:
+
+```text
+1. Create annotated production tag locally.
+2. Push the tag to GitHub.
+3. Create a GitHub Release from the pushed tag.
+4. Add release notes explaining the production publish.
+```
+
+Do not create GitHub Releases for offline development snapshots unless you explicitly want archival release pages for them.
+
+
+
+---
+
+## 28. Correcting Tag Mistakes and Understanding Tag Messages
+
+Tag mistakes can be fixed.
+
+The right method depends on three questions:
+
+1. Has the tag already been pushed to GitHub?
+2. Should the corrected tag point to the current commit or an older commit?
+3. Is there already a GitHub Release attached to the tag?
+
+### Three different message types
+
+Do not confuse these:
+
+| Message type | Stored where | Example |
+|---|---|---|
+| Commit message | Git commit | `feat: add Dice microservice link` |
+| Annotated tag message | Git tag object | `Release v1.0.0: initial production publish.` |
+| GitHub Release notes | GitHub Release page | Bulleted summary, links, publish notes |
+
+Changing a tag message is not the same thing as changing a commit message or GitHub Release notes.
+
+### Correct a local tag that has not been pushed
+
+Problem:
+
+```powershell
+git tag -a v0.1.1 -m "Ve0sion 0.1.1"
+```
+
+Then:
+
+```powershell
+git tag -a v0.1.1 -m "Version 0.1.1"
+```
+
+Git reports:
+
+```text
+fatal: tag 'v0.1.1' already exists
+```
+
+If the tag has not been pushed, delete and recreate the local tag:
+
+```powershell
+git tag -d v0.1.1
+git tag -a v0.1.1 -m "Version 0.1.1"
+```
+
+Verify:
+
+```powershell
+git show v0.1.1
+git tag -n99 v0.1.1
+```
+
+Then push:
+
+```powershell
+git push origin v0.1.1
+```
+
+Caution:
+
+```powershell
+git tag -a v0.1.1 -m "Version 0.1.1"
+```
+
+creates the tag on the current commit, also called `HEAD`.
+
+If the tag should point to an older commit, specify that commit explicitly.
+
+### Correct a pushed tag on the current commit
+
+If the tag has already been pushed and should point to the current commit, delete the remote tag, delete the local tag, recreate it, and push it again.
+
+Example:
+
+```powershell
+git push origin --delete v0.1.1
+git tag -d v0.1.1
+git tag -a v0.1.1 -m "Version 0.1.1"
+git push origin v0.1.1
+```
+
+Verify:
+
+```powershell
+git show v0.1.1
+git tag -n99 v0.1.1
+git ls-remote --tags origin v0.1.1
+```
+
+### Correct a pushed tag from several commits back
+
+If the tag points to an older commit, save the original commit first.
+
+PowerShell:
+
+```powershell
+$commit = git rev-list -n 1 v0.1.0
+$commit
+```
+
+Then delete and recreate the tag on that same saved commit:
+
+```powershell
+git push origin --delete v0.1.0
+git tag -d v0.1.0
+git tag -a v0.1.0 $commit -m "Version 0.1.0"
+git push origin v0.1.0
+```
+
+Verify:
+
+```powershell
+git show v0.1.0
+git tag -n99 v0.1.0
+git ls-remote --tags origin v0.1.0
+```
+
+### Bash equivalent
+
+In Bash:
+
+```bash
+commit=$(git rev-list -n 1 v0.1.0)
+echo "$commit"
+
+git push origin --delete v0.1.0
+git tag -d v0.1.0
+git tag -a v0.1.0 "$commit" -m "Version 0.1.0"
+git push origin v0.1.0
+```
+
+### What `$commit = git rev-list -n 1 v0.1.0` means
+
+This is a PowerShell variable assignment.
+
+```powershell
+$commit = git rev-list -n 1 v0.1.0
+```
+
+`$commit` is a PowerShell variable.
+
+`git rev-list -n 1 v0.1.0` asks Git for the commit ID pointed to by `v0.1.0`. Git's `rev-list` command lists commit objects, and `-n 1` limits the output to one commit. [R64]
+
+This pattern is useful because it lets you delete and recreate the tag without accidentally moving it to the current commit.
+
+### Generic safe pattern for fixing an older pushed tag
+
+PowerShell:
+
+```powershell
+$tag = "vX.Y.Z"
+$commit = git rev-list -n 1 $tag
+
+git push origin --delete $tag
+git tag -d $tag
+git tag -a $tag $commit -m "Version X.Y.Z"
+git push origin $tag
+git show $tag
+git tag -n99 $tag
+git ls-remote --tags origin $tag
+```
+
+### Caution about replacing pushed tags
+
+Replacing pushed tags can confuse other people or tools if they already fetched the old tag.
+
+Before replacing a pushed tag, ask:
+
+```text
+Has anyone else pulled/fetched this tag?
+Is a build, deployment, or release asset based on it?
+Does a GitHub Release already exist for it?
+```
+
+If a GitHub Release already exists:
+
+1. Update/delete the GitHub Release as needed.
+2. Correct the tag.
+3. Recreate or update the release so it points to the corrected tag.
+
+### Checking tags locally
+
+List tag names only:
+
+```powershell
+git tag
+```
+
+Show one tag in detail:
+
+```powershell
+git show v1.0.0
+```
+
+Show tag names with short messages:
+
+```powershell
+git tag -n
+```
+
+Show tag names with up to 99 lines of message:
+
+```powershell
+git tag -n99
+```
+
+Show one tag with up to 99 lines of message:
+
+```powershell
+git tag -n99 v1.0.0
+```
+
+### What `git tag -n99` means
+
+`git tag` lists tags.
+
+`-n` asks Git to show annotation lines.
+
+`99` means show up to 99 lines of each tag message.
+
+So:
+
+```powershell
+git tag -n99
+```
+
+means:
+
+> List tags and show up to 99 lines of each tag annotation message.
+
+### Viewing tags and commit messages on GitHub
+
+GitHub shows commit messages in the commit history.
+
+GitHub also shows tags in repository tag views and release/tag pages.
+
+Important limitation:
+
+> GitHub's normal file browsing interface does not always make annotated tag messages as obvious as local Git commands do.
+
+For precise tag-message inspection, use local Git commands such as:
+
+```powershell
+git show v1.0.0
+git tag -n99 v1.0.0
+```
+
+### Proper terminology for pushed tags
+
+Use:
+
+```text
+Push the tag to GitHub.
+Push the tag to origin.
+Publish the tag.
+```
+
+Avoid:
+
+```text
+Commit the tag.
+```
+
+You commit changes, then create a tag, then push the tag.
+
+
+
+---
+
+## 29. Line Endings, LF, CRLF, and `.gitattributes`
+
+On Windows, Git may warn about line endings.
+
+Example warning:
+
+```text
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+```
+
+This is usually not an error.
+
+It means Git noticed line-ending differences between the repository-normalized content and the working-copy content.
+
+### LF vs. CRLF
+
+| Term | Meaning | Common platform |
+|---|---|---|
+| `LF` | Line Feed | Linux, macOS, Git repository normalization |
+| `CRLF` | Carriage Return + Line Feed | Windows |
+
+A text file can look normal in an editor while still using different line endings internally.
+
+### What Git is warning about
+
+The warning means something like:
+
+> Git sees LF line endings now, but based on your Git settings or repository attributes, the file may be written with CRLF line endings in your Windows working copy later.
+
+This often happens when Git is configured with Windows-friendly line-ending behavior, such as `core.autocrlf=true`, or when `.gitattributes` requests CRLF for certain text files. Git's configuration documentation covers line-ending conversion settings such as `core.autocrlf`. [R65]
+
+### What is being fixed?
+
+The goal is not to make every file use the same line endings everywhere.
+
+The goal is to make line-ending behavior explicit and predictable.
+
+A good policy is:
+
+```text
+Repository-normalized text = consistent
+Windows working files       = comfortable for Windows tools
+Shell scripts               = LF so they work on Unix/Linux
+Binary files                = never line-ending converted
+```
+
+### Recommended fix: add `.gitattributes`
+
+Create a file named:
+
+```text
+.gitattributes
+```
+
+in the repository root.
+
+Recommended Windows-friendly starter content:
+
+```gitattributes
+# Normalize text files in the repository.
+* text=auto
+
+# Common website/documentation text files.
+*.html text eol=crlf
+*.css  text eol=crlf
+*.js   text eol=crlf
+*.md   text eol=crlf
+*.txt  text eol=crlf
+*.xml  text eol=crlf
+*.svg  text eol=crlf
+*.json text eol=crlf
+
+# PowerShell scripts should use Windows line endings.
+*.ps1 text eol=crlf
+
+# Unix/Linux shell scripts should use LF.
+*.sh text eol=lf
+
+# Images and binary files should never be line-ending converted.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+```
+
+Git's attributes documentation describes using `.gitattributes` to set path-specific attributes, including text and end-of-line behavior. [R66]
+
+This style is especially useful for a Windows-managed documentation or website repository where you intentionally want CRLF in common working-copy text files.
+
+### What to do before the first commit
+
+If the line-ending warning appears before the first commit, fix it before committing.
+
+PowerShell workflow:
+
+```powershell
+git reset
+notepad .gitattributes
+git add .gitattributes
+git add .
+git status
+```
+
+Then commit:
+
+```powershell
+git commit -m "feat: add initial AWS microservices index"
+```
+
+What the commands do:
+
+| Command | Purpose |
+|---|---|
+| `git reset` | Unstages files that were already staged |
+| `notepad .gitattributes` | Creates or edits `.gitattributes` |
+| `git add .gitattributes` | Stages the line-ending rules |
+| `git add .` | Stages project files again using the new attributes |
+| `git status` | Confirms what is staged |
+
+### Inspect line endings in Git
+
+Use:
+
+```powershell
+git ls-files --eol
+```
+
+Example output:
+
+```text
+i/lf    w/crlf  attr/text eol=crlf  index.html
+```
+
+Meaning:
+
+| Part | Meaning |
+|---|---|
+| `i/lf` | Git index/repository-normalized version uses LF |
+| `w/crlf` | Working copy uses CRLF |
+| `attr/text eol=crlf` | `.gitattributes` requests CRLF in the working copy |
+
+For a Windows-managed repository, this can be normal and expected.
+
+Git's `git ls-files` documentation includes the `--eol` option for showing end-of-line information. [R67]
+
+### Risks of ignoring LF/CRLF warnings
+
+For a static website, the website behavior risk is usually low.
+
+The Git/history risk can still matter.
+
+Possible problems:
+
+```text
+1. Repeated line-ending warnings.
+2. Git diffs showing entire files changed because of line endings.
+3. Future commits including line-ending-only changes.
+4. Harder comparison between historical versions.
+5. Noisier merge conflicts.
+6. Cross-platform inconsistency.
+7. Scripts breaking if they receive the wrong line endings.
+```
+
+The biggest technical risk is scripts.
+
+A Linux shell script with CRLF line endings can fail with errors like:
+
+```text
+/bin/bash^M: bad interpreter
+```
+
+That is why `.sh` files should generally stay LF, even if the repo is managed on Windows.
+
+### Bottom line
+
+When Git warns:
+
+```text
+LF will be replaced by CRLF the next time Git touches it
+```
+
+read it as:
+
+> Git detected LF line endings in a file that may be written with CRLF line endings in the Windows working copy.
+
+It is usually not fatal, but it is a good reason to add `.gitattributes` early.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -6616,6 +7404,93 @@ Try staging with `git add -A`, then check rename detection. If Git still does no
 No. A one-line commit is often enough. A body is useful when you want to explain why the rename was needed.
 
 
+
+## F.128 How do I reconstruct a Git repository from historical version folders?
+
+Import each folder as one commit in chronological order. Tag only the commits that represent production releases unless you have a specific reason to tag every snapshot.
+
+## F.129 Should offline development snapshots be tagged?
+
+Usually no. Keep them as ordinary commits. Use annotated tags for production releases or important official versions.
+
+## F.130 Should production dates be included in tag names?
+
+Usually no. Keep tag names clean, such as `v1.0.0`, and put production dates in the tag message, release notes, changelog, or deployment notes.
+
+## F.131 How do I tag an older commit?
+
+Find the commit with:
+
+```powershell
+git log --oneline
+```
+
+Then tag it explicitly:
+
+```powershell
+git tag -a vX.Y.Z <commit-sha> -m "Version X.Y.Z"
+```
+
+## F.132 How do I fix a local tag message before pushing?
+
+Delete and recreate the local tag:
+
+```powershell
+git tag -d vX.Y.Z
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+```
+
+## F.133 How do I fix a pushed tag message?
+
+Delete the remote tag, delete the local tag, recreate the tag, and push it again. Be careful if other people or releases already depend on the tag.
+
+## F.134 How do I fix an older pushed tag without moving it to the latest commit?
+
+Save the commit first:
+
+```powershell
+$commit = git rev-list -n 1 vX.Y.Z
+```
+
+Then delete and recreate the tag on that saved commit.
+
+## F.135 What does `git tag -n99` do?
+
+It lists tag names and shows up to 99 lines of each annotated tag message.
+
+## F.136 What is the difference between a commit message, tag message, and release notes?
+
+A commit message describes one commit. A tag message is stored in an annotated tag. Release notes are stored on a GitHub Release page.
+
+## F.137 Is `LF will be replaced by CRLF` an error?
+
+Usually no. It is a line-ending warning. It means Git may write the file with CRLF line endings in the Windows working copy.
+
+## F.138 What is the difference between LF and CRLF?
+
+LF is a single line-feed character. CRLF is carriage return plus line feed. Windows commonly uses CRLF; Linux/macOS commonly use LF.
+
+## F.139 How do I control line endings in a repository?
+
+Add a `.gitattributes` file and define line-ending rules for text files, scripts, and binary files.
+
+## F.140 How do I inspect line endings in Git?
+
+Use:
+
+```powershell
+git ls-files --eol
+```
+
+## F.141 Why should `.sh` files usually use LF?
+
+Linux/Unix shell scripts can fail if they use CRLF line endings.
+
+## F.142 Should binary image files be line-ending converted?
+
+No. Mark binary formats such as PNG, JPG, GIF, ICO, and WEBP as binary in `.gitattributes`.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -8573,7 +9448,325 @@ git log --follow -p -- new-name.md
 | Need to prove what changed | Use `git diff --cached --summary` and `git diff --cached --name-status --find-renames` |
 
 
-# Appendix O: References
+
+---
+
+# Appendix P: Historical Repository Reconstruction Scenario
+
+This appendix expands [Section 27](#27-reconstructing-a-repository-from-historical-snapshots).
+
+## P.1 Example historical folder sequence
+
+```text
+v0.1.0
+v0.1.1
+v0.1.2
+v0.1.3
+v0.1.4
+v0.1.5
+v0.1.6
+v0.1.7
+v0.1.8
+v1.0.0
+v1.1.0
+v1.1.1
+v1.1.2
+v1.2.0
+v1.3.0
+v1.4.0
+```
+
+Each folder can become one Git commit.
+
+## P.2 Production versions
+
+```text
+v1.0.0   2026-03-17
+v1.1.2   2026-03-22
+v1.2.0   2026-03-23
+v1.3.0   2026-03-24
+v1.4.0   2026-03-27
+```
+
+These should receive annotated tags if they were production releases.
+
+## P.3 Offline snapshots
+
+```text
+v0.1.0 through v0.1.8
+v1.1.0
+v1.1.1
+```
+
+These can remain ordinary commits.
+
+## P.4 Import loop pattern
+
+For each version folder:
+
+```powershell
+# Replace the repository working files with the next version folder's files.
+git status
+git add -A
+git status
+git commit -m "message for that version"
+```
+
+Use `git add -A` because the folder replacement may include additions, edits, deletions, and moved files.
+
+## P.5 Example commit messages
+
+| Version | Recommended commit message |
+|---|---|
+| `v0.1.0` | `feat: add initial AWS microservices index` |
+| `v0.1.1` | `feat: add Dice microservice link` |
+| `v0.1.2` | `docs: add author attribution and version history` |
+| `v0.1.3` | `feat: add Time microservice link` |
+| `v0.1.4` | `docs: clarify Dice service description` |
+| `v0.1.5` | `feat: add Lottery microservice link` |
+| `v0.1.6` | `feat: add WordOfTheDay and polish index page` |
+| `v0.1.7` | `style: normalize HTML formatting` |
+| `v0.1.8` | `style: reformat index markup and comments` |
+| `v1.0.0` | `chore: prepare initial production site snapshot` |
+| `v1.1.0` | `chore: add preview image and reorganize error assets` |
+| `v1.1.1` | `feat: add Anagram and update site metadata` |
+| `v1.1.2` | `fix: update canonical domain to demo.jeffskone.com` |
+| `v1.2.0` | `chore: refine SEO and social preview metadata` |
+| `v1.3.0` | `fix: improve accessibility, metadata, and 404 page` |
+| `v1.4.0` | `chore: refresh metadata guidance and sitemap date` |
+
+## P.6 Example production tag commands
+
+```powershell
+git tag -a v1.0.0 -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+git tag -a v1.1.2 -m "Release v1.1.2: production domain and preview metadata update. Original production publish: 2026-03-22."
+git tag -a v1.2.0 -m "Release v1.2.0: SEO and social metadata polish. Original production publish: 2026-03-23."
+git tag -a v1.3.0 -m "Release v1.3.0: accessibility and 404 page polish. Original production publish: 2026-03-24."
+git tag -a v1.4.0 -m "Release v1.4.0: metadata guidance and sitemap refresh. Original production publish: 2026-03-27."
+```
+
+If tagging after the fact, specify the correct commit hash:
+
+```powershell
+git tag -a v1.0.0 <commit-sha> -m "Release v1.0.0: initial production publish. Original production publish: 2026-03-17."
+```
+
+## P.7 Recommended documentation files for reconstructed websites
+
+At minimum:
+
+```text
+README.md
+CHANGELOG.md
+```
+
+Useful additional files:
+
+```text
+RELEASES.md
+IMPORT-NOTES.md
+```
+
+Purpose:
+
+| File | Purpose |
+|---|---|
+| `README.md` | Explains what the site is and where it is deployed |
+| `CHANGELOG.md` | Summarizes notable changes by version |
+| `RELEASES.md` | Lists production publish dates, tags, and release notes |
+| `IMPORT-NOTES.md` | Explains how historical folder backups were reconstructed into Git history |
+
+
+
+---
+
+# Appendix Q: Tag Correction and Release Repair Scenarios
+
+This appendix expands [Section 28](#28-correcting-tag-mistakes-and-understanding-tag-messages).
+
+## Q.1 Correct local unpushed tag message
+
+```powershell
+git tag -d v0.1.1
+git tag -a v0.1.1 -m "Version 0.1.1"
+git show v0.1.1
+git tag -n99 v0.1.1
+git push origin v0.1.1
+```
+
+## Q.2 Correct pushed tag on current commit
+
+```powershell
+git push origin --delete v0.1.1
+git tag -d v0.1.1
+git tag -a v0.1.1 -m "Version 0.1.1"
+git push origin v0.1.1
+git ls-remote --tags origin v0.1.1
+```
+
+## Q.3 Correct pushed older tag without moving it to `HEAD`
+
+```powershell
+$commit = git rev-list -n 1 v0.1.0
+$commit
+
+git push origin --delete v0.1.0
+git tag -d v0.1.0
+git tag -a v0.1.0 $commit -m "Version 0.1.0"
+git push origin v0.1.0
+
+git show v0.1.0
+git tag -n99 v0.1.0
+git ls-remote --tags origin v0.1.0
+```
+
+## Q.4 Generic PowerShell pattern
+
+```powershell
+$tag = "vX.Y.Z"
+$commit = git rev-list -n 1 $tag
+
+git push origin --delete $tag
+git tag -d $tag
+git tag -a $tag $commit -m "Version X.Y.Z"
+git push origin $tag
+```
+
+## Q.5 Bash pattern
+
+```bash
+tag="vX.Y.Z"
+commit=$(git rev-list -n 1 "$tag")
+
+git push origin --delete "$tag"
+git tag -d "$tag"
+git tag -a "$tag" "$commit" -m "Version X.Y.Z"
+git push origin "$tag"
+```
+
+## Q.6 Verification commands
+
+```powershell
+git show vX.Y.Z
+git tag -n99 vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+```
+
+## Q.7 If a GitHub Release exists
+
+Before replacing the tag:
+
+1. Check whether a GitHub Release exists for that tag.
+2. Delete or update the release if necessary.
+3. Replace the tag.
+4. Recreate or update the GitHub Release so it points to the corrected tag.
+
+
+
+---
+
+# Appendix R: Line-Ending and `.gitattributes` Scenarios
+
+This appendix expands [Section 29](#29-line-endings-lf-crlf-and-gitattributes).
+
+## R.1 Recommended `.gitattributes` starter file
+
+```gitattributes
+# Normalize text files in the repository.
+* text=auto
+
+# Common website/documentation text files.
+*.html text eol=crlf
+*.css  text eol=crlf
+*.js   text eol=crlf
+*.md   text eol=crlf
+*.txt  text eol=crlf
+*.xml  text eol=crlf
+*.svg  text eol=crlf
+*.json text eol=crlf
+
+# PowerShell scripts should use Windows line endings.
+*.ps1 text eol=crlf
+
+# Unix/Linux shell scripts should use LF.
+*.sh text eol=lf
+
+# Images and binary files should never be line-ending converted.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+```
+
+## R.2 Add `.gitattributes` before first commit
+
+```powershell
+git reset
+notepad .gitattributes
+git add .gitattributes
+git add .
+git status
+git commit -m "feat: add initial AWS microservices index"
+```
+
+## R.3 Inspect line endings
+
+```powershell
+git ls-files --eol
+```
+
+Example:
+
+```text
+i/lf    w/crlf  attr/text eol=crlf  index.html
+```
+
+Meaning:
+
+| Part | Meaning |
+|---|---|
+| `i/lf` | Git index/repository-normalized version uses LF |
+| `w/crlf` | Working copy uses CRLF |
+| `attr/text eol=crlf` | Attribute rule requests CRLF in working copy |
+
+## R.4 Common warning
+
+```text
+LF will be replaced by CRLF the next time Git touches it
+```
+
+Interpretation:
+
+```text
+Git detected LF line endings in a file that may be written as CRLF in the Windows working copy.
+```
+
+This is usually not an error.
+
+## R.5 Most important risks
+
+| Risk | Why it matters |
+|---|---|
+| Noisy diffs | Entire files may appear changed because line endings changed |
+| Harder history comparison | Historical versions become harder to compare cleanly |
+| Merge noise | Line-ending changes can make conflicts harder to read |
+| Script failures | Unix shell scripts may fail if saved with CRLF |
+
+## R.6 Bottom-line rule
+
+For Windows-managed website/documentation repositories:
+
+```text
+Use .gitattributes early.
+Use CRLF for common text files if that is your repo preference.
+Keep .sh files LF.
+Mark images and other binary files binary.
+```
+
+
+# Appendix S: References
 
 ## Core conceptual references
 
@@ -8765,7 +9958,38 @@ https://git-scm.com/docs/git-mv
 [R62] GitHub Docs, “About pull request merges.”  
 [R63] GitHub Docs, “Changing the stage of a pull request.”  
 
+
+[R64] Git documentation, `git-rev-list`.  
+[R65] Git documentation, `git-config`, including `core.autocrlf`.  
+[R66] Git documentation, `gitattributes`.  
+[R67] Git documentation, `git-ls-files`, including `--eol`.  
+
 # Index
+
+
+## Historical reconstruction
+
+See [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots) and [Appendix P](#appendix-p-historical-repository-reconstruction-scenario).
+
+## Production tags
+
+See [27. Reconstructing a Repository from Historical Snapshots](#27-reconstructing-a-repository-from-historical-snapshots).
+
+## Tag correction
+
+See [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages) and [Appendix Q](#appendix-q-tag-correction-and-release-repair-scenarios).
+
+## `git tag -n99`
+
+See [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages).
+
+## Line endings
+
+See [29. Line Endings, LF, CRLF, and `.gitattributes`](#29-line-endings-lf-crlf-and-gitattributes) and [Appendix R](#appendix-r-line-ending-and-gitattributes-scenarios).
+
+## `.gitattributes`
+
+See [29. Line Endings, LF, CRLF, and `.gitattributes`](#29-line-endings-lf-crlf-and-gitattributes) and [Appendix R](#appendix-r-line-ending-and-gitattributes-scenarios).
 
 
 ## File renames
