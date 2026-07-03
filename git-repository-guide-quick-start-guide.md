@@ -1,13 +1,13 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.11.0  
-**Based on full guide:** [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)  
+**Version:** v1.11.1  
+**Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
 This is the short, practical version of the full Git Repository Guide. It focuses on the common successful path: create a local repo, connect it to GitHub, commit files, create annotated tags, and understand what is included when you download a tagged version.
 
-Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md).
+Use the full guide when you need deeper explanation, conflict handling, branch workflows, file/folder edge cases, or detailed troubleshooting. Use the command quick reference when you want command syntax and parameter details: [`git-command-quick-reference.md`](git-command-quick-reference.md).
 
 ---
 
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.11.0
+annotated version tags such as v1.0.0, v1.1.0, v1.11.1
 ```
 
 End result:
@@ -734,6 +734,6 @@ Use the full guide when you need:
 - command syntax and parameter meanings;
 - troubleshooting and reference commands.
 
-Full guide: [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)
+Full guide: [`git-repository-guide.md`](git-repository-guide.md)
 
-Command quick reference: [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md)
+Command quick reference: [`git-command-quick-reference.md`](git-command-quick-reference.md)

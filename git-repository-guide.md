@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.11.0  
-Previous locked version: v1.10.0  
+Document version: v1.11.1  
+Previous locked version: v1.11.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.11.0` file. Save future changes as a new version, such as `v1.11.1` or `v1.12.0`.  
+Future edit policy: Do not overwrite this `v1.11.1` file. Save future changes as a new version, such as `v1.11.2` or `v1.12.0`.  
 Current as of: 2026-07-02
 
-Revision note: This `v1.11.0` edition preserves the `v1.10.0` guide and additively incorporates commit-message misspelling detection and correction workflows, including `git log --grep`, `git commit --amend`, interactive rebase with `reword`, pushed-history cautions, and `git push --force-with-lease` guidance.
+Revision note: This `v1.11.1` patch preserves the `v1.11.0` guide and corrects internal file-reference guidance so active repository links use stable filenames while standalone download filename examples and historical changelog entries may remain versioned when that is the point being explained.
 
 ---
 
@@ -74,7 +74,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, or another version.
 
 That is a normal Git workflow.
 
@@ -1086,6 +1086,34 @@ git-repository-guide-v1.3.0.md
 
 Those names are acceptable for standalone downloads in a chat or file-sharing context, but they are not the best pattern inside the actual repository.
 
+### Internal links vs. standalone download filenames
+
+Use this rule for this guide's file set:
+
+> Internal repo links and active file references should use stable filenames. Standalone download filename examples and historical changelog entries may still use versioned filenames when that is the point being explained.
+
+Inside the repository, link to active files like this:
+
+```text
+git-repository-guide.md
+git-repository-guide-quick-start-guide.md
+git-repository-guide-cheat-sheet.md
+git-command-quick-reference.md
+README.md
+CHANGELOG.md
+```
+
+For downloadable copies created outside the repository, versioned filenames are still useful:
+
+```text
+git-repository-guide-v1.11.1.md
+README-v1.11.1.md
+CHANGELOG-v1.11.1.md
+```
+
+Historical changelog entries may also mention the versioned standalone filenames that were created at that time. Do not rewrite those historical examples unless they are inaccurate or confusing in context.
+
+
 Inside the repository, use Git history to track versions:
 
 ```text
@@ -1159,6 +1187,7 @@ Recommended history:
 | `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
 | `v1.10.0` | Additive expansion covering project identity, canonical URL, GitHub Release notes, release documentation files, and import-note examples for reconstructed repositories |
 | `v1.11.0` | Additive expansion covering commit-message typo detection, commit-message correction, amend/rebase workflows, pushed-history safety, and force-with-lease guidance |
+| `v1.11.1` | Patch correction clarifying stable internal repository filenames while preserving versioned standalone download filename examples and historical changelog entries when intentional |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 

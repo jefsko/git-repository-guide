@@ -4,6 +4,22 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.11.1
+
+### Changed
+
+- Updated internal repo links and active file references to use stable repository filenames.
+- Added the filename-reference rule: internal repo links and active file references should use stable filenames, while standalone download filename examples and historical changelog entries may still use versioned filenames when that is the point being explained.
+- Preserved versioned standalone download filename examples where they are intentionally used to describe downloadable copies outside the repository.
+- Preserved historical changelog entries that mention versioned standalone filenames.
+
+### Notes
+
+- This is a patch correction from `v1.11.0`.
+- No substantive Git workflow content was added, removed, or restructured.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may continue to use versioned filenames, such as `git-repository-guide-v1.11.1.md`.
+
 ## v1.11.0
 
 ### Added

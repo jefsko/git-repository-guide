@@ -1,9 +1,9 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.11.0  
-**Full guide:** [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.11.0.md`](git-repository-guide-quick-start-guide-v1.11.0.md)  
-**Command quick reference:** [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md)
+**Version:** v1.11.1  
+**Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
+**Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
 
 ## Path
 
@@ -24,7 +24,7 @@ repeat for later versions
 
 Use this when you want a compact checklist for creating or updating a Git repository and marking file sets as versions with tags.
 
-For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference-v1.11.0.md`](git-command-quick-reference-v1.11.0.md).
+For explanations, use the quick-start or full guide. For command syntax and parameter details, use [`git-command-quick-reference.md`](git-command-quick-reference.md).
 
 ---
 

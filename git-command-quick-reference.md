@@ -1,9 +1,9 @@
 # Git Command Quick Reference
 
-**Version:** v1.11.0  
-**Full guide:** [`git-repository-guide-v1.11.0.md`](git-repository-guide-v1.11.0.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide-v1.11.0.md`](git-repository-guide-quick-start-guide-v1.11.0.md)  
-**Cheat sheet:** [`git-repository-guide-cheat-sheet-v1.11.0.md`](git-repository-guide-cheat-sheet-v1.11.0.md)
+**Version:** v1.11.1  
+**Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
+**Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
+**Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
 
 This is a practical quick reference for commonly used Git commands.
 
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.11.0.md
+git-command-quick-reference-v1.11.1.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -1182,7 +1182,7 @@ to inspect the result.
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.11.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.11.1` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
