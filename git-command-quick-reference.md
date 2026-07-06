@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.12.0  
+**Version:** v1.13.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.12.0.md
+git-command-quick-reference-v1.13.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -215,6 +215,7 @@ Lists, creates, deletes, or renames branches.
 ```bash
 git branch
 git branch -a
+git branch -vv
 git branch -M main
 git branch -d branch-name
 ```
@@ -230,6 +231,7 @@ git branch -d branch-name
 | Option | Meaning |
 |---|---|
 | `-a` | Lists local and remote-tracking branches. |
+| `-vv` | Shows branch tracking/upstream information and latest commit subjects. |
 | `-M new-name` | Renames the current branch, forcing the rename if needed. |
 | `-d branch-name` | Deletes a fully merged local branch. |
 | `-D branch-name` | Force-deletes a local branch. Use carefully. |
@@ -512,6 +514,8 @@ Shows commit history.
 git log
 git log --oneline
 git log --oneline --decorate --graph --all
+git log --oneline origin/main..main
+git log --oneline main..origin/main
 git log --all --grep="Ve0sion" --oneline
 git log --follow -- file-name.md
 ```
@@ -808,6 +812,7 @@ Sends local commits or tags to a remote repository.
 
 ```bash
 git push
+git push origin main
 git push -u origin main
 git push origin v1.0.0
 git push origin --delete branch-name
@@ -828,10 +833,14 @@ git push --force-with-lease
 | `-u` or `--set-upstream` | Sets upstream tracking for future plain `git push` and `git pull`. |
 | `--follow-tags` | Pushes annotated tags reachable from pushed commits. |
 | `--tags` | Pushes all tags. Use carefully. |
+| `origin main` | Explicitly pushes local `main` to remote `origin`. |
+| `origin vX.Y.Z` | Explicitly pushes one version tag. |
 | `--delete branch-name` | Deletes a branch on the remote. |
 | `--force-with-lease` | Safer force-push; useful after rebasing a private branch. Use carefully. |
 
 ### Notes
+
+Plain `git push` uses the current branch's configured upstream/push settings. It is often equivalent to `git push origin main` when you are on `main` and tracking `origin/main`, but the explicit form is clearer for careful release work.
 
 Plain `git push` does not necessarily push new tags. Push version tags explicitly:
 
@@ -1223,6 +1232,68 @@ git ls-files --eol
 to inspect the result.
 
 
+---
+
+# Repository hygiene quick reference
+
+## `.gitignore`
+
+`.gitignore` is not a Git command. It is a file of patterns that tells Git which untracked files to ignore.
+
+Example:
+
+```gitignore
+*.log
+.env
+dist/
+build/
+.vscode/
+```
+
+Important:
+
+```text
+.gitignore only ignores untracked files.
+```
+
+To stop tracking a file while keeping it locally:
+
+```powershell
+git rm --cached file-name
+```
+
+## `.gitkeep`
+
+`.gitkeep` is not a Git command. It is a placeholder convention for preserving an intentionally empty folder.
+
+Example:
+
+```text
+exports/.gitkeep
+```
+
+Then:
+
+```powershell
+git add exports/.gitkeep
+git commit -m "chore: keep exports folder placeholder"
+```
+
+## GitHub topics
+
+GitHub topics are repository metadata tags. They are optional.
+
+Example topics:
+
+```text
+git
+github
+documentation
+versioning
+static-site
+```
+
+
 # Common placeholder meanings
 
 | Placeholder | Meaning | Example |
@@ -1240,7 +1311,7 @@ to inspect the result.
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.12.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.13.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
@@ -1275,6 +1346,8 @@ git diff --name-status
 | Stage current-folder changes | `git add .` |
 | Save staged changes | `git commit -m "Message"` |
 | Push current branch | `git push` |
+| Push current branch explicitly | `git push origin main` |
+| Push one version tag | `git push origin vX.Y.Z` |
 | Push first branch and set upstream | `git push -u origin main` |
 | Push a version tag | `git push origin vX.Y.Z` |
 | Compare version tags | `git diff --name-status old-tag..new-tag` |
@@ -1291,3 +1364,4 @@ git diff --name-status
 | Restore accidental file deletion | `git restore file-name.md` |
 | Unstage a file | `git restore --staged file-name.md` |
 | View history | `git log --oneline --decorate --graph --all` |
+| Check unpushed commits | `git log --oneline origin/main..main` |

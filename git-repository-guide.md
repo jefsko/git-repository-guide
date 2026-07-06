@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.12.0  
-Previous locked version: v1.11.1  
+Document version: v1.13.0  
+Previous locked version: v1.12.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.12.0` file. Save future changes as a new version, such as `v1.12.1` or `v1.13.0`.  
-Current as of: 2026-07-03
+Future edit policy: Do not overwrite this `v1.13.0` file. Save future changes as a new version, such as `v1.13.1` or `v1.14.0`.  
+Current as of: 2026-07-06
 
-Revision note: This `v1.12.0` edition preserves the `v1.11.1` guide and additively incorporates commit-message prefix guidance, including `feat`, `fix`, `docs`, `chore`, `refactor`, `style`, and related prefix decision examples.
+Revision note: This `v1.13.0` edition preserves the `v1.12.0` guide and additively incorporates git push, branch/tag push, checkout, repository hygiene, `.gitignore`, `.gitkeep`, GitHub topics, and line-ending policy guidance from the v1.13.0 update brief.
 
 ---
 
@@ -45,6 +45,7 @@ Revision note: This `v1.12.0` edition preserves the `v1.11.1` guide and additive
 - [29. Line Endings, LF, CRLF, and `.gitattributes`](#29-line-endings-lf-crlf-and-gitattributes)
 - [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes)
 - [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them)
+- [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -64,7 +65,8 @@ Revision note: This `v1.12.0` edition preserves the `v1.11.1` guide and additive
 - [Appendix R: Line-Ending and `.gitattributes` Scenarios](#appendix-r-line-ending-and-gitattributes-scenarios)
 - [Appendix S: Commit Message Correction Scenarios](#appendix-s-commit-message-correction-scenarios)
 - [Appendix T: Commit Message Prefix Scenarios](#appendix-t-commit-message-prefix-scenarios)
-- [Appendix U: References](#appendix-u-references)
+- [Appendix U: Push, Tag, Branch, and Repository Hygiene Scenarios](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios)
+- [Appendix V: References](#appendix-v-references)
 - [Index](#index)
 
 ---
@@ -76,7 +78,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1080,6 +1082,29 @@ If rewritten history was already pushed and it is safe to rewrite that branch:
 
 ```bash
 git push --force-with-lease
+```
+
+
+### Explicit branch and tag push
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "docs: update guide"
+git push origin main
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+### Check branch/tag push state
+
+```powershell
+git status
+git branch -vv
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+git log --oneline --decorate --graph --all
 ```
 
 ### Create a GitHub Release
@@ -6006,6 +6031,560 @@ Use these defaults:
 | Line-ending-only normalization | `style` or `chore` |
 | Site gains new visible section/app/content | `feat` |
 | Site content corrected or moved to the right section | `fix` |
+
+
+
+---
+
+## 32. Push, Tag, Branch, and Repository Hygiene Workflows
+
+This section gathers practical repository-maintenance guidance for careful versioned file-set work.
+
+It covers:
+
+- when plain `git push` behaves like `git push origin main`;
+- why branch pushes and tag pushes are different;
+- a repeatable commit, push, and tag checklist;
+- when to work directly on `main` versus a working branch;
+- recommended repository folders;
+- `.gitignore`;
+- `.gitkeep`;
+- GitHub topics;
+- line-ending policy reminders.
+
+### Is `git push` the same as `git push origin main`?
+
+Sometimes, yes, in a specific repository state.
+
+If you are on `main`, and local `main` is tracking `origin/main`, then:
+
+```powershell
+git push
+```
+
+usually behaves like:
+
+```powershell
+git push origin main
+```
+
+A status message like this means the current branch and upstream are aligned:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+```
+
+That tells you:
+
+- the current local branch is `main`;
+- local `main` tracks `origin/main`;
+- there are no staged, unstaged, or untracked changes that Git is reporting;
+- local `main` and remote `origin/main` are currently aligned.
+
+However, plain `git push` is not universally identical to `git push origin main`.
+
+A safer mental model:
+
+```text
+git push
+```
+
+means:
+
+```text
+Push the current branch according to its configured upstream and push settings.
+```
+
+Whereas:
+
+```text
+git push origin main
+```
+
+means:
+
+```text
+Push local main to the remote named origin.
+```
+
+For careful versioned guide, website, or historical-import workflows, the explicit command is often better:
+
+```powershell
+git push origin main
+```
+
+Git's `git push` documentation describes pushing local refs to remote refs; this is why being explicit about remote and branch can reduce ambiguity. [R22]
+
+### Why branch pushes and tag pushes both matter
+
+A commit, branch, and tag are related but different.
+
+```text
+Commit = saved snapshot of the file tree
+Branch = movable pointer to the latest commit in a line of work
+Tag    = fixed label pointing to a specific commit
+```
+
+Example:
+
+```text
+A -- B -- C
+          ^
+          main
+          v1.20.0
+```
+
+Here, `main` and `v1.20.0` both point to commit `C`, but they serve different purposes:
+
+- `main` moves forward as new commits are added;
+- `v1.20.0` stays fixed unless deliberately changed;
+- the tag identifies a specific version or release;
+- the branch identifies the current line of development.
+
+Pushing a tag:
+
+```powershell
+git push origin v1.20.0
+```
+
+pushes the tag. If the remote does not yet have the commit pointed to by the tag, Git can transfer the objects needed by that tag.
+
+But pushing only the tag does not necessarily update the remote branch pointer.
+
+That can create a confusing state:
+
+```text
+origin/main  -> older commit
+v1.20.0      -> newer commit
+```
+
+The version tag exists on GitHub, but the default branch may still show older files.
+
+For a normal version workflow, push both:
+
+```powershell
+git push origin main
+git push origin v1.20.0
+```
+
+For careful historical imports, pushing one intended tag at a time is usually safer than pushing every local tag:
+
+```powershell
+git push origin main
+git push origin v1.20.0
+```
+
+Avoid casual use of:
+
+```powershell
+git push --tags
+```
+
+unless you have checked that every local tag should be published.
+
+### Consequences of not pushing `main`
+
+If you push only tags but not the branch, the repository may still be recoverable, but it can be harder to understand.
+
+| Area | Possible consequence |
+|---|---|
+| GitHub default branch view | May show old files instead of the latest version |
+| GitHub commit history on `main` | May omit commits that only exist through tags |
+| Releases/tags page | May show version tags correctly |
+| Deployment workflows | Anything deploying from `main` may deploy an old version |
+| Clones/checkouts | Users may not get the expected latest branch state |
+| Repo auditability | History can look confusing because tags point to commits not visible on the pushed branch line |
+
+Check whether local `main` has unpushed commits:
+
+```powershell
+git status
+```
+
+If it says:
+
+```text
+Your branch is up to date with 'origin/main'.
+```
+
+then local `main` and remote `origin/main` are aligned.
+
+If it says:
+
+```text
+Your branch is ahead of 'origin/main' by 1 commit.
+```
+
+then local commits exist that have not yet been pushed to the remote branch.
+
+Useful verification commands:
+
+```powershell
+git log --oneline --decorate -10
+git log --oneline --decorate --graph --all
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+git tag --list
+git show v1.20.0
+```
+
+### Recommended commit, push, and tag sequence
+
+For careful versioned website or guide repos, use a repeatable checklist:
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "type: concise subject" -m "Longer body explaining what changed and why."
+git push origin main
+
+git tag -a v1.20.0 -m "Release v1.20.0: production cleanup release published on 2026-07-06."
+git push origin v1.20.0
+```
+
+Use `git add -A` for full version snapshots because it stages additions, modifications, deletions, and renamed/deleted paths across the working tree. [R19]
+
+Check `git status` before and after staging:
+
+| When | Why |
+|---|---|
+| Before `git add -A` | See what changed before staging |
+| After `git add -A` | Confirm what will be committed |
+| After commit | Confirm the working tree is clean |
+| After push | Confirm local and remote branch alignment if needed |
+
+Example release-style commit messages:
+
+```powershell
+git commit -m "feat: expand demo index into AWS portfolio" -m "Update the site title, subtitle, metadata, README, changelog, release notes, and sitemap for v2.1.0."
+git commit -m "fix: correct canonical domain references" -m "Update metadata, README, and release notes to use the canonical demo.jeffskone.com domain."
+git commit -m "docs: document git push and tag workflow" -m "Add guidance explaining branch pushes, tag pushes, upstream tracking, and version-release verification."
+git commit -m "chore: prepare v1.20.0 release" -m "Refresh metadata and release documentation before tagging v1.20.0."
+```
+
+### First `-m` vs. second `-m`
+
+In this command:
+
+```powershell
+git commit -m "docs: document git push and tag workflow" -m "Add guidance explaining branch pushes, tag pushes, upstream tracking, and version-release verification."
+```
+
+the first `-m` creates the commit subject.
+
+The second `-m` creates the commit body.
+
+View subjects only:
+
+```powershell
+git log --oneline
+```
+
+View full messages:
+
+```powershell
+git log --format=fuller
+```
+
+View a single latest message:
+
+```powershell
+git show --no-patch --format=fuller HEAD
+```
+
+### Checking out branches before committing and pushing
+
+There are three common states.
+
+#### Option A: commit directly on `main`
+
+This is simplest:
+
+```powershell
+git switch main
+git pull
+git status
+git add -A
+git commit -m "docs: update guide"
+git push origin main
+```
+
+Pros:
+
+- simple;
+- good for solo/personal repos;
+- fewer branch-management steps.
+
+Cons:
+
+- less review structure;
+- easier to mix unrelated changes;
+- less suitable for team repos.
+
+#### Option B: create a working branch, then merge into `main`
+
+```powershell
+git switch main
+git pull
+git switch -c update-guide
+git add -A
+git commit -m "docs: update guide"
+git push -u origin update-guide
+```
+
+After review or self-check:
+
+```powershell
+git switch main
+git pull
+git merge update-guide
+git push origin main
+```
+
+Pros:
+
+- safer;
+- easier review;
+- better for pull requests;
+- cleaner isolation for changes.
+
+Cons:
+
+- more steps;
+- branch cleanup needed later.
+
+#### Option C: detached `HEAD`
+
+This can happen when you check out a tag or commit directly:
+
+```powershell
+git switch --detach v1.20.0
+```
+
+Detached `HEAD` is useful for inspection, but not ideal for normal committing.
+
+If you need to edit from that point, create a branch:
+
+```powershell
+git switch -c fix-from-v1.20.0
+```
+
+### Recommended repo folders
+
+Repository structure should support how the project is actually used.
+
+Common folders:
+
+| Folder | Purpose |
+|---|---|
+| `docs/` | Additional documentation, guides, diagrams, or notes |
+| `archive/` | Old reference material kept intentionally but not active |
+| `assets/` | Images, icons, CSS assets, screenshots, or downloadable resources |
+| `src/` or `source/` | Source code or source content |
+| `public/`, `dist/`, or `site/` | Published/static/generated website output, depending on project |
+| `scripts/` | Helper scripts for build, release, validation, or maintenance |
+| `.github/` | GitHub-specific files, such as workflows, issue templates, or pull request templates |
+
+Suggested simple static-site structure:
+
+```text
+README.md
+CHANGELOG.md
+index.html
+style.css
+script.js
+assets/
+docs/
+scripts/
+.github/
+```
+
+Use `archive/` only for material that has long-term historical value. Do not let it become a dumping ground.
+
+### `.gitignore`: what it is and how to use it
+
+`.gitignore` tells Git which untracked files to ignore.
+
+It does not remove files that are already tracked.
+
+Git's `gitignore` documentation describes ignore patterns for intentionally untracked files. [R72]
+
+Common starter example:
+
+```gitignore
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Build output
+bin/
+obj/
+dist/
+build/
+
+# Local environment files
+.env
+.env.*
+
+# Editor folders
+.vscode/
+.idea/
+
+# Archives generated locally
+*.zip
+*.7z
+```
+
+Important:
+
+> `.gitignore` only ignores untracked files.
+
+If a file is already tracked, adding it to `.gitignore` does not stop tracking it.
+
+To stop tracking a file but keep it locally:
+
+```powershell
+git rm --cached file-name
+```
+
+Then commit the change.
+
+For guide/website repos, create `.gitignore` early, before the first commit when possible.
+
+### `.gitkeep`: what it is and how to use it
+
+Git does not track empty folders.
+
+A `.gitkeep` file is a common placeholder file used to keep an otherwise-empty folder in the repository.
+
+Example:
+
+```text
+logs/.gitkeep
+exports/.gitkeep
+```
+
+Then:
+
+```powershell
+git add logs/.gitkeep
+git commit -m "chore: keep logs folder placeholder"
+```
+
+Use `.gitkeep` when:
+
+- the folder needs to exist;
+- the folder is currently empty;
+- future scripts or docs expect that folder path.
+
+Do not use `.gitkeep` when:
+
+- the folder already contains tracked files;
+- the folder is generated and should not be tracked;
+- the folder is only temporary.
+
+`.gitkeep` is a convention, not a special Git feature.
+
+### GitHub topics
+
+GitHub topics are short repository metadata tags that help classify a repository.
+
+Examples:
+
+```text
+git
+github
+documentation
+versioning
+static-site
+aws
+cloudfront
+s3
+```
+
+Pros:
+
+- helps organize repositories;
+- improves discoverability;
+- makes a repo easier to understand at a glance.
+
+Cons:
+
+- easy to overdo;
+- not a substitute for README content;
+- needs occasional cleanup if the project changes.
+
+Use a small set of accurate topics.
+
+GitHub's repository topic documentation describes topics as a way to classify repositories and make them more discoverable. [R73]
+
+### LF vs. CRLF and `.gitattributes` reminder
+
+The detailed line-ending guidance is in [Section 29](#29-line-endings-lf-crlf-and-gitattributes).
+
+High-confidence policy:
+
+| File type | Recommended line ending |
+|---|---|
+| General text in repository | Usually normalize to LF in the repository |
+| Windows working copy | CRLF may be acceptable depending on `.gitattributes` |
+| Shell scripts `.sh` | LF |
+| PowerShell scripts `.ps1` | CRLF is acceptable |
+| Binary files | No line-ending conversion |
+
+A portable static website policy is:
+
+```gitattributes
+# Auto-detect text files and normalize them to LF in the repository
+* text=auto
+
+# Explicit text formats
+*.html text eol=lf
+*.css  text eol=lf
+*.js   text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.txt  text eol=lf
+*.xml  text eol=lf
+*.svg  text eol=lf
+
+# Windows PowerShell
+*.ps1 text eol=crlf
+
+# Unix/Linux shell scripts
+*.sh text eol=lf
+
+# Binary files
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+```
+
+If your repo intentionally wants CRLF for common documentation and website files, that is also acceptable. The important thing is to make the policy explicit in `.gitattributes`, then verify with:
+
+```powershell
+git ls-files --eol
+```
+
+Git's `gitattributes` documentation covers text/eol attributes, and Git's `git ls-files` documentation includes `--eol` for inspecting end-of-line behavior. [R66] [R67]
 
 
 # Appendix A: Expanded Git Command Reference
@@ -11420,7 +11999,188 @@ git commit -m "feat!: replace guide structure" -m "BREAKING CHANGE: The guide se
 For documentation repositories, this is uncommon but possible when anchors, filenames, or instructions change in incompatible ways.
 
 
-# Appendix U: References
+
+---
+
+# Appendix U: Push, Tag, Branch, and Repository Hygiene Scenarios
+
+This appendix expands [Section 32](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## U.1 Check whether plain `git push` has an upstream
+
+```powershell
+git status
+git branch -vv
+```
+
+Look for text such as:
+
+```text
+main  abc1234 [origin/main] latest commit subject
+```
+
+That means local `main` is tracking `origin/main`.
+
+## U.2 Explicit release push checklist
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "docs: update guide" -m "Explain what changed and why."
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+## U.3 Verify branch and tag state
+
+```powershell
+git log --oneline --decorate -10
+git log --oneline --decorate --graph --all
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+git tag --list
+git show vX.Y.Z
+```
+
+## U.4 Push branch and one tag, not every tag
+
+Recommended for careful version work:
+
+```powershell
+git push origin main
+git push origin vX.Y.Z
+```
+
+Use this cautiously:
+
+```powershell
+git push --tags
+```
+
+because it pushes every local tag that the remote does not have.
+
+## U.5 Direct-to-main vs. working branch
+
+| Workflow | Best for | Watch out for |
+|---|---|---|
+| Direct on `main` | Solo/personal repos, small docs updates | Less review/isolation |
+| Working branch | Larger updates, PRs, team review | More steps |
+| Detached `HEAD` | Inspecting old commits/tags | Not ideal for normal commits |
+
+## U.6 Static-site folder starter
+
+```text
+README.md
+CHANGELOG.md
+index.html
+style.css
+script.js
+assets/
+docs/
+scripts/
+.github/
+```
+
+Optional:
+
+```text
+archive/
+```
+
+Use `archive/` only for intentional historical material.
+
+## U.7 `.gitignore` starter
+
+```gitignore
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Build output
+bin/
+obj/
+dist/
+build/
+
+# Local environment files
+.env
+.env.*
+
+# Editor folders
+.vscode/
+.idea/
+
+# Archives generated locally
+*.zip
+*.7z
+```
+
+## U.8 Stop tracking a file that is now ignored
+
+```powershell
+git rm --cached file-name
+git commit -m "chore: stop tracking generated file"
+```
+
+## U.9 `.gitkeep` placeholder
+
+```text
+exports/.gitkeep
+```
+
+Then:
+
+```powershell
+git add exports/.gitkeep
+git commit -m "chore: keep exports folder placeholder"
+```
+
+## U.10 GitHub topics checklist
+
+Use a small set of accurate topics.
+
+Example:
+
+```text
+git
+github
+documentation
+versioning
+static-site
+```
+
+Avoid irrelevant tags, outdated tags, and huge topic lists.
+
+## U.11 Line-ending verification
+
+```powershell
+git ls-files --eol
+```
+
+Example:
+
+```text
+i/lf    w/crlf  attr/text eol=crlf  README.md
+```
+
+Use this after adding or changing `.gitattributes`.
+
+
+# Appendix V: References
 
 ## Core conceptual references
 
@@ -11624,7 +12384,36 @@ https://git-scm.com/docs/git-mv
 [R70] Git documentation, `git-rebase`, including interactive rebase and `reword`.  
 [R71] Git documentation, `git-push`, including `--force-with-lease`.  
 
+
+[R72] Git documentation, `gitignore`.  
+[R73] GitHub Docs, repository topics/classification guidance.  
+
 # Index
+
+
+## `git push` vs `git push origin main`
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows) and [Appendix U](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios).
+
+## Branch push
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## Tag push
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## `.gitignore`
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows) and [Appendix U](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios).
+
+## `.gitkeep`
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows) and [Appendix U](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios).
+
+## GitHub topics
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows).
 
 
 ## Commit message prefixes

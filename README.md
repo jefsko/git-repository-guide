@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.12.0`
+Current guide version: `v1.13.0`
 
 Main guide file:
 
@@ -160,6 +160,16 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Using optional commit-message scopes
 - Understanding breaking-change notation in commit messages
 
+- Understanding when `git push` behaves like `git push origin main`
+- Pushing branches and tags explicitly
+- Verifying branch/tag push state
+- Choosing direct-to-main versus working-branch workflows
+- Using `docs/`, `archive/`, `assets/`, `scripts/`, and `.github/` folders appropriately
+- Creating and using `.gitignore`
+- Preserving empty folders with `.gitkeep` when needed
+- Choosing GitHub repository topics
+- Applying line-ending policy reminders with `.gitattributes`
+
 ## Recommended Repository Details
 
 Recommended repository name:
@@ -197,12 +207,12 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.12.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.13.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Patch updates, such as `v1.13.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Minor updates, such as `v1.14.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.12.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.13.0`.
 
 ## Suggested Repository Structure
 

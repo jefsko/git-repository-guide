@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.12.0  
+**Version:** v1.13.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.12.0
+annotated version tags such as v1.0.0, v1.1.0, v1.13.0
 ```
 
 End result:
@@ -692,7 +692,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.12.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.13.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos
@@ -728,6 +728,45 @@ git push --force-with-lease
 ```
 
 Do not rewrite shared, protected, tagged, released, or deployed history just to fix a minor typo unless you fully understand the consequences.
+
+
+---
+
+## Push branch and tag explicitly
+
+For careful versioned guide or website work, push the branch and the tag explicitly.
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "docs: update guide"
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Plain `git push` may be enough when the current branch is already tracking an upstream branch, but `git push origin main` is clearer.
+
+Check tracking and unpushed commits:
+
+```powershell
+git status
+git branch -vv
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+```
+
+Use a working branch for larger changes:
+
+```powershell
+git switch main
+git pull
+git switch -c update-guide
+```
+
+Use `main` directly only when that is appropriate for your repo and risk level.
 
 
 ## If something fails
@@ -768,6 +807,8 @@ Use the full guide when you need:
 - commit-message prefix selection;
 - canonical URL and repository identity planning;
 - command syntax and parameter meanings;
+- explicit branch and tag push workflows;
+- `.gitignore`, `.gitkeep`, repository folder, and GitHub topics basics;
 - troubleshooting and reference commands.
 
 Full guide: [`git-repository-guide.md`](git-repository-guide.md)

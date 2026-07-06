@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.12.0  
+**Version:** v1.13.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -575,6 +575,56 @@ git rebase --abort
 ```
 
 
+---
+
+## Explicit push and repo hygiene
+
+### Push branch and one tag
+
+```powershell
+git push origin main
+git push origin vX.Y.Z
+```
+
+### Release checklist
+
+```powershell
+git status
+git add -A
+git status
+git commit -m "docs: update guide"
+git push origin main
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+### Verify branch state
+
+```powershell
+git branch -vv
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+```
+
+### Useful hygiene files
+
+| File | Purpose |
+|---|---|
+| `.gitignore` | Ignore untracked local/generated files |
+| `.gitattributes` | Control text/binary and line-ending behavior |
+| `.gitkeep` | Preserve intentionally empty folders |
+
+### Suggested folders
+
+```text
+docs/
+assets/
+scripts/
+.github/
+archive/
+```
+
+
 ## Common fixes
 
 | Problem | Fix |
@@ -588,6 +638,7 @@ git rebase --abort
 | Need to see latest commit stats | `git show --stat --oneline HEAD` |
 | Need to verify a rename | `git diff --cached --summary` and `git diff --cached --name-status --find-renames` |
 | Need to inspect line endings | `git ls-files --eol` |
+| Need to check unpushed commits | `git log --oneline origin/main..main` |
 | Need to search commit messages | `git log --all --grep="TYPO" --oneline` |
 | Need to fix latest commit message | `git commit --amend -m "Corrected message"` |
 | Need a commit prefix | Use `docs`, `fix`, `feat`, `chore`, `style`, or `refactor` based on the change type |

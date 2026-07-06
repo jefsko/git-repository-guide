@@ -4,6 +4,44 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.13.0
+
+### Added
+
+- Added guidance explaining when plain `git push` behaves like `git push origin main`.
+- Added a safer mental model for plain `git push` versus explicit branch pushes.
+- Added guidance explaining why branch pushes and tag pushes both matter.
+- Added consequences of pushing a tag without pushing `main`.
+- Added verification commands for branch/tag state, including `git branch -vv`, `git log origin/main..main`, and `git log main..origin/main`.
+- Added a recommended commit, push, and tag sequence for careful versioned guide or website repos.
+- Added guidance for direct-to-`main`, working branch, and detached `HEAD` workflows.
+- Added repository hygiene guidance for `docs/`, `archive/`, `assets/`, `src/`, `public/`, `dist/`, `site/`, `scripts/`, and `.github/`.
+- Added `.gitignore` guidance, including the rule that `.gitignore` only ignores untracked files.
+- Added `.gitkeep` guidance for preserving intentionally empty folders.
+- Added GitHub topics guidance and examples.
+- Added a concise line-ending and `.gitattributes` policy reminder that cross-references the existing detailed line-ending section.
+- Added a dedicated appendix for push, tag, branch, and repository hygiene scenarios.
+- Added Knowledge Base entries for explicit push behavior, branch/tag pushes, `.gitignore`, `.gitkeep`, GitHub topics, and line-ending policy.
+
+### Changed
+
+- Updated the guide metadata from `v1.12.0` to `v1.13.0`.
+- Expanded existing push/tag guidance with more explicit branch-vs-tag push examples.
+- Expanded repository hygiene guidance with folder conventions and ignore/placeholder file guidance.
+- Updated README version, version history, and topic list for `v1.13.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.13.0`.
+- Moved the references appendix from Appendix U to Appendix V so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.12.0`.
+- Existing line-ending and `.gitattributes` guidance was preserved; only concise policy reminders and static-site examples were added.
+- Existing commit-message prefix guidance from `v1.12.0` was preserved.
+- Existing stable filename guidance from `v1.11.1` was preserved.
+- The addendum's `v1.19.0` and `v1.20.0` examples were treated as case-study examples, not as guide-version targets.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.13.0.md`.
+
 ## v1.12.0
 
 ### Added
