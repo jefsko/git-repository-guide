@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.13.0  
+**Version:** v1.14.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.13.0
+annotated version tags such as v1.0.0, v1.1.0, v1.14.0
 ```
 
 End result:
@@ -251,11 +251,19 @@ Commit:
 git commit -m "Create version v1.1.0"
 ```
 
-Push the commit:
+Push the commit. After upstream tracking is configured, plain `git push` usually works:
 
 ```bash
 git push
 ```
+
+For careful versioned updates, the explicit form is clearer:
+
+```bash
+git push origin main
+```
+
+Use one of those branch-push forms, not both every time.
 
 Create and push the next tag:
 
@@ -310,6 +318,51 @@ git archive --format=zip --output project-v1.0.0.zip v1.0.0
 A custom GitHub Release asset ZIP is different. It contains whatever files you manually put into that ZIP.
 
 ---
+
+---
+
+## Inspect tags and commit messages
+
+List tags newest-first by version:
+
+```bash
+git tag --sort=-v:refname
+```
+
+Show a compact graph with branches and tags:
+
+```bash
+git log --oneline --decorate --graph --all
+```
+
+Show only tagged or decorated commits:
+
+```bash
+git log --tags --simplify-by-decoration --oneline
+```
+
+Search commit messages:
+
+```bash
+git log --all --grep="keyword" --oneline
+```
+
+Show commit messages only:
+
+```bash
+git log --format=%B
+```
+
+Find the nearest reachable tag from the current commit:
+
+```bash
+git describe --tags
+```
+
+Press `q` to exit the Git pager.
+
+When viewing a file on GitHub, use `Ctrl+F` on Windows/Linux or `Cmd+F` on Mac to search inside that file. Press `.` on GitHub to open the web editor if you want an editor-like view.
+
 
 ## Stop here if your goal is only a quick test
 
@@ -692,7 +745,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.13.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.14.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

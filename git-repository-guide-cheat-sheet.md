@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.13.0  
+**Version:** v1.14.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -74,11 +74,18 @@ git status
 git add .
 git status
 git commit -m "Create version v1.1.0"
+
+# Normal later push after upstream is configured:
 git push
+
+# Explicit branch push, often clearer for versioned updates:
+git push origin main
 
 git tag -a v1.1.0 -m "Version 1.1.0"
 git push origin v1.1.0
 ```
+
+Use one branch-push form, not both every time. Both are shown to make the choice visible.
 
 ---
 
@@ -89,8 +96,15 @@ git status
 git add .
 git status
 git commit -m "Describe what changed"
+
+# Normal later push after upstream is configured:
 git push
+
+# Explicit branch push:
+git push origin main
 ```
+
+Use one branch-push form, not both every time.
 
 ---
 
@@ -537,6 +551,27 @@ git commit -m "fix: correct canonical domain"
 git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
+
+
+---
+
+## GitHub file search and history lookup
+
+| Goal | Shortcut or command |
+|---|---|
+| Search current GitHub file | `Ctrl+F` / `Cmd+F` |
+| Open GitHub web editor | `.` |
+| Search a path on GitHub | `keyword path:git-repository-guide.md` |
+| List tags newest-first | `git tag --sort=-v:refname` |
+| Show tagged commits | `git log --tags --simplify-by-decoration --oneline` |
+| Inspect tag | `git show v1.0.0` |
+| Nearest reachable tag | `git describe --tags` |
+| Show tag refs and hashes | `git show-ref --tags` |
+| Show commit messages | `git log --oneline` |
+| Search commit messages | `git log --all --grep="keyword" --oneline` |
+| Messages only | `git log --format=%B` |
+| Subjects only | `git log --format=%s` |
+| Exit pager | `q` |
 
 
 ## Commit-message typo fixes

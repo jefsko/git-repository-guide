@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.13.0  
-Previous locked version: v1.12.0  
+Document version: v1.14.0  
+Previous locked version: v1.13.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.13.0` file. Save future changes as a new version, such as `v1.13.1` or `v1.14.0`.  
+Future edit policy: Do not overwrite this `v1.14.0` file. Save future changes as a new version, such as `v1.14.1` or `v1.15.0`.  
 Current as of: 2026-07-06
 
-Revision note: This `v1.13.0` edition preserves the `v1.12.0` guide and additively incorporates git push, branch/tag push, checkout, repository hygiene, `.gitignore`, `.gitkeep`, GitHub topics, and line-ending policy guidance from the v1.13.0 update brief.
+Revision note: This `v1.14.0` edition preserves the `v1.13.0` guide and additively incorporates GitHub open-file search guidance, expanded tag and release-version inspection commands, commit-history lookup commands, and a clearer plain-vs-explicit push reminder for later updates.
 
 ---
 
@@ -46,6 +46,7 @@ Revision note: This `v1.13.0` edition preserves the `v1.12.0` guide and additive
 - [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes)
 - [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them)
 - [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows)
+- [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -66,7 +67,8 @@ Revision note: This `v1.13.0` edition preserves the `v1.12.0` guide and additive
 - [Appendix S: Commit Message Correction Scenarios](#appendix-s-commit-message-correction-scenarios)
 - [Appendix T: Commit Message Prefix Scenarios](#appendix-t-commit-message-prefix-scenarios)
 - [Appendix U: Push, Tag, Branch, and Repository Hygiene Scenarios](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios)
-- [Appendix V: References](#appendix-v-references)
+- [Appendix V: GitHub File Search, Tag Inspection, and Commit History Scenarios](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios)
+- [Appendix W: References](#appendix-w-references)
 - [Index](#index)
 
 ---
@@ -78,7 +80,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1107,6 +1109,26 @@ git log --oneline main..origin/main
 git log --oneline --decorate --graph --all
 ```
 
+
+### Search GitHub files, tags, and commit history
+
+```text
+Search current GitHub file: Ctrl+F or Cmd+F
+Open GitHub web editor: .
+Search specific path: keyword path:git-repository-guide.md
+```
+
+```bash
+git tag --sort=-v:refname
+git log --tags --simplify-by-decoration --oneline
+git describe --tags
+git show-ref --tags
+git log --format=%B
+git log --all --grep="keyword" --oneline
+```
+
+Press `q` to exit the Git pager.
+
 ### Create a GitHub Release
 
 ```bash
@@ -1324,8 +1346,15 @@ git status
 git add .
 git status
 git commit -m "Describe what changed"
+
+# Option A: normal later push after upstream is configured
 git push
+
+# Option B: explicit push to the main branch on origin
+git push origin main
 ```
+
+Use one of the push options above, not both every time. They are shown together to make the choice visible.
 
 No tag command is needed if you are not marking a new version.
 
@@ -1349,8 +1378,11 @@ git status
 git add .
 git status
 git commit -m "Describe what changed"
-git push
 
+# Push the branch first so GitHub's normal/default branch view is current.
+git push origin main
+
+# Then create and push the version tag.
 git tag -a vX.Y.Z -m "Version X.Y.Z"
 git push origin vX.Y.Z
 ```
@@ -1362,7 +1394,8 @@ git status
 git add .
 git status
 git commit -m "Expand guide with repository packaging and branch workflow guidance"
-git push
+
+git push origin main
 
 git tag -a v1.2.0 -m "Version 1.2.0"
 git push origin v1.2.0
@@ -6587,6 +6620,338 @@ git ls-files --eol
 Git's `gitattributes` documentation covers text/eol attributes, and Git's `git ls-files` documentation includes `--eol` for inspecting end-of-line behavior. [R66] [R67]
 
 
+
+---
+
+## 33. GitHub File Search, Tag Inspection, and Commit History Lookup
+
+This section collects quick lookup workflows for three common questions:
+
+- How do I search inside the file I am viewing on GitHub?
+- How do I list and inspect version tags or GitHub Releases?
+- How do I review or search commit messages?
+
+Some of these commands already appear elsewhere in the guide. This section groups the most useful inspection commands together so they are easier to find.
+
+### Search only the file currently open on GitHub
+
+If you are already viewing a file on GitHub and only want to search inside that file, use your browser's Find command:
+
+```text
+Windows/Linux: Ctrl+F
+Mac: Cmd+F
+```
+
+That is usually the fastest and most precise method.
+
+For larger files or an editor-like experience, press:
+
+```text
+.
+```
+
+while viewing the repository or file on GitHub. This opens GitHub's web editor. Then use:
+
+```text
+Ctrl+F
+```
+
+or:
+
+```text
+Cmd+F
+```
+
+to search inside the open file.
+
+### Search a specific path with GitHub search
+
+GitHub's search bar can be limited to a path by using `path:`.
+
+Pattern:
+
+```text
+search-term path:folder/subfolder/filename.ext
+```
+
+Example:
+
+```text
+force-with-lease path:git-repository-guide.md
+```
+
+When using the GitHub search bar, make sure the search is limited to the current repository if you do not want results from all of GitHub.
+
+For a file you already have open, prefer `Ctrl+F` or `Cmd+F`.
+
+### Use symbols for code files
+
+For some source-code files, GitHub can show a symbols or outline pane. Use it when you want to jump to:
+
+- a function;
+- a class;
+- a method;
+- a variable;
+- another code symbol.
+
+This is useful for navigating code definitions, but it is not a replacement for general text search.
+
+### Practical GitHub file-search ranking
+
+| Rank | Method | Best use |
+|---:|---|---|
+| 1 | Browser Find, `Ctrl+F` or `Cmd+F` | Search the currently open file |
+| 2 | GitHub web editor, `.` then `Ctrl+F` or `Cmd+F` | Search or navigate a larger file in an editor-like view |
+| 3 | GitHub search bar with `path:` | Search a specific file path from the repository search interface |
+| 4 | Symbols pane | Jump to functions, classes, or other code definitions |
+
+### List tags and version markers
+
+List all local tags:
+
+```bash
+git tag
+```
+
+Equivalent form:
+
+```bash
+git tag --list
+```
+
+Filter tags by pattern:
+
+```bash
+git tag --list "v1.*"
+```
+
+List tags in descending version-aware order:
+
+```bash
+git tag --sort=-v:refname
+```
+
+List tags in ascending version-aware order:
+
+```bash
+git tag --sort=v:refname
+```
+
+Show tag refs with their hashes:
+
+```bash
+git show-ref --tags
+```
+
+### Show tags in commit history
+
+Show commit history with branches and tags displayed:
+
+```bash
+git log --oneline --decorate --graph --all
+```
+
+Show a simplified view focused on tagged or decorated commits:
+
+```bash
+git log --tags --simplify-by-decoration --oneline
+```
+
+This can be useful when you want a quick release/version timeline instead of every ordinary commit.
+
+### Inspect one tag
+
+Inspect a tag:
+
+```bash
+git show v1.0.0
+```
+
+For an annotated tag, this can show the tagger, date, tag message, target commit, and related commit details.
+
+Show the nearest reachable tag from the current commit:
+
+```bash
+git describe --tags
+```
+
+This is useful when you want to know which tagged version the current commit is closest to.
+
+### Git tags vs. GitHub Releases
+
+Git tags and GitHub Releases are related, but not identical.
+
+| Thing | Meaning |
+|---|---|
+| Git tag | A Git ref pointing to a specific commit |
+| Annotated tag | A Git tag object with metadata and a message |
+| GitHub Release | A GitHub page/object based on a tag, often with release notes and assets |
+
+Use Git commands to inspect Git tags.
+
+Use GitHub.com or GitHub CLI to inspect GitHub Releases.
+
+Examples with GitHub CLI:
+
+```bash
+gh release list
+gh release view v1.0.0
+```
+
+### View commit messages
+
+Compact commit history:
+
+```bash
+git log --oneline
+```
+
+Full current-branch history:
+
+```bash
+git log
+```
+
+All branch and ref history:
+
+```bash
+git log --all --oneline
+```
+
+Readable graph:
+
+```bash
+git log --all --oneline --decorate --graph
+```
+
+### Print commit messages only
+
+Print raw commit messages only:
+
+```bash
+git log --format=%B
+```
+
+Print commit subjects only:
+
+```bash
+git log --format=%s
+```
+
+Print short hash and subject:
+
+```bash
+git log --format="%h %s"
+```
+
+Print short hash, short date, and subject:
+
+```bash
+git log --date=short --format="%h %ad %s"
+```
+
+### Search or filter commit messages
+
+Search commit messages on the current branch:
+
+```bash
+git log --grep="keyword"
+```
+
+Search commit messages across all refs:
+
+```bash
+git log --all --grep="keyword"
+```
+
+Search case-insensitively:
+
+```bash
+git log --all --regexp-ignore-case --grep="keyword"
+```
+
+Filter by author:
+
+```bash
+git log --author="Name"
+```
+
+Limit the number of commits shown:
+
+```bash
+git log -n 5 --oneline
+```
+
+### Exit the Git pager
+
+Many `git log` and `git show` commands open in Git's pager.
+
+Press:
+
+```text
+q
+```
+
+to quit the pager and return to the terminal prompt.
+
+This is important because beginners sometimes think the terminal is stuck.
+
+### Later update push choice reminder
+
+After the first push with upstream tracking:
+
+```bash
+git push -u origin main
+```
+
+plain `git push` usually works for later updates because local `main` tracks `origin/main`.
+
+For ordinary later updates, this is often enough:
+
+```bash
+git push
+```
+
+For careful versioned updates, release tagging, historical imports, or documentation examples where clarity matters, use the explicit form:
+
+```bash
+git push origin main
+```
+
+The two forms should not normally be run one after the other every time. They are shown together to explain the choice.
+
+A later update can be documented like this:
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: describe what changed"
+
+# Option A: normal later push after upstream is configured
+git push
+
+# Option B: explicit push to the main branch on origin
+git push origin main
+```
+
+For a later versioned update, the explicit branch push is often clearest:
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: describe what changed"
+
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+That keeps GitHub's normal/default branch view current and also publishes the exact version tag.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -6935,6 +7300,59 @@ git log --oneline --decorate --graph --all
 Shows commit history.
 
 Official reference: [R26]
+
+
+### `git log --format`
+
+```bash
+git log --format=%B
+git log --format=%s
+git log --date=short --format="%h %ad %s"
+```
+
+Prints commit messages or selected commit fields in a compact custom format.
+
+Official reference: [R26]
+
+### `git describe --tags`
+
+```bash
+git describe --tags
+```
+
+Shows the nearest reachable tag from the current commit.
+
+Official reference: [R74]
+
+### `git show-ref --tags`
+
+```bash
+git show-ref --tags
+```
+
+Shows tag refs with their hashes.
+
+Official reference: [R75]
+
+### `gh release list`
+
+```bash
+gh release list
+```
+
+Lists GitHub Releases for the current repository when GitHub CLI is installed and authenticated.
+
+Official reference: [R78]
+
+### `gh release view`
+
+```bash
+gh release view v1.0.0
+```
+
+Shows one GitHub Release.
+
+Official reference: [R79]
 
 ### `git push`
 
@@ -9333,6 +9751,145 @@ A scope is an optional area in parentheses, such as `docs(readme): add navigatio
 ## F.168 How do I mark a breaking change in a commit message?
 
 Use `!` after the type or scope and explain the breaking change in the body, such as `feat!: replace guide structure` with a `BREAKING CHANGE:` body.
+
+
+
+## F.169 How do I search only the file I currently have open on GitHub?
+
+Use your browser's Find command:
+
+```text
+Windows/Linux: Ctrl+F
+Mac: Cmd+F
+```
+
+For an editor-like view, press `.` on GitHub to open the web editor, then use `Ctrl+F` or `Cmd+F`.
+
+## F.170 How do I search a specific file path on GitHub?
+
+Use the `path:` qualifier:
+
+```text
+search-term path:folder/file-name.ext
+```
+
+Example:
+
+```text
+force-with-lease path:git-repository-guide.md
+```
+
+## F.171 How do I list all Git tags?
+
+Use:
+
+```bash
+git tag
+```
+
+or:
+
+```bash
+git tag --list
+```
+
+## F.172 How do I list tags newest-first by version?
+
+Use:
+
+```bash
+git tag --sort=-v:refname
+```
+
+## F.173 How do I show only tagged release/version commits?
+
+Use:
+
+```bash
+git log --tags --simplify-by-decoration --oneline
+```
+
+For more context, use:
+
+```bash
+git log --oneline --decorate --graph --all
+```
+
+## F.174 How do I inspect one tag?
+
+Use:
+
+```bash
+git show v1.0.0
+```
+
+## F.175 How do I find the nearest reachable tag from my current commit?
+
+Use:
+
+```bash
+git describe --tags
+```
+
+## F.176 How do I see all commit messages in a repo?
+
+Use:
+
+```bash
+git log --oneline
+```
+
+For all refs:
+
+```bash
+git log --all --oneline
+```
+
+## F.177 How do I print only commit messages?
+
+Use:
+
+```bash
+git log --format=%B
+```
+
+For subjects only:
+
+```bash
+git log --format=%s
+```
+
+## F.178 How do I search commit messages?
+
+Use:
+
+```bash
+git log --all --grep="keyword"
+```
+
+For case-insensitive search:
+
+```bash
+git log --all --regexp-ignore-case --grep="keyword"
+```
+
+## F.179 How do I exit `git log` when it fills the terminal?
+
+Press:
+
+```text
+q
+```
+
+## F.180 Should I use `git push` or `git push origin main` for later updates?
+
+After `git push -u origin main`, plain `git push` usually works because `main` tracks `origin/main`.
+
+For careful versioned updates, release tagging, historical imports, or examples where clarity matters, use the explicit form:
+
+```bash
+git push origin main
+```
 
 
 # Appendix G: Command Sequences and Workflow Recipes
@@ -12180,7 +12737,228 @@ i/lf    w/crlf  attr/text eol=crlf  README.md
 Use this after adding or changing `.gitattributes`.
 
 
-# Appendix V: References
+
+---
+
+# Appendix V: GitHub File Search, Tag Inspection, and Commit History Scenarios
+
+This appendix expands [Section 33](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+
+## V.1 Search only the open file on GitHub
+
+Use browser Find:
+
+```text
+Windows/Linux: Ctrl+F
+Mac: Cmd+F
+```
+
+This is the best first choice when the file is already open.
+
+## V.2 Open GitHub's web editor and search there
+
+While viewing a repository or file on GitHub, press:
+
+```text
+.
+```
+
+Then search the open file with:
+
+```text
+Ctrl+F
+```
+
+or:
+
+```text
+Cmd+F
+```
+
+## V.3 Search a specific path on GitHub
+
+Use the `path:` qualifier:
+
+```text
+search-term path:folder/file-name.ext
+```
+
+Example:
+
+```text
+force-with-lease path:git-repository-guide.md
+```
+
+Make sure the search is limited to the intended repository when you do not want global GitHub results.
+
+## V.4 List tags
+
+```bash
+git tag
+git tag --list
+```
+
+## V.5 Filter tags
+
+```bash
+git tag --list "v1.*"
+git tag --list "v1.13.*"
+```
+
+## V.6 Sort tags by version
+
+Newest first:
+
+```bash
+git tag --sort=-v:refname
+```
+
+Oldest first:
+
+```bash
+git tag --sort=v:refname
+```
+
+## V.7 Show tags with hashes
+
+```bash
+git show-ref --tags
+```
+
+## V.8 Show tags in history
+
+```bash
+git log --oneline --decorate --graph --all
+```
+
+Show a simplified tagged/decorated history:
+
+```bash
+git log --tags --simplify-by-decoration --oneline
+```
+
+## V.9 Inspect one tag
+
+```bash
+git show v1.0.0
+```
+
+## V.10 Find the nearest reachable tag
+
+```bash
+git describe --tags
+```
+
+## V.11 List GitHub Releases with GitHub CLI
+
+```bash
+gh release list
+```
+
+View one release:
+
+```bash
+gh release view v1.0.0
+```
+
+## V.12 Show compact commit messages
+
+```bash
+git log --oneline
+```
+
+## V.13 Show all commit messages across refs
+
+```bash
+git log --all --oneline
+```
+
+Readable graph:
+
+```bash
+git log --all --oneline --decorate --graph
+```
+
+## V.14 Print only commit message text
+
+Full raw messages:
+
+```bash
+git log --format=%B
+```
+
+Subjects only:
+
+```bash
+git log --format=%s
+```
+
+Short hash plus subject:
+
+```bash
+git log --format="%h %s"
+```
+
+## V.15 Search commit messages
+
+```bash
+git log --grep="keyword"
+git log --all --grep="keyword"
+git log --all --regexp-ignore-case --grep="keyword"
+```
+
+## V.16 Filter commit history by author
+
+```bash
+git log --author="Name"
+```
+
+## V.17 Limit commit history output
+
+```bash
+git log -n 5 --oneline
+```
+
+## V.18 Exit the Git pager
+
+Press:
+
+```text
+q
+```
+
+## V.19 Later push choice examples
+
+Normal later push after upstream is configured:
+
+```bash
+git push
+```
+
+Explicit later push:
+
+```bash
+git push origin main
+```
+
+Use one of those forms for the branch push. They are shown together to explain the choice.
+
+For a careful versioned update:
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: describe what changed"
+
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+
+# Appendix W: References
 
 ## Core conceptual references
 
@@ -12388,7 +13166,63 @@ https://git-scm.com/docs/git-mv
 [R72] Git documentation, `gitignore`.  
 [R73] GitHub Docs, repository topics/classification guidance.  
 
+
+[R74] Git documentation, `git-describe`.  
+https://git-scm.com/docs/git-describe
+
+[R75] Git documentation, `git-show-ref`.  
+https://git-scm.com/docs/git-show-ref
+
+[R76] GitHub Docs, “Searching code.”  
+https://docs.github.com/en/search-github/searching-on-github/searching-code
+
+[R77] GitHub Docs, “Navigating code on GitHub.”  
+https://docs.github.com/en/repositories/working-with-files/using-files/navigating-code-on-github
+
+[R78] GitHub CLI Manual, `gh release list`.  
+https://cli.github.com/manual/gh_release_list
+
+[R79] GitHub CLI Manual, `gh release view`.  
+https://cli.github.com/manual/gh_release_view
+
 # Index
+
+
+## GitHub file search
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+
+## `Ctrl+F` / `Cmd+F`
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+
+## GitHub `path:` search
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+
+## `git tag --sort`
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+
+## `git describe --tags`
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+
+## `git show-ref --tags`
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+
+## Commit history lookup
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+
+## `git log --format=%B`
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+
+## Git pager
+
+See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup).
 
 
 ## `git push` vs `git push origin main`

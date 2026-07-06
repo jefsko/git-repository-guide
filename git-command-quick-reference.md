@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.13.0  
+**Version:** v1.14.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.13.0.md
+git-command-quick-reference-v1.14.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -128,6 +128,35 @@ Breaking-change pattern:
 ```bash
 git commit -m "feat!: replace guide structure" -m "BREAKING CHANGE: The guide section order and anchor names changed."
 ```
+
+
+---
+
+# GitHub file search and history inspection quick reference
+
+These are quick lookup commands and shortcuts for GitHub files, tags, releases, and commit messages.
+
+| Goal | Shortcut or command |
+|---|---|
+| Search current GitHub file | `Ctrl+F` / `Cmd+F` |
+| Open GitHub web editor | `.` |
+| Search a path on GitHub | `keyword path:git-repository-guide.md` |
+| List tags | `git tag --list` |
+| List tags newest-first | `git tag --sort=-v:refname` |
+| Show tag refs and hashes | `git show-ref --tags` |
+| Show tags in history | `git log --oneline --decorate --graph --all` |
+| Show tagged/decorated commits | `git log --tags --simplify-by-decoration --oneline` |
+| Inspect one tag | `git show v1.0.0` |
+| Nearest reachable tag | `git describe --tags` |
+| List GitHub Releases | `gh release list` |
+| View one GitHub Release | `gh release view v1.0.0` |
+| Compact commit history | `git log --oneline` |
+| Messages only | `git log --format=%B` |
+| Subjects only | `git log --format=%s` |
+| Search commit messages | `git log --all --grep="keyword" --oneline` |
+| Exit Git pager | `q` |
+
+Plain `git push` usually works after upstream tracking is set. For careful versioned updates, `git push origin main` is often clearer.
 
 
 # Alphabetical command reference
@@ -386,6 +415,99 @@ Set `user.name` and `user.email` before committing if Git asks for identity info
 
 ---
 
+---
+
+## `git describe`
+
+### What it does
+
+Shows a name for the current commit based on the nearest reachable tag.
+
+### Common syntax
+
+```bash
+git describe --tags
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| None | No | Describes the current commit by default. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `--tags` | Uses any tag, not only annotated tags. |
+
+### Notes
+
+Use this when you want to know which tagged version the current commit is closest to.
+
+---
+
+## `git show-ref`
+
+### What it does
+
+Shows refs and their hashes.
+
+### Common syntax
+
+```bash
+git show-ref --tags
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| None | No | Shows refs. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `--tags` | Limits output to tag refs. |
+
+### Notes
+
+Use this when you need to verify tag refs and hashes exactly.
+
+---
+
+## `gh release`
+
+### What it does
+
+Uses GitHub CLI to inspect GitHub Releases.
+
+### Common syntax
+
+```bash
+gh release list
+gh release view v1.0.0
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Tag name | Required for `gh release view` | Identifies the release to view. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `list` | Lists releases. |
+| `view` | Views one release. |
+
+### Notes
+
+Git tags and GitHub Releases are related but different. Use `git tag` commands for Git tags. Use `gh release` commands or GitHub.com for GitHub Releases.
+
+
 ## `git diff`
 
 ### What it does
@@ -517,6 +639,9 @@ git log --oneline --decorate --graph --all
 git log --oneline origin/main..main
 git log --oneline main..origin/main
 git log --all --grep="Ve0sion" --oneline
+git log --format=%B
+git log --format=%s
+git log --tags --simplify-by-decoration --oneline
 git log --follow -- file-name.md
 ```
 
@@ -849,6 +974,8 @@ git push origin v1.0.0
 ```
 
 Use `--force-with-lease` only when you intentionally rewrote history and it is safe to update the remote branch.
+
+For careful versioned updates, `git push origin main` can be clearer than plain `git push`.
 
 ---
 
@@ -1311,7 +1438,7 @@ static-site
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.13.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.14.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 

@@ -4,6 +4,39 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.14.0
+
+### Added
+
+- Added GitHub.com guidance for searching inside the currently open file with `Ctrl+F` or `Cmd+F`.
+- Added GitHub web-editor shortcut guidance using `.` for editor-style file navigation.
+- Added GitHub `path:` search qualifier examples for limiting search to a specific file path.
+- Added expanded tag-inspection commands, including `git tag --sort=-v:refname`, `git show-ref --tags`, `git log --tags --simplify-by-decoration --oneline`, and `git describe --tags`.
+- Added guidance distinguishing Git tags from GitHub Releases when listing version markers.
+- Added expanded commit-message inspection commands, including `git log --format=%B`, `git log --format=%s`, `git log --author`, and `git log -n`.
+- Added beginner reminder to press `q` to exit the `git log` or `git show` pager.
+- Added a dedicated appendix for GitHub file search, tag inspection, and commit-history lookup scenarios.
+- Added Knowledge Base entries for GitHub file search, tag sorting, tag inspection, commit-message lookup, and exiting the pager.
+
+### Changed
+
+- Updated the guide metadata from `v1.13.0` to `v1.14.0`.
+- Expanded existing tag, commit-history, GitHub.com, cheat-sheet, and command-reference coverage with additional inspection and search commands.
+- Clarified later-update push examples by showing the difference between plain `git push` and explicit `git push origin main`.
+- Updated README version, version history, and topic list for `v1.14.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.14.0`.
+- Moved the references appendix from Appendix V to Appendix W so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.13.0`.
+- Existing push/tag/repository hygiene guidance from `v1.13.0` was preserved.
+- Existing commit-message prefix and correction guidance was preserved.
+- Existing stable filename guidance was preserved.
+- Duplicate tag, log, and commit-message explanations were not re-added unless the addendum provided more detail, clearer examples, or better placement.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.14.0.md`.
+
 ## v1.13.0
 
 ### Added
