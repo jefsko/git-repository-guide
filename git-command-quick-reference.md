@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.11.1  
+**Version:** v1.12.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.11.1.md
+git-command-quick-reference-v1.12.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -73,6 +73,62 @@ Placeholders such as `branch-name`, `file-name.md`, `old-tag`, and `new-tag` are
 | 20 | `git archive` | Exports a repository snapshot, often as a ZIP. |
 
 ---
+
+---
+
+# Commit message prefix quick reference
+
+Commit prefixes are not Git commands. They are a convention used inside commit message text.
+
+Pattern:
+
+```text
+type: short imperative summary
+```
+
+Common examples:
+
+```bash
+git commit -m "docs: document commit message prefixes"
+git commit -m "fix: correct canonical domain"
+git commit -m "feat: add web applications section"
+git commit -m "chore: prepare v2.1.0 release"
+```
+
+| Prefix | Meaning | Use when |
+|---|---|---|
+| `feat` | Feature | User-visible content, capability, page, endpoint, or section is added or expanded |
+| `fix` | Bug fix | Something wrong, broken, stale, misleading, or misplaced is corrected |
+| `docs` | Documentation | Documentation-only files change |
+| `chore` | Maintenance | Routine maintenance, release prep, metadata refresh, or housekeeping |
+| `refactor` | Restructure | Internal structure changes without intended visible behavior change |
+| `style` | Formatting | Whitespace, indentation, line endings, or formatting-only changes |
+| `test` | Tests | Tests, test data, or validation scripts change |
+| `build` | Build/dependencies | Build scripts, Dockerfiles, package files, or dependencies change |
+| `ci` | CI/CD | GitHub Actions, deployment automation, or validation workflows change |
+| `perf` | Performance | Speed, size, load time, or efficiency improves |
+| `revert` | Revert | A previous commit is intentionally undone |
+
+Optional scope pattern:
+
+```text
+type(scope): summary
+```
+
+Examples:
+
+```bash
+git commit -m "docs(readme): add repository navigation"
+git commit -m "fix(metadata): correct canonical domain"
+git commit -m "feat(portfolio): add web applications section"
+```
+
+Breaking-change pattern:
+
+```bash
+git commit -m "feat!: replace guide structure" -m "BREAKING CHANGE: The guide section order and anchor names changed."
+```
+
 
 # Alphabetical command reference
 
@@ -288,6 +344,8 @@ git commit --amend -m "Corrected commit message"
 A one-line commit message is often enough.
 
 A commit body is optional and useful when the why/context matters.
+
+Commit-message prefixes such as `docs:`, `fix:`, `feat:`, and `chore:` are conventions, not Git commands.
 
 ---
 
@@ -1182,7 +1240,7 @@ to inspect the result.
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.11.1` |
+| `vX.Y.Z` | Version tag placeholder | `v1.12.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
@@ -1227,6 +1285,7 @@ git diff --name-status
 | Save commit pointed to by a tag | `git rev-list -n 1 vX.Y.Z` |
 | Search commit messages for typo | `git log --all --grep="TYPO" --oneline` |
 | Fix latest commit message | `git commit --amend -m "Corrected message"` |
+| Need a commit-message prefix | Choose based on change type: `docs`, `fix`, `feat`, `chore`, `style`, or `refactor` |
 | Fix older commit message | `git rebase -i <bad-commit-sha>~1`, then `reword` |
 | Push rewritten private branch | `git push --force-with-lease` |
 | Restore accidental file deletion | `git restore file-name.md` |

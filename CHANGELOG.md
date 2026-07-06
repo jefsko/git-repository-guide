@@ -4,6 +4,38 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.12.0
+
+### Added
+
+- Added guidance for common commit-message prefixes such as `feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`, `build`, `ci`, `perf`, `revert`, and `release`.
+- Added clarification that commit-message prefixes are not Git commands and are not enforced by Git by default.
+- Added a ranked prefix table for documentation repositories, website repositories, release packages, and small project/versioned file sets.
+- Added prefix-specific examples for documentation, website, metadata, release, formatting, testing, build, CI, performance, and revert workflows.
+- Added a decision table for choosing the best prefix.
+- Added guidance distinguishing commit messages, tag names, annotated tag messages, GitHub Release titles, and GitHub Release notes.
+- Added guidance for recommended subject style, optional scopes, and breaking-change notation.
+- Added a dedicated appendix for commit-message prefix scenarios and examples.
+- Added Knowledge Base entries for `feat`, `fix`, `docs`, `chore`, `style`, scopes, and breaking changes.
+- Added quick-start, cheat-sheet, and command quick-reference coverage for commit-message prefix selection.
+
+### Changed
+
+- Updated the guide metadata from `v1.11.1` to `v1.12.0`.
+- Expanded commit-message guidance beyond message correction workflows to include prefix selection and consistent commit-history style.
+- Updated README version, version history, and topic list for `v1.12.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.12.0`.
+- Moved the references appendix from Appendix T to Appendix U so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.11.1`.
+- Existing commit-message typo correction guidance was preserved.
+- Existing stable filename guidance from `v1.11.1` was preserved.
+- Duplicate commit-message style content was not re-added unless it provided more detail, ranking, or examples.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.12.0.md`.
+
 ## v1.11.1
 
 ### Changed

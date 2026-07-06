@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.11.1  
+**Version:** v1.12.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.11.1
+annotated version tags such as v1.0.0, v1.1.0, v1.12.0
 ```
 
 End result:
@@ -660,6 +660,41 @@ Use `RELEASES.md` for production release summaries and `IMPORT-NOTES.md` to expl
 
 ---
 
+---
+
+## Choose a commit-message prefix
+
+Commit prefixes are not Git commands. They are a convention for making history easier to scan.
+
+Use this pattern:
+
+```text
+type: short imperative summary
+```
+
+Common choices:
+
+| Prefix | Use when |
+|---|---|
+| `feat` | user-visible content, capability, page, endpoint, or section is added or expanded |
+| `fix` | something wrong, broken, stale, misleading, or misplaced is corrected |
+| `docs` | documentation-only files change |
+| `chore` | routine maintenance, release prep, metadata refresh, or housekeeping |
+| `style` | formatting, whitespace, table formatting, or line-ending-only changes |
+| `refactor` | internal structure changes without intended visible behavior change |
+
+Examples:
+
+```bash
+git commit -m "docs: document commit message prefixes"
+git commit -m "fix: correct canonical domain"
+git commit -m "feat: add web applications section"
+git commit -m "chore: prepare v2.1.0 release"
+```
+
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.12.0`, and tag messages simple, such as `Version 1.12.0`.
+
+
 ## Fix commit-message typos
 
 Search commit messages:
@@ -730,6 +765,7 @@ Use the full guide when you need:
 - LF/CRLF and `.gitattributes` guidance;
 - release notes and import documentation;
 - commit-message typo correction workflows;
+- commit-message prefix selection;
 - canonical URL and repository identity planning;
 - command syntax and parameter meanings;
 - troubleshooting and reference commands.

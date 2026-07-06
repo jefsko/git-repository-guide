@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.11.1  
+**Version:** v1.12.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -508,6 +508,37 @@ YYYY-MM-DD
 
 ---
 
+---
+
+## Commit-message prefixes
+
+Pattern:
+
+```text
+type: short imperative summary
+```
+
+Common choices:
+
+| Prefix | Use when |
+|---|---|
+| `feat` | user-visible content/capability added or expanded |
+| `fix` | wrong, broken, stale, misleading, or misplaced item corrected |
+| `docs` | documentation-only change |
+| `chore` | routine maintenance or release prep |
+| `style` | formatting-only change |
+| `refactor` | internal restructure without intended behavior change |
+
+Examples:
+
+```bash
+git commit -m "docs: document commit message prefixes"
+git commit -m "fix: correct canonical domain"
+git commit -m "feat: add web applications section"
+git commit -m "chore: prepare v2.1.0 release"
+```
+
+
 ## Commit-message typo fixes
 
 ### Search commit messages
@@ -559,6 +590,7 @@ git rebase --abort
 | Need to inspect line endings | `git ls-files --eol` |
 | Need to search commit messages | `git log --all --grep="TYPO" --oneline` |
 | Need to fix latest commit message | `git commit --amend -m "Corrected message"` |
+| Need a commit prefix | Use `docs`, `fix`, `feat`, `chore`, `style`, or `refactor` based on the change type |
 
 ---
 

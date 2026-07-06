@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.11.1  
-Previous locked version: v1.11.0  
+Document version: v1.12.0  
+Previous locked version: v1.11.1  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.11.1` file. Save future changes as a new version, such as `v1.11.2` or `v1.12.0`.  
-Current as of: 2026-07-02
+Future edit policy: Do not overwrite this `v1.12.0` file. Save future changes as a new version, such as `v1.12.1` or `v1.13.0`.  
+Current as of: 2026-07-03
 
-Revision note: This `v1.11.1` patch preserves the `v1.11.0` guide and corrects internal file-reference guidance so active repository links use stable filenames while standalone download filename examples and historical changelog entries may remain versioned when that is the point being explained.
+Revision note: This `v1.12.0` edition preserves the `v1.11.1` guide and additively incorporates commit-message prefix guidance, including `feat`, `fix`, `docs`, `chore`, `refactor`, `style`, and related prefix decision examples.
 
 ---
 
@@ -44,6 +44,7 @@ Revision note: This `v1.11.1` patch preserves the `v1.11.0` guide and corrects i
 - [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages)
 - [29. Line Endings, LF, CRLF, and `.gitattributes`](#29-line-endings-lf-crlf-and-gitattributes)
 - [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes)
+- [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -62,7 +63,8 @@ Revision note: This `v1.11.1` patch preserves the `v1.11.0` guide and corrects i
 - [Appendix Q: Tag Correction and Release Repair Scenarios](#appendix-q-tag-correction-and-release-repair-scenarios)
 - [Appendix R: Line-Ending and `.gitattributes` Scenarios](#appendix-r-line-ending-and-gitattributes-scenarios)
 - [Appendix S: Commit Message Correction Scenarios](#appendix-s-commit-message-correction-scenarios)
-- [Appendix T: References](#appendix-t-references)
+- [Appendix T: Commit Message Prefix Scenarios](#appendix-t-commit-message-prefix-scenarios)
+- [Appendix U: References](#appendix-u-references)
 - [Index](#index)
 
 ---
@@ -74,7 +76,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1038,6 +1040,26 @@ git ls-files --eol
 ```
 
 
+
+### Choose a commit-message prefix
+
+```bash
+git commit -m "docs: document commit message prefixes"
+git commit -m "fix: correct canonical domain"
+git commit -m "feat: add web applications section"
+git commit -m "chore: prepare v2.1.0 release"
+```
+
+Basic rule:
+
+```text
+feat   = user-visible addition or expansion
+fix    = correction
+docs   = documentation-only change
+chore  = routine maintenance
+style  = formatting-only change
+```
+
 ### Search and fix commit-message typos
 
 ```bash
@@ -1187,6 +1209,7 @@ Recommended history:
 | `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
 | `v1.10.0` | Additive expansion covering project identity, canonical URL, GitHub Release notes, release documentation files, and import-note examples for reconstructed repositories |
 | `v1.11.0` | Additive expansion covering commit-message typo detection, commit-message correction, amend/rebase workflows, pushed-history safety, and force-with-lease guidance |
+| `v1.12.0` | Additive expansion covering commit-message prefixes, prefix selection, Conventional Commit-style examples, scopes, breaking changes, and tag-message distinctions |
 | `v1.11.1` | Patch correction clarifying stable internal repository filenames while preserving versioned standalone download filename examples and historical changelog entries when intentional |
 
 ### Commit messages, tag names, tag messages, and changelog entries
@@ -5543,6 +5566,448 @@ git commit --amend -m "docs: update version references" -m $body
 ```
 
 
+
+---
+
+## 31. Commit Message Prefixes and When to Use Them
+
+Commit message prefixes such as `feat`, `fix`, `docs`, `chore`, and `refactor` are not Git commands.
+
+Git does not require them, and Git does not enforce them by default.
+
+They are a human convention. The value comes from consistency.
+
+A common pattern is:
+
+```text
+type: short imperative summary
+```
+
+Example:
+
+```bash
+git commit -m "feat: expand demo index into AWS portfolio"
+```
+
+A longer commit can include a body:
+
+```bash
+git commit -m "feat: expand demo index into AWS portfolio" -m "Update the site title, subtitle, metadata, README, changelog, release notes, and sitemap for v2.1.0. Move Anagram from Microservices to Web Applications while preserving the existing layout and preview image."
+```
+
+### Why prefixes are useful
+
+Prefixes make commit history easier to:
+
+- scan;
+- search;
+- group by type of change;
+- summarize in changelogs;
+- review when preparing tags or releases;
+- understand later when reconstructing why a version changed.
+
+Git sees this:
+
+```text
+feat: expand demo index into AWS portfolio
+```
+
+as ordinary commit message text.
+
+The prefix is for humans and tooling that chooses to interpret the convention.
+
+### Recommended prefix ranking for this guide workflow
+
+This ranking is based on practical usefulness for documentation repositories, website repositories, release packages, and small project/versioned file sets.
+
+| Rank | Prefix | Meaning | Most useful when |
+|---:|---|---|---|
+| 1 | `feat` | Feature | A user-visible capability, page, endpoint, section, or meaningful content structure is added or expanded |
+| 2 | `fix` | Bug fix | Something incorrect, broken, misleading, stale, or malfunctioning is corrected |
+| 3 | `docs` | Documentation | README, guide, changelog, release notes, comments, or explanatory text are updated without changing functional behavior |
+| 4 | `chore` | Maintenance | Routine upkeep, release preparation, metadata refresh, housekeeping, or non-user-facing maintenance |
+| 5 | `refactor` | Internal restructuring | Code or structure is reorganized without changing visible behavior |
+| 6 | `style` | Formatting only | Whitespace, indentation, line endings, formatting, or visual/code style changes without meaningfully changing content or behavior |
+| 7 | `test` | Tests | Test files, test cases, test data, or test infrastructure are added or changed |
+| 8 | `build` | Build/dependency system | Build scripts, package files, Dockerfiles, dependency manifests, or generated build configuration change |
+| 9 | `ci` | Continuous integration | GitHub Actions, CI/CD pipelines, deployment automation, or validation workflows change |
+| 10 | `perf` | Performance | A change primarily improves speed, size, load time, or efficiency |
+| 11 | `revert` | Revert | A previous commit is intentionally undone |
+| 12 | `release` | Release marker/custom convention | Optional custom prefix for release-only commits, but often `chore` is better |
+
+### `feat`
+
+Use `feat` when the change adds, expands, or meaningfully changes something user-facing.
+
+Examples:
+
+```bash
+git commit -m "feat: expand demo index into AWS portfolio"
+git commit -m "feat: add Anagram web application section"
+git commit -m "feat: add Dice microservice link"
+git commit -m "feat: add website section placeholder"
+```
+
+Use `feat` when:
+
+- a visible page changes in a meaningful way;
+- a new section, endpoint, guide, app, feature, or user-facing capability is added;
+- a project grows beyond its previous purpose;
+- metadata and documentation are updated as part of a visible feature release.
+
+For example, changing a live site from a microservices-only index into a broader AWS portfolio is better described with `feat:` than `docs:` or `chore:` because the user-visible site changed.
+
+### `fix`
+
+Use `fix` when correcting something wrong.
+
+Examples:
+
+```bash
+git commit -m "fix: correct canonical domain"
+git commit -m "fix: update stale Open Graph metadata"
+git commit -m "fix: move Anagram out of microservices section"
+git commit -m "fix: correct typo in release tag message guidance"
+```
+
+Use `fix` when:
+
+- a URL is wrong;
+- metadata is stale or incorrect;
+- a link is broken;
+- a typo changes meaning or looks unprofessional;
+- a service appears under the wrong section;
+- a deployment problem is corrected;
+- an accessibility issue is corrected.
+
+Do not overuse `fix` for ordinary wording improvements. If the change is simply making documentation clearer, `docs:` is usually better.
+
+### `docs`
+
+Use `docs` for documentation-only changes.
+
+Examples:
+
+```bash
+git commit -m "docs: add AWS S3 static website quick start guide"
+git commit -m "docs: update README with primary site URL and alias"
+git commit -m "docs: add Git tag message correction guidance"
+git commit -m "docs: document commit message prefixes"
+```
+
+Use `docs` when:
+
+- the README changes;
+- a guide changes;
+- a changelog or release note changes;
+- comments or explanatory text are updated;
+- usage examples are added;
+- no live behavior or visible product feature changes.
+
+If the only changed files are `README.md`, `CHANGELOG.md`, or guide files, `docs:` is usually correct.
+
+If `index.html` changes the live visible site in a meaningful way, use `feat:` or `fix:` depending on the reason.
+
+### `chore`
+
+`chore` is not an acronym. It means routine maintenance.
+
+Examples:
+
+```bash
+git commit -m "chore: prepare v2.1.0 release"
+git commit -m "chore: refresh sitemap lastmod date"
+git commit -m "chore: normalize line endings"
+git commit -m "chore: update project metadata"
+```
+
+Use `chore` when:
+
+- preparing a release;
+- updating metadata that does not change visible behavior;
+- cleaning generated files;
+- updating housekeeping files;
+- normalizing line endings;
+- refreshing dates;
+- updating non-functional project settings.
+
+Do not use `chore` as a junk drawer. If the change is a real feature, fix, or documentation update, use the more specific prefix.
+
+### `refactor`
+
+Use `refactor` when the structure changes but visible behavior is intended to stay the same.
+
+Examples:
+
+```bash
+git commit -m "refactor: reorganize error image assets"
+git commit -m "refactor: split metadata helpers"
+git commit -m "refactor: simplify service card markup"
+```
+
+Use `refactor` when:
+
+- code is reorganized without intended behavior change;
+- files move to clearer locations;
+- repeated code or markup is simplified;
+- internal structure improves but users should not see a functional difference.
+
+If the refactor also changes visible behavior, consider `feat:` or `fix:` instead.
+
+### `style`
+
+Use `style` for formatting-only changes.
+
+Examples:
+
+```bash
+git commit -m "style: normalize HTML indentation"
+git commit -m "style: format markdown tables"
+git commit -m "style: normalize line endings"
+```
+
+Use `style` when:
+
+- indentation changes;
+- whitespace changes;
+- Markdown table formatting changes;
+- line endings change;
+- quote style or semicolon style changes;
+- code formatting changes without changing meaning.
+
+Do not use `style` for visual design changes to a website. If the user-visible page design changes, `feat:` or `fix:` may be better.
+
+### `test`
+
+Use `test` when test-related files or validation workflows change.
+
+Examples:
+
+```bash
+git commit -m "test: add homepage metadata checks"
+git commit -m "test: add link validation script"
+git commit -m "test: update accessibility test cases"
+```
+
+### `build`
+
+Use `build` when build tooling, dependency configuration, or package infrastructure changes.
+
+Examples:
+
+```bash
+git commit -m "build: update Dockerfile"
+git commit -m "build: update package lockfile"
+git commit -m "build: add static site build script"
+```
+
+### `ci`
+
+Use `ci` when continuous integration or deployment automation changes.
+
+Examples:
+
+```bash
+git commit -m "ci: add link-check workflow"
+git commit -m "ci: update GitHub Actions deployment workflow"
+git commit -m "ci: run markdown validation on pull requests"
+```
+
+### `perf`
+
+Use `perf` when the main point is performance.
+
+Examples:
+
+```bash
+git commit -m "perf: reduce homepage image size"
+git commit -m "perf: lazy-load preview image"
+git commit -m "perf: minimize static CSS"
+```
+
+### `revert`
+
+Use `revert` when intentionally undoing an earlier commit.
+
+Examples:
+
+```bash
+git commit -m "revert: restore previous metadata layout"
+git commit -m "revert: undo sitemap date refresh"
+```
+
+When possible, use Git's revert command because it creates a normal inverse commit:
+
+```bash
+git revert <commit-sha>
+```
+
+### `release`
+
+`release` can be used as a custom prefix, but it is optional.
+
+Examples:
+
+```bash
+git commit -m "release: prepare v2.1.0"
+git commit -m "release: publish v1.4.0 assets"
+```
+
+For many small projects, `chore:` is usually enough:
+
+```bash
+git commit -m "chore: prepare v2.1.0 release"
+```
+
+Use `release:` only if you want release-only commits to stand out.
+
+### Choosing the best prefix
+
+Ask these questions in order:
+
+| Question | Prefix |
+|---|---|
+| Did the live product, site, app, endpoint, or guide gain meaningful new user-facing content? | `feat` |
+| Did the change correct something wrong, broken, stale, misleading, or misplaced? | `fix` |
+| Did only documentation, comments, release notes, or guides change? | `docs` |
+| Was this routine release prep, metadata refresh, housekeeping, or maintenance? | `chore` |
+| Did the internal structure change without intended visible behavior change? | `refactor` |
+| Did only formatting, whitespace, line endings, or style change? | `style` |
+| Did tests or validation change? | `test` |
+| Did build/dependency files change? | `build` |
+| Did GitHub Actions, CI, or deployment automation change? | `ci` |
+| Did performance improve? | `perf` |
+| Did the commit undo a previous commit? | `revert` |
+
+### Commit messages vs. tag messages
+
+Commit messages, tag names, tag messages, and GitHub Release notes are related, but not the same thing.
+
+| Item | Example | Purpose |
+|---|---|---|
+| Commit message | `feat: expand demo index into AWS portfolio` | Describes one commit |
+| Tag name | `v2.1.0` | Identifies a version point |
+| Annotated tag message | `Version 2.1.0` | Describes the tag |
+| GitHub Release title | `v2.1.0` | Title for a GitHub Release |
+| GitHub Release notes | Bulleted release summary | Explains the release |
+
+Commit prefixes belong in commit messages, not tag names.
+
+Recommended tag name:
+
+```text
+v2.1.0
+```
+
+Recommended annotated tag message:
+
+```text
+Version 2.1.0
+```
+
+Avoid:
+
+```text
+feat: v2.1.0
+```
+
+as a tag name or tag message.
+
+### Multiple `-m` options
+
+A commit can use multiple `-m` options.
+
+For commits, the first `-m` becomes the subject and the later `-m` values become body paragraphs.
+
+Example:
+
+```bash
+git commit -m "feat: expand demo index into AWS portfolio" -m "Update the site title, subtitle, metadata, README, changelog, release notes, and sitemap for v2.1.0. Move Anagram from Microservices to Web Applications while preserving the existing layout and preview image."
+```
+
+Annotated tags can also use multiple `-m` options when you want a longer tag annotation, but simple version tags usually only need one concise tag message:
+
+```bash
+git tag -a v2.1.0 -m "Version 2.1.0"
+```
+
+### Recommended subject style
+
+Use this style:
+
+```text
+type: imperative summary
+```
+
+Recommended:
+
+```text
+docs: document commit message prefixes
+fix: correct canonical domain
+feat: add Anagram web application section
+chore: prepare v2.1.0 release
+```
+
+Guidelines:
+
+- use lowercase prefixes;
+- use the imperative mood when practical;
+- keep the subject concise;
+- do not end the subject with a period;
+- use a body when the reason or context matters.
+
+### Optional scopes
+
+A scope can clarify the area being changed.
+
+Pattern:
+
+```text
+type(scope): summary
+```
+
+Examples:
+
+```bash
+git commit -m "docs(readme): add repository navigation"
+git commit -m "fix(metadata): correct canonical domain"
+git commit -m "feat(portfolio): add web applications section"
+```
+
+Scopes are optional. Use them when they make the message clearer.
+
+### Breaking changes
+
+For breaking changes, use a `!` after the type or scope and explain the breaking change in the body.
+
+Examples:
+
+```bash
+git commit -m "feat!: replace guide structure" -m "BREAKING CHANGE: The guide section order and anchor names changed."
+git commit -m "feat(api)!: change response format" -m "BREAKING CHANGE: Clients must update JSON parsing."
+```
+
+For documentation repositories, breaking changes are less common, but they can happen if a guide is reorganized in a way that breaks anchors, links, or instructions.
+
+### Recommended defaults for this workflow
+
+Use these defaults:
+
+| Situation | Recommended prefix |
+|---|---|
+| Main guide or companion guide updated | `docs` |
+| New guide section or appendix added | `docs` |
+| Broken link fixed | `fix` |
+| Incorrect guidance corrected | `fix` |
+| Stable filename link patch | `fix` |
+| Release prep only | `chore` |
+| Sitemap/date/metadata housekeeping only | `chore` |
+| Formatting-only Markdown cleanup | `style` |
+| Line-ending-only normalization | `style` or `chore` |
+| Site gains new visible section/app/content | `feat` |
+| Site content corrected or moved to the right section | `fix` |
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -8249,6 +8714,48 @@ git rebase --continue
 ```
 
 
+
+## F.159 Are `feat`, `fix`, and `docs` Git commands?
+
+No. They are commit-message prefixes. Git treats them as ordinary commit message text.
+
+## F.160 Why use commit-message prefixes?
+
+They make history easier to scan, search, summarize, and review later.
+
+## F.161 When should I use `feat`?
+
+Use `feat` when a user-visible capability, section, endpoint, page, or meaningful content structure is added or expanded.
+
+## F.162 When should I use `fix`?
+
+Use `fix` when correcting something wrong, broken, stale, misleading, misplaced, or malfunctioning.
+
+## F.163 When should I use `docs`?
+
+Use `docs` for documentation-only changes, such as README, guide, changelog, release notes, comments, or explanatory text.
+
+## F.164 When should I use `chore`?
+
+Use `chore` for routine maintenance, release preparation, metadata refreshes, housekeeping, or non-user-facing maintenance.
+
+## F.165 When should I use `style`?
+
+Use `style` for formatting-only changes, including whitespace, indentation, Markdown table formatting, or line-ending-only changes.
+
+## F.166 Should commit prefixes go in tag messages?
+
+Usually no. Commit prefixes belong in commit messages. Tag names should usually be clean versions such as `v1.2.0`, and annotated tag messages can simply say `Version 1.2.0`.
+
+## F.167 What is a commit-message scope?
+
+A scope is an optional area in parentheses, such as `docs(readme): add navigation`.
+
+## F.168 How do I mark a breaking change in a commit message?
+
+Use `!` after the type or scope and explain the breaking change in the body, such as `feat!: replace guide structure` with a `BREAKING CHANGE:` body.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -10770,7 +11277,150 @@ The benefit is worth the disruption.
 ```
 
 
-# Appendix T: References
+
+---
+
+# Appendix T: Commit Message Prefix Scenarios
+
+This appendix expands [Section 31](#31-commit-message-prefixes-and-when-to-use-them).
+
+## T.1 Prefix quick table
+
+| Prefix | Use when | Example |
+|---|---|---|
+| `feat` | User-visible feature/content/capability added or expanded | `feat: add Anagram web application section` |
+| `fix` | Incorrect, broken, stale, misleading, or misplaced item corrected | `fix: correct canonical domain` |
+| `docs` | Documentation-only change | `docs: document commit message prefixes` |
+| `chore` | Routine maintenance or release preparation | `chore: prepare v2.1.0 release` |
+| `refactor` | Internal restructure without intended visible behavior change | `refactor: reorganize error image assets` |
+| `style` | Formatting, whitespace, line endings, or style-only change | `style: normalize markdown tables` |
+| `test` | Tests or validation changed | `test: add link validation script` |
+| `build` | Build/dependency/package configuration changed | `build: update Dockerfile` |
+| `ci` | CI/CD or GitHub Actions changed | `ci: add markdown validation workflow` |
+| `perf` | Performance improved | `perf: reduce homepage image size` |
+| `revert` | Previous change intentionally undone | `revert: restore previous metadata layout` |
+| `release` | Optional release-only custom convention | `release: prepare v2.1.0` |
+
+## T.2 Decision flow
+
+```text
+New user-visible behavior/content?      -> feat
+Correction to wrong/broken/stale item?  -> fix
+Documentation only?                     -> docs
+Routine maintenance/release prep?       -> chore
+Internal restructure only?              -> refactor
+Formatting only?                        -> style
+Tests changed?                          -> test
+Build/dependencies changed?             -> build
+CI/deployment automation changed?       -> ci
+Performance improved?                   -> perf
+Undoing a previous commit?              -> revert
+```
+
+## T.3 Examples for guide repositories
+
+| Change | Recommended message |
+|---|---|
+| Add a new main guide section | `docs: add commit message prefix guidance` |
+| Add a new appendix | `docs: add commit prefix scenarios appendix` |
+| Correct wrong Git guidance | `fix: correct tag repair workflow` |
+| Fix broken internal links | `fix: use stable filenames for internal guide links` |
+| Prepare a new documentation version | `chore: prepare v1.12.0 guide update` |
+| Reformat Markdown tables only | `style: format guide tables` |
+
+## T.4 Examples for website repositories
+
+| Change | Recommended message |
+|---|---|
+| Add a new visible site section | `feat: add web applications section` |
+| Expand a demo index into a portfolio | `feat: expand demo index into AWS portfolio` |
+| Correct a stale canonical URL | `fix: correct canonical domain` |
+| Move a service to the right section | `fix: move Anagram to web applications section` |
+| Refresh sitemap date only | `chore: refresh sitemap lastmod date` |
+| Reduce image size | `perf: reduce homepage preview image size` |
+
+## T.5 Commit body examples
+
+One-line message:
+
+```bash
+git commit -m "docs: document commit message prefixes"
+```
+
+Subject and body:
+
+```bash
+git commit -m "docs: document commit message prefixes" -m "Add prefix definitions, decision guidance, examples, and recommendations for documentation, website, release, and maintenance workflows."
+```
+
+PowerShell multiline command:
+
+```powershell
+git commit `
+  -m "feat: expand demo index into AWS portfolio" `
+  -m "Update the site title, subtitle, metadata, README, changelog, release notes, and sitemap for v2.1.0. Move Anagram from Microservices to Web Applications while preserving the existing layout and preview image."
+```
+
+## T.6 Tag message examples
+
+Commit prefixes do not belong in tag names.
+
+Recommended tag name:
+
+```text
+v2.1.0
+```
+
+Recommended tag message:
+
+```text
+Version 2.1.0
+```
+
+Recommended command:
+
+```bash
+git tag -a v2.1.0 -m "Version 2.1.0"
+```
+
+Do not use:
+
+```bash
+git tag -a feat:v2.1.0 -m "feat: version 2.1.0"
+```
+
+## T.7 Scopes
+
+Scopes are optional.
+
+Pattern:
+
+```text
+type(scope): summary
+```
+
+Examples:
+
+```bash
+git commit -m "docs(readme): add repository navigation"
+git commit -m "fix(metadata): correct canonical domain"
+git commit -m "feat(portfolio): add web applications section"
+```
+
+Use scopes only when they make the message clearer.
+
+## T.8 Breaking changes
+
+Use `!` and a `BREAKING CHANGE` body when the change breaks compatibility.
+
+```bash
+git commit -m "feat!: replace guide structure" -m "BREAKING CHANGE: The guide section order and anchor names changed."
+```
+
+For documentation repositories, this is uncommon but possible when anchors, filenames, or instructions change in incompatible ways.
+
+
+# Appendix U: References
 
 ## Core conceptual references
 
@@ -10975,6 +11625,31 @@ https://git-scm.com/docs/git-mv
 [R71] Git documentation, `git-push`, including `--force-with-lease`.  
 
 # Index
+
+
+## Commit message prefixes
+
+See [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them) and [Appendix T](#appendix-t-commit-message-prefix-scenarios).
+
+## Conventional commit style
+
+See [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them).
+
+## `feat`
+
+See [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them).
+
+## `fix`
+
+See [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them).
+
+## `docs`
+
+See [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them).
+
+## `chore`
+
+See [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them).
 
 
 ## Commit-message misspellings
