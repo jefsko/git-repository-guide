@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.14.0  
+**Version:** v1.15.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.14.0
+annotated version tags such as v1.0.0, v1.1.0, v1.15.0
 ```
 
 End result:
@@ -320,6 +320,45 @@ A custom GitHub Release asset ZIP is different. It contains whatever files you m
 ---
 
 ---
+
+---
+
+## Link related repositories
+
+For a hub-and-example series, such as a set of simple website examples, keep each repository independent and connect them through README links and GitHub metadata.
+
+Recommended ranking:
+
+| Rank | Method | Recommendation |
+|---:|---|---|
+| 1 | README links | Strongly recommended |
+| 2 | GitHub topics | Strongly recommended |
+| 3 | GitHub About / website links | Recommended |
+| 4 | Tags and releases | Recommended |
+| 5 | Git submodules | Usually not recommended |
+| 6 | Git subtree | Usually not recommended |
+
+Use same-repo relative links for files inside the same repository:
+
+```markdown
+[Changelog](CHANGELOG.md)
+```
+
+Use full GitHub URLs for links to separate repositories:
+
+```markdown
+[Series hub](https://github.com/YOUR-USERNAME/simple-website-examples)
+[Example 02](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
+```
+
+Avoid sibling-folder links as the final form for separate GitHub repos:
+
+```markdown
+[Example 02](../simple-website-example-02-basic-site-files/)
+```
+
+Use Git CLI for exact push, tag, and release commands even when reviewing files in VS Code or Visual Studio.
+
 
 ## Inspect tags and commit messages
 
@@ -745,7 +784,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.14.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.15.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

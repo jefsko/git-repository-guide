@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.14.0  
+**Version:** v1.15.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.14.0.md
+git-command-quick-reference-v1.15.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -157,6 +157,28 @@ These are quick lookup commands and shortcuts for GitHub files, tags, releases, 
 | Exit Git pager | `q` |
 
 Plain `git push` usually works after upstream tracking is set. For careful versioned updates, `git push origin main` is often clearer.
+
+
+---
+
+# Related repository linking quick reference
+
+Related repositories are usually connected through documentation and GitHub metadata, not by nesting repositories.
+
+| Goal | Recommended method |
+|---|---|
+| Hub links to examples | README table with full GitHub URLs |
+| Example links to hub | README link back to hub |
+| Previous/next example navigation | Full GitHub cross-repo links |
+| Same-repo file links | Relative links such as `CHANGELOG.md` |
+| Separate-repo links | Absolute GitHub URLs |
+| Group repos | Shared GitHub topics |
+| Version snapshots | Repo-specific tags |
+| Polished release pages | Repo-specific GitHub Releases |
+| Technical embedding | `git submodule`, only when truly needed |
+| Copying another repo into a folder | `git subtree`, only when truly needed |
+
+Submodules and subtree are advanced tools. For beginner-friendly educational examples, prefer README links, topics, descriptions, tags, and releases.
 
 
 # Alphabetical command reference
@@ -1253,6 +1275,58 @@ git push
 
 ---
 
+---
+
+## `git submodule`
+
+### What it does
+
+Adds another Git repository as a submodule inside the current repository.
+
+### Common syntax
+
+```bash
+git submodule add https://github.com/OWNER/REPO.git path/to/submodule
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Repository URL | Yes | The repository to add as a submodule. |
+| Local path | Usually | Where the submodule should appear. |
+
+### Notes
+
+Submodules are usually not recommended for simple beginner educational example repos. Use them only when there is a true technical dependency.
+
+---
+
+## `git subtree`
+
+### What it does
+
+Copies another repository into a folder while preserving a relationship to the source.
+
+### Common syntax
+
+```bash
+git subtree add --prefix=path/to/folder https://github.com/OWNER/REPO.git main --squash
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Prefix path | Yes | The folder where the subtree content should go. |
+| Repository URL | Yes | The source repository. |
+| Branch | Usually | The branch to import. |
+
+### Notes
+
+Subtree is more advanced than needed for most simple educational examples. Prefer separate repositories connected by README links and GitHub metadata unless you specifically need subtree behavior.
+
+
 ## `git switch`
 
 ### What it does
@@ -1438,7 +1512,7 @@ static-site
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.14.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.15.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 

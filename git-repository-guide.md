@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.14.0  
-Previous locked version: v1.13.0  
+Document version: v1.15.0  
+Previous locked version: v1.14.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.14.0` file. Save future changes as a new version, such as `v1.14.1` or `v1.15.0`.  
+Future edit policy: Do not overwrite this `v1.15.0` file. Save future changes as a new version, such as `v1.15.1` or `v1.16.0`.  
 Current as of: 2026-07-06
 
-Revision note: This `v1.14.0` edition preserves the `v1.13.0` guide and additively incorporates GitHub open-file search guidance, expanded tag and release-version inspection commands, commit-history lookup commands, and a clearer plain-vs-explicit push reminder for later updates.
+Revision note: This `v1.15.0` edition preserves the `v1.14.0` guide and additively incorporates guidance for linking related GitHub repositories, hub/example README navigation, GitHub topics, cross-repository links, submodule/subtree cautions, and multi-repo check-in/release workflows using Git CLI, Visual Studio Code, and Visual Studio.
 
 ---
 
@@ -47,6 +47,7 @@ Revision note: This `v1.14.0` edition preserves the `v1.13.0` guide and additive
 - [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them)
 - [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows)
 - [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup)
+- [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -68,7 +69,8 @@ Revision note: This `v1.14.0` edition preserves the `v1.13.0` guide and additive
 - [Appendix T: Commit Message Prefix Scenarios](#appendix-t-commit-message-prefix-scenarios)
 - [Appendix U: Push, Tag, Branch, and Repository Hygiene Scenarios](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios)
 - [Appendix V: GitHub File Search, Tag Inspection, and Commit History Scenarios](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios)
-- [Appendix W: References](#appendix-w-references)
+- [Appendix W: Multi-Repository Linking and Release Workflow Common Scenarios](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios)
+- [Appendix X: References](#appendix-x-references)
 - [Index](#index)
 
 ---
@@ -80,7 +82,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1128,6 +1130,33 @@ git log --all --grep="keyword" --oneline
 ```
 
 Press `q` to exit the Git pager.
+
+
+### Link related repositories
+
+For a hub-and-example repo series:
+
+```text
+Use README links as the primary connection.
+Use GitHub topics for grouping and discovery.
+Use GitHub About / website links for quick context.
+Use tags and releases consistently within each repo.
+Avoid submodules or subtree unless there is a real technical need.
+```
+
+Same-repo links:
+
+```markdown
+[Changelog](CHANGELOG.md)
+[Learning path](docs/learning-path.md)
+```
+
+Cross-repo links:
+
+```markdown
+[Series hub](https://github.com/YOUR-USERNAME/simple-website-examples)
+[Example 02](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
+```
 
 ### Create a GitHub Release
 
@@ -6952,6 +6981,345 @@ git push origin vX.Y.Z
 That keeps GitHub's normal/default branch view current and also publishes the exact version tag.
 
 
+
+---
+
+## 34. Linking Related Repositories and Multi-Repo Release Workflows
+
+Sometimes a larger project is split into several separate GitHub repositories.
+
+Example:
+
+```text
+simple-website-examples
+simple-website-example-01-first-web-page
+simple-website-example-02-basic-site-files
+simple-website-example-03-html-css-js-assets
+...
+simple-website-example-18-media-and-embeds
+```
+
+In that structure, the first repository can act as a **hub** or documentation repository, while each example repository remains independent.
+
+GitHub repositories are not normally nested inside each other like folders. Instead, you make them feel connected through documentation, metadata, naming, topics, tags, and releases.
+
+### Recommended relationship model
+
+For beginner-friendly educational examples, use a documentation-level relationship:
+
+```text
+Hub README links to each example repo.
+Each example README links back to the hub repo.
+Each example README links to the previous and next examples.
+All repos use consistent descriptions, topics, README structure, changelog structure, tag style, and release conventions.
+```
+
+This keeps the repositories simple and independent while still making them feel like one coherent learning series.
+
+### Recommended ranking for linking related repositories
+
+| Rank | Method | Recommendation | Best use |
+|---:|---|---|---|
+| 1 | README links | Strongly recommended | Primary navigation between hub and examples |
+| 2 | GitHub topics | Strongly recommended | Discovery, grouping, and searchability |
+| 3 | GitHub About / website link | Recommended | Quick context from each repository landing page |
+| 4 | GitHub Releases and tags | Recommended | Versioned snapshots and downloadable releases |
+| 5 | Git submodules | Usually not recommended | Only when one repo must embed another repo as a dependency |
+| 6 | Git subtree | Usually not recommended | Only when content must be copied into a parent repo while preserving some history |
+
+For a simple educational series, use methods 1 through 4. Avoid submodules and subtree unless there is a specific technical reason.
+
+### README links are the primary connection
+
+The hub README should link to every example repository.
+
+Example hub table:
+
+```markdown
+# Simple Website Examples
+
+A progressive series of plain HTML, CSS, and JavaScript examples.
+
+## Examples
+
+| # | Example | Repo | Main Concept |
+|---:|---|---|---|
+| 01 | First Web Page | [simple-website-example-01-first-web-page](https://github.com/YOUR-USERNAME/simple-website-example-01-first-web-page) | Minimum HTML page |
+| 02 | Basic Site Files | [simple-website-example-02-basic-site-files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files) | index.html, robots.txt, sitemap.xml |
+| 18 | Media and Embeds | [simple-website-example-18-media-and-embeds](https://github.com/YOUR-USERNAME/simple-website-example-18-media-and-embeds) | Audio, video, and embedded content |
+```
+
+Each example README should link back to the hub and, when useful, to the previous and next examples:
+
+```markdown
+Part of the [Simple Website Examples](https://github.com/YOUR-USERNAME/simple-website-examples) series.
+
+Previous: [Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)  
+Next: [Example 04 — Multi-Page Site](https://github.com/YOUR-USERNAME/simple-website-example-04-multi-page-site)
+```
+
+### Cross-repo links vs. same-repo links
+
+Use this rule:
+
+```text
+Relative links are best for files inside the same repository.
+Absolute GitHub URLs are best for links between separate repositories.
+```
+
+Good same-repo relative links:
+
+```markdown
+[Changelog](CHANGELOG.md)
+[Learning path](docs/learning-path.md)
+[Main stylesheet](assets/css/styles.css)
+```
+
+Good cross-repository GitHub links:
+
+```markdown
+[Series hub](https://github.com/YOUR-USERNAME/simple-website-examples)
+[Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
+[Example 18 — Media and Embeds](https://github.com/YOUR-USERNAME/simple-website-example-18-media-and-embeds)
+```
+
+For the `jefsko` GitHub account, the same pattern would be:
+
+```markdown
+[Series hub](https://github.com/jefsko/simple-website-examples)
+[Example 02 — Basic Site Files](https://github.com/jefsko/simple-website-example-02-basic-site-files)
+[Example 18 — Media and Embeds](https://github.com/jefsko/simple-website-example-18-media-and-embeds)
+```
+
+Avoid final GitHub README links like this when each folder will become a separate repository:
+
+```markdown
+[Example 02](../simple-website-example-02-basic-site-files/)
+```
+
+That sibling-folder link might work in a local ZIP workspace, but it is not the right final form for separate GitHub repositories.
+
+### Link-type recommendation table
+
+| Link type | Best use | Example | Recommended for final separate GitHub repos? |
+|---|---|---|---|
+| Same-repo relative link | Link to a file inside the current repo | `[Changelog](CHANGELOG.md)` | Yes |
+| Same-repo docs relative link | Link to documentation inside the current repo | `[Glossary](docs/glossary.md)` | Yes |
+| Same-repo source relative link | Link to a source file inside the current repo | `[CSS](assets/css/styles.css)` | Yes |
+| Sibling-folder relative link | Temporary local ZIP/workspace navigation | `[Example 02](../simple-website-example-02-basic-site-files/)` | No, not for final separate repos |
+| Absolute GitHub cross-repo link | Link from one separate GitHub repo to another | `[Example 02](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)` | Yes |
+| Submodule/subtree relationship | Technical repo embedding or history sharing | `git submodule add ...` | Usually no for beginner educational examples |
+
+### GitHub topics
+
+Use shared GitHub topics to group related repositories.
+
+Example topics:
+
+```text
+html
+css
+javascript
+static-site
+web-development
+beginner-friendly
+learning-examples
+simple-website-examples
+```
+
+For a series, use one shared topic on every repo, such as:
+
+```text
+simple-website-examples
+```
+
+Then add repo-specific topics as appropriate.
+
+### GitHub About / website links
+
+Use GitHub's About sidebar to reinforce the relationship.
+
+Recommended pattern:
+
+| Repository type | About / website link |
+|---|---|
+| Hub repo | Link to the hub documentation, project homepage, or published learning path |
+| Example repo | Link back to the hub repo, the live demo, or the example's GitHub Pages site |
+
+Keep descriptions consistent.
+
+Example hub description:
+
+```text
+A progressive series of plain HTML, CSS, and JavaScript examples for learning static websites.
+```
+
+Example repo description:
+
+```text
+Example 01 in the Simple Website Examples series: the smallest useful HTML page.
+```
+
+### Tags and releases as relationship markers
+
+Tags and releases should remain repository-specific.
+
+A tag like this:
+
+```text
+v1.0.0
+```
+
+inside `simple-website-example-01-first-web-page` applies to that example repo only.
+
+A tag with the same name in the hub repo is a separate tag in a separate repository.
+
+Use consistent tag names and release-note style across the series, but do not assume one repo's tag automatically versions another repo.
+
+### Recommended initial check-in workflow for a new example repo
+
+Use the Git CLI when you want the most explicit and repeatable workflow.
+
+```bash
+git status
+git init -b main
+git status
+git add -A
+git status
+git commit -m "docs: add initial example files" -m "Add the initial README, changelog, source files, and supporting documentation for this example repository."
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git remote -v
+git push -u origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+Use this pattern when creating a new hub repository or a new standalone example repository.
+
+### Recommended documentation-only update workflow
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: update repository links" -m "Update README navigation, cross-repository links, and related documentation."
+git push origin main
+```
+
+If the update should become a new version:
+
+```bash
+git tag -a v1.1.0 -m "Version 1.1.0"
+git push origin v1.1.0
+```
+
+### Recommended source-code update workflow
+
+```bash
+git status
+git add -A
+git status
+git commit -m "feat: add media embed example" -m "Add audio, video, and iframe embed examples with supporting README and changelog updates."
+git push origin main
+git tag -a v1.1.0 -m "Version 1.1.0"
+git push origin v1.1.0
+```
+
+### Recommended verification commands
+
+Before tagging:
+
+```bash
+git status
+git log --oneline --decorate -5
+git diff --cached --stat
+```
+
+After tagging:
+
+```bash
+git tag --list
+git show v1.0.0
+git log --oneline --decorate --graph --all -10
+```
+
+After pushing:
+
+```bash
+git status
+git branch -vv
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+```
+
+The two `git log` comparison commands should normally return no output when local `main` and `origin/main` are aligned.
+
+### Git CLI vs. VS Code vs. Visual Studio
+
+| Method | Recommendation | Best use |
+|---|---|---|
+| Git CLI | Best for exact, repeatable guide workflows | Tagging, releases, verification, documentation examples |
+| Visual Studio Code | Good for reviewing diffs and writing commits | Documentation repos, websites, small projects |
+| Visual Studio | Good when the repo is part of a Visual Studio solution | .NET or application projects |
+
+A hybrid workflow is often best:
+
+```text
+Use VS Code or Visual Studio to review changes.
+Use Git CLI for exact commit, push, tag, and release commands.
+```
+
+### VS Code workflow summary
+
+1. Open the repository folder.
+2. Review changed files in Source Control.
+3. Stage the intended changes.
+4. Enter a clear commit message.
+5. Commit.
+6. Push or Sync.
+7. Use the terminal for tags and releases.
+
+Recommended hybrid commands:
+
+```bash
+git status
+git push origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+### Visual Studio workflow summary
+
+Visual Studio is useful when the repository is part of a solution.
+
+1. Open the solution or folder.
+2. Use Git Changes to review edits.
+3. Stage changes.
+4. Commit.
+5. Push.
+6. Use Git CLI for exact tagging and release commands when needed.
+
+Recommended hybrid commands:
+
+```bash
+git status
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+### Required vs. optional concepts
+
+| Concept | Required? | Notes |
+|---|---:|---|
+| Commit message | Yes | Every commit needs a message |
+| Commit body | No | Useful when the reason or scope needs explanation |
+| Tag | No | Required only when you want a named version snapshot |
+| Version | No | Strongly recommended for examples, releases, and guides |
+| GitHub Release | No | Useful for a polished release page and downloadable assets |
+| README links | No, but strongly recommended | Best way to connect related repos |
+| GitHub topics | No, but recommended | Helps group and discover related repos |
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -7443,6 +7811,28 @@ git status
 Shows current repository state.
 
 Official reference: [R18]
+
+
+### `git submodule`
+
+```bash
+git submodule add https://github.com/OWNER/REPO.git path/to/submodule
+```
+
+Adds another Git repository as a submodule.
+
+For beginner educational example repos, this is usually not the recommended way to link related repositories. Prefer README links and GitHub topics unless there is a true technical dependency.
+
+### `git subtree`
+
+```bash
+git subtree add --prefix=path/to/folder https://github.com/OWNER/REPO.git main --squash
+```
+
+Copies another repository into a folder while preserving a relationship to the source.
+
+For beginner educational example repos, this is usually more complexity than needed. Prefer separate repositories connected by README links and GitHub metadata.
+
 
 ### `git switch`
 
@@ -9890,6 +10280,116 @@ For careful versioned updates, release tagging, historical imports, or examples 
 ```bash
 git push origin main
 ```
+
+
+
+## F.181 Can Git repositories be linked?
+
+Yes, but usually through documentation and metadata rather than by nesting repositories inside each other.
+
+For beginner-friendly educational projects, prefer:
+
+```text
+README links
+GitHub topics
+GitHub About / website links
+consistent tags and releases
+```
+
+Avoid submodules or subtree unless there is a real technical dependency.
+
+## F.182 Should related repos use relative sibling links?
+
+Usually no for final separate GitHub repositories.
+
+Use relative links for files inside the same repository:
+
+```markdown
+[Changelog](CHANGELOG.md)
+```
+
+Use full GitHub URLs for links to other repositories:
+
+```markdown
+[Example 02](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
+```
+
+## F.183 How should a hub repo link to example repos?
+
+Use a README table.
+
+```markdown
+| # | Example | Repo | Main Concept |
+|---:|---|---|---|
+| 01 | First Web Page | [simple-website-example-01-first-web-page](https://github.com/YOUR-USERNAME/simple-website-example-01-first-web-page) | Minimum HTML page |
+```
+
+## F.184 How should an example repo link back to the hub?
+
+Add a short navigation block near the top of the README.
+
+```markdown
+Part of the [Simple Website Examples](https://github.com/YOUR-USERNAME/simple-website-examples) series.
+```
+
+When useful, add previous and next example links.
+
+## F.185 Should a beginner educational repo use Git submodules?
+
+Usually no.
+
+Submodules are useful when one repo must embed another repo at a specific commit, but they add workflow complexity. For beginner examples, README links and GitHub topics are simpler.
+
+## F.186 Should a beginner educational repo use Git subtree?
+
+Usually no.
+
+Subtree can be useful when content must be copied into a parent repo while preserving some history, but it is more advanced than needed for most simple educational examples.
+
+## F.187 Are tags shared across related repositories?
+
+No.
+
+A tag named `v1.0.0` in one repository is separate from a tag named `v1.0.0` in another repository. Use consistent tag names across a series, but remember each repo has its own Git history.
+
+## F.188 What is the recommended first check-in workflow for a new example repo?
+
+Use:
+
+```bash
+git status
+git init -b main
+git add -A
+git status
+git commit -m "feat: add first web page example" -m "Add the initial HTML file, README, changelog, and supporting documentation."
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git remote -v
+git push -u origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+## F.189 What is the recommended documentation-only update workflow?
+
+Use:
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: update repository links" -m "Update README navigation and cross-repository links."
+git push origin main
+```
+
+## F.190 When should I use Git CLI, VS Code, or Visual Studio?
+
+Use Git CLI for exact, repeatable commands.
+
+Use VS Code for reviewing diffs and documentation/source changes.
+
+Use Visual Studio when the repo is part of a Visual Studio solution.
+
+A hybrid workflow is often best: review in an editor, then use Git CLI for exact push/tag/release commands.
 
 
 # Appendix G: Command Sequences and Workflow Recipes
@@ -12958,7 +13458,222 @@ git push origin vX.Y.Z
 ```
 
 
-# Appendix W: References
+
+---
+
+# Appendix W: Multi-Repository Linking and Release Workflow Common Scenarios
+
+This appendix expands [Section 34](#34-linking-related-repositories-and-multi-repo-release-workflows).
+
+It is a **common scenarios** appendix rather than a troubleshooting-only appendix. Some entries prevent mistakes, some explain choices, and some provide complete workflow examples.
+
+## W.1 Hub repository README template
+
+```markdown
+# Simple Website Examples
+
+A progressive series of plain HTML, CSS, and JavaScript examples.
+
+## Examples
+
+| # | Example | Repository | Main Concept |
+|---:|---|---|---|
+| 01 | First Web Page | [simple-website-example-01-first-web-page](https://github.com/YOUR-USERNAME/simple-website-example-01-first-web-page) | Minimum HTML page |
+| 02 | Basic Site Files | [simple-website-example-02-basic-site-files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files) | index.html, robots.txt, sitemap.xml |
+```
+
+## W.2 Example repository README navigation template
+
+```markdown
+Part of the [Simple Website Examples](https://github.com/YOUR-USERNAME/simple-website-examples) series.
+
+Previous: [Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)  
+Next: [Example 04 — Multi-Page Site](https://github.com/YOUR-USERNAME/simple-website-example-04-multi-page-site)
+```
+
+## W.3 Same-repo link examples
+
+```markdown
+[Changelog](CHANGELOG.md)
+[Learning path](docs/learning-path.md)
+[Main stylesheet](assets/css/styles.css)
+```
+
+## W.4 Cross-repo link examples
+
+```markdown
+[Series hub](https://github.com/YOUR-USERNAME/simple-website-examples)
+[Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
+```
+
+## W.5 Links for the `jefsko` account
+
+```markdown
+[Series hub](https://github.com/jefsko/simple-website-examples)
+[Example 02 — Basic Site Files](https://github.com/jefsko/simple-website-example-02-basic-site-files)
+[Example 18 — Media and Embeds](https://github.com/jefsko/simple-website-example-18-media-and-embeds)
+```
+
+## W.6 Avoid sibling-folder links for final separate repos
+
+Avoid this as the final GitHub README form:
+
+```markdown
+[Example 02](../simple-website-example-02-basic-site-files/)
+```
+
+That can work in a temporary local workspace, but it is not reliable after each folder becomes its own GitHub repository.
+
+## W.7 Recommended GitHub topics
+
+```text
+html
+css
+javascript
+static-site
+web-development
+beginner-friendly
+learning-examples
+simple-website-examples
+```
+
+## W.8 First check-in of a new hub repo
+
+```bash
+git status
+git init -b main
+git add -A
+git status
+git commit -m "docs: add Simple Website Examples hub" -m "Add the hub README, changelog, learning-path documentation, and navigation links for the example repository series."
+git remote add origin https://github.com/YOUR-USERNAME/simple-website-examples.git
+git remote -v
+git push -u origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+## W.9 First check-in of a new example repo
+
+```bash
+git status
+git init -b main
+git add -A
+git status
+git commit -m "feat: add first web page example" -m "Add the initial HTML file, README, changelog, and supporting documentation for Example 01."
+git remote add origin https://github.com/YOUR-USERNAME/simple-website-example-01-first-web-page.git
+git remote -v
+git push -u origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+## W.10 Documentation-only update
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: update repository links" -m "Update hub/example navigation links and README wording."
+git push origin main
+```
+
+## W.11 Source-code update
+
+```bash
+git status
+git add -A
+git status
+git commit -m "feat: add media embed example" -m "Add audio, video, and iframe examples with README and changelog updates."
+git push origin main
+git tag -a v1.1.0 -m "Version 1.1.0"
+git push origin v1.1.0
+```
+
+## W.12 Fixing a commit before pushing
+
+If the latest commit has not been pushed yet:
+
+```bash
+git commit --amend -m "docs: correct repository navigation links"
+```
+
+Then push normally:
+
+```bash
+git push origin main
+```
+
+## W.13 Creating a GitHub Release after tagging
+
+After creating and pushing the tag:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+create the GitHub Release:
+
+```bash
+gh release create v1.0.0 --title "v1.0.0" --notes "Initial release."
+```
+
+## W.14 VS Code hybrid workflow
+
+Use VS Code for review and Git CLI for exact release commands.
+
+```text
+1. Open the folder in VS Code.
+2. Review changes in Source Control.
+3. Stage intended files.
+4. Commit with a clear message.
+5. Open the integrated terminal.
+6. Run the explicit push/tag commands.
+```
+
+Commands:
+
+```bash
+git status
+git push origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+## W.15 Visual Studio hybrid workflow
+
+Use Visual Studio for solution-aware review and Git CLI for exact release commands.
+
+```text
+1. Open the solution or folder.
+2. Review changes in Git Changes.
+3. Stage and commit intended files.
+4. Push from Visual Studio or Git CLI.
+5. Use Git CLI for tags and releases.
+```
+
+Commands:
+
+```bash
+git status
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+## W.16 Required vs. optional workflow elements
+
+| Item | Required? | Recommended use |
+|---|---:|---|
+| Commit message | Yes | Required for each commit |
+| Commit body | No | Add when context or scope matters |
+| Tag | No | Use for versioned snapshots |
+| Version number | No | Strongly recommended for guides and examples |
+| GitHub Release | No | Use for polished release pages and downloadable assets |
+| README cross-links | No | Strongly recommended for related repos |
+| GitHub topics | No | Recommended for grouping and discovery |
+
+
+# Appendix X: References
 
 ## Core conceptual references
 
@@ -13186,6 +13901,39 @@ https://cli.github.com/manual/gh_release_list
 https://cli.github.com/manual/gh_release_view
 
 # Index
+
+
+## Related repositories
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+
+## Hub repository
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+
+## Cross-repository links
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows).
+
+## Sibling-folder links
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows).
+
+## Git submodules
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows).
+
+## Git subtree
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows).
+
+## Visual Studio workflow
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+
+## Multi-repo release workflows
+
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
 
 
 ## GitHub file search

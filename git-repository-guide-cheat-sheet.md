@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.14.0  
+**Version:** v1.15.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -554,6 +554,40 @@ git commit -m "chore: prepare v2.1.0 release"
 
 
 ---
+
+---
+
+## Related repo linking
+
+| Goal | Recommendation |
+|---|---|
+| Link hub to examples | README table with full GitHub URLs |
+| Link example to hub | README link back to hub |
+| Link previous/next examples | Full GitHub cross-repo links |
+| Link files inside same repo | Relative links such as `CHANGELOG.md` |
+| Link separate repos | Absolute GitHub URLs |
+| Group related repos | Shared GitHub topic |
+| Use submodules | Usually avoid for beginner examples |
+| Use subtree | Usually avoid for beginner examples |
+
+Good same-repo link:
+
+```markdown
+[Changelog](CHANGELOG.md)
+```
+
+Good cross-repo link:
+
+```markdown
+[Series hub](https://github.com/YOUR-USERNAME/simple-website-examples)
+```
+
+Avoid as final separate-repo link:
+
+```markdown
+[Example 02](../simple-website-example-02-basic-site-files/)
+```
+
 
 ## GitHub file search and history lookup
 

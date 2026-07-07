@@ -4,6 +4,40 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.15.0
+
+### Added
+
+- Added guidance for linking related GitHub repositories without making them technically nested or dependent.
+- Added a ranked strategy for connecting related repos with README links, GitHub topics, GitHub About/website links, tags/releases, submodules, and subtree.
+- Added hub-and-example repository guidance using the Simple Website Examples series as a case study.
+- Added cross-repository link guidance explaining when to use same-repo relative links versus absolute GitHub URLs.
+- Added examples for hub README tables and individual example README previous/next navigation.
+- Added guidance for avoiding sibling-folder relative links as the final form for separate GitHub repositories.
+- Added GitHub topics and repository description examples for a related repo series.
+- Added guidance explaining that tags and releases are repository-specific, even when related repos use consistent version names.
+- Added Git CLI, Visual Studio Code, and Visual Studio workflow summaries for committing, pushing, tagging, and releasing.
+- Added a common-scenarios appendix for multi-repository linking and release workflows.
+- Added Knowledge Base entries for related repos, cross-repo links, submodules, subtree, hub README navigation, tags across repos, and multi-repo check-in workflows.
+
+### Changed
+
+- Updated the guide metadata from `v1.14.0` to `v1.15.0`.
+- Expanded existing repository hygiene, README, GitHub topics, commit, tag, and release workflow coverage with multi-repository examples.
+- Updated README version, version history, and topic list for `v1.15.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.15.0`.
+- Moved the references appendix from Appendix W to Appendix X so references remain last.
+
+### Notes
+
+- This is an additive update from `v1.14.0`.
+- Existing stable filename guidance was preserved.
+- Existing push/tag/repository hygiene guidance from `v1.13.0` was preserved.
+- Existing GitHub file search and commit-history lookup guidance from `v1.14.0` was preserved.
+- Submodules and subtree were mentioned as advanced alternatives but not recommended for beginner-friendly educational example repos.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.15.0.md`.
+
 ## v1.14.0
 
 ### Added
