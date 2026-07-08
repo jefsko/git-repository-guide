@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.15.0  
+**Version:** v1.16.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -556,6 +556,50 @@ git commit -m "chore: prepare v2.1.0 release"
 ---
 
 ---
+
+---
+
+## Rename repo, folder, project, or remote
+
+| Scenario | Command / action |
+|---|---|
+| Rename local parent folder | Rename in File Explorer or `Rename-Item`; no commit if only parent folder changed |
+| Rename tracked file/folder | `git mv old-path new-path` |
+| Stage manual rename | `git add -A` |
+| Verify rename | `git diff --cached --summary` |
+| Rename GitHub repo | GitHub repo settings |
+| Update local remote | `git remote set-url origin https://github.com/USERNAME/new-repo-name.git` |
+| Search old names | `git grep "old-name"` |
+| PowerShell search | `Get-ChildItem -Recurse -File \| Select-String -Pattern "old-name"` |
+
+Tracked rename:
+
+```bash
+git mv old-path new-path
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "chore: rename project paths"
+```
+
+Remote update after GitHub repo rename:
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git remote -v
+git fetch origin
+```
+
+Old-name cleanup:
+
+```bash
+git grep "old-name"
+git add -A
+git commit -m "docs: update renamed repository references"
+git push origin main
+```
+
 
 ## Related repo linking
 

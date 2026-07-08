@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.15.0  
-Previous locked version: v1.14.0  
+Document version: v1.16.0  
+Previous locked version: v1.15.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.15.0` file. Save future changes as a new version, such as `v1.15.1` or `v1.16.0`.  
+Future edit policy: Do not overwrite this `v1.16.0` file. Save future changes as a new version, such as `v1.16.1` or `v1.17.0`.  
 Current as of: 2026-07-06
 
-Revision note: This `v1.15.0` edition preserves the `v1.14.0` guide and additively incorporates guidance for linking related GitHub repositories, hub/example README navigation, GitHub topics, cross-repository links, submodule/subtree cautions, and multi-repo check-in/release workflows using Git CLI, Visual Studio Code, and Visual Studio.
+Revision note: This `v1.16.0` edition preserves the `v1.15.0` guide and additively incorporates guidance for renaming local folders, tracked files/folders, GitHub repositories, project references, and Git remotes, including `git remote set-url`, old-name search cleanup, and rename workflow common scenarios.
 
 ---
 
@@ -48,6 +48,7 @@ Revision note: This `v1.15.0` edition preserves the `v1.14.0` guide and additive
 - [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows)
 - [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup)
 - [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows)
+- [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -69,8 +70,9 @@ Revision note: This `v1.15.0` edition preserves the `v1.14.0` guide and additive
 - [Appendix T: Commit Message Prefix Scenarios](#appendix-t-commit-message-prefix-scenarios)
 - [Appendix U: Push, Tag, Branch, and Repository Hygiene Scenarios](#appendix-u-push-tag-branch-and-repository-hygiene-scenarios)
 - [Appendix V: GitHub File Search, Tag Inspection, and Commit History Scenarios](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios)
-- [Appendix W: Multi-Repository Linking and Release Workflow Common Scenarios](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios)
-- [Appendix X: References](#appendix-x-references)
+- [Appendix W: Multi-Repository Linking and Release Workflow Scenarios](#appendix-w-multi-repository-linking-and-release-workflow-scenarios)
+- [Appendix Y: Repository Renaming and Rename Workflow Scenarios](#appendix-y-repository-renaming-and-rename-workflow-scenarios)
+- [Appendix Z: References](#appendix-z-references)
 - [Index](#index)
 
 ---
@@ -82,7 +84,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1156,6 +1158,41 @@ Cross-repo links:
 ```markdown
 [Series hub](https://github.com/YOUR-USERNAME/simple-website-examples)
 [Example 02](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
+```
+
+
+### Rename repositories, folders, and remotes
+
+```text
+Local parent folder rename: usually no Git commit.
+Tracked file/folder rename: Git commit required.
+GitHub repo rename: rename in GitHub settings, then update local remote.
+Project/app name rename: search files, update references, then commit.
+```
+
+Tracked rename:
+
+```bash
+git mv old-path new-path
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "chore: rename project paths"
+```
+
+Update remote after GitHub repo rename:
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git remote -v
+git fetch origin
+```
+
+Search old references:
+
+```bash
+git grep "old-name"
 ```
 
 ### Create a GitHub Release
@@ -7320,6 +7357,315 @@ git push origin v1.0.0
 | GitHub topics | No, but recommended | Helps group and discover related repos |
 
 
+
+---
+
+## 35. Renaming Repositories, Local Folders, Project Names, and Remotes
+
+Renaming is common as a project matures.
+
+A draft project might start with an early folder name, then later move to a cleaner final repository name before publication. That is normal, but it is important to know **which thing is being renamed**.
+
+A local folder name, a tracked folder inside a Git repository, and a GitHub repository name are related but different things.
+
+| Item | Tracked by Git? | Renamed where? | Example |
+|---|---:|---|---|
+| Local parent folder containing a repo | Usually no | File Explorer / command line | `old-local-folder-name/` to `new-local-folder-name/` |
+| File or folder inside a repo | Yes | `git mv` or filesystem move plus `git add -A` | `docs/old-name.md` to `docs/new-name.md` |
+| GitHub repository name | No, not as file content | GitHub repository settings | `old-repo-name` to `new-repo-name` |
+| Git remote URL | Stored in local Git config | `git remote set-url` | Update `origin` after a repo rename |
+| Project/application name | Maybe | Project files, README, metadata, source code | Depends where the name appears |
+
+The key idea:
+
+```text
+Not every rename needs a Git commit.
+Only tracked file/folder changes inside the repo become Git history.
+```
+
+### Local parent folder rename
+
+If you have a standalone repo in a local folder, the folder that contains `.git/` is usually not part of the repo history.
+
+Example before:
+
+```text
+old-local-folder-name/
+  .git/
+  README.md
+  index.html
+```
+
+Example after:
+
+```text
+new-local-folder-name/
+  .git/
+  README.md
+  index.html
+```
+
+That local folder rename does not require a Git commit because Git is tracking the contents inside the repository, not the name of the parent folder on your computer.
+
+After renaming the local folder, open the new folder path in your terminal or editor.
+
+PowerShell example:
+
+```powershell
+Rename-Item "old-local-folder-name" "new-local-folder-name"
+cd "new-local-folder-name"
+git status
+```
+
+### Tracked file or folder rename inside a repo
+
+If the file or folder is inside an existing Git repository, renaming it is a tracked change.
+
+Example before:
+
+```text
+main-repo/
+  examples/
+    old-example-name/
+      index.html
+```
+
+Example after:
+
+```text
+main-repo/
+  examples/
+    new-example-name/
+      index.html
+```
+
+Recommended command:
+
+```bash
+git mv examples/old-example-name examples/new-example-name
+git status
+git commit -m "chore: rename example folder" -m "Rename the example folder to match the final project naming convention."
+```
+
+Alternative using a normal filesystem move:
+
+```bash
+mv examples/old-example-name examples/new-example-name
+git add -A
+git status
+git commit -m "chore: rename example folder" -m "Rename the example folder to match the final project naming convention."
+```
+
+PowerShell example:
+
+```powershell
+Rename-Item "examples/old-example-name" "new-example-name"
+git add -A
+git status
+git commit -m "chore: rename example folder" -m "Rename the example folder to match the final project naming convention."
+```
+
+`git mv` is convenient because it moves the file/folder and stages the change at the same time. Git still detects renames based on content similarity when comparing history.
+
+### GitHub repository rename
+
+A GitHub repository rename changes the remote repository name.
+
+Example:
+
+```text
+https://github.com/USERNAME/old-repo-name
+```
+
+to:
+
+```text
+https://github.com/USERNAME/new-repo-name
+```
+
+This is done in GitHub, usually through:
+
+```text
+Repository > Settings > General > Repository name
+```
+
+Do not use `git mv` to rename a GitHub repository. `git mv` is only for tracked files and folders inside a repository.
+
+### Should you rename a GitHub repo later?
+
+Yes, you can rename a GitHub repository later. It can be a good choice when the old name is unclear, inconsistent, misspelled, too long, or no longer matches the project.
+
+However, it is usually better to choose the final repo name before the repo is public or widely used.
+
+Pros:
+
+| Pro | Why it matters |
+|---|---|
+| Improves clarity | A cleaner repo name helps users understand the project faster |
+| Preserves history | Commits, tags, branches, releases, issues, and stars generally remain with the repo |
+| Fixes early naming mistakes | Useful when a project evolves from draft names to final names |
+| Improves consistency | Important for multi-repo series or related repos |
+
+Risks:
+
+| Risk | Why it matters |
+|---|---|
+| Existing users may be confused | People may still recognize or bookmark the old name |
+| Links may need updates | READMEs, docs, badges, scripts, package files, and deployment settings may reference the old URL |
+| Local clones may need remote updates | Developers should update `origin` to the new URL |
+| GitHub Pages project-site URLs are special | Project-site URLs may not redirect the same way regular repo URLs do |
+| Old-name redirects may become confusing | If a new repo is later created with the old name, redirect behavior can be affected |
+
+### Update the local remote after a GitHub repo rename
+
+After renaming a GitHub repository, check your local remote:
+
+```bash
+git remote -v
+```
+
+Update it:
+
+```bash
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+```
+
+Verify it:
+
+```bash
+git remote -v
+```
+
+Test with a safe read operation:
+
+```bash
+git fetch origin
+```
+
+If the remote is correct and reachable, `git fetch origin` should succeed.
+
+### Search for old names after a rename
+
+After a repo, folder, or project rename, search for old references.
+
+PowerShell examples:
+
+```powershell
+Select-String -Path *.md -Pattern "old-repo-name"
+Get-ChildItem -Recurse -File | Select-String -Pattern "old-repo-name"
+```
+
+Git examples:
+
+```bash
+git grep "old-repo-name"
+git grep "old-folder-name"
+```
+
+Search likely places:
+
+```text
+README.md
+CHANGELOG.md
+docs/
+.github/
+package files
+project files
+deployment configuration
+badges
+GitHub Pages references
+scripts
+```
+
+### Rename decision table
+
+| Scenario | Usually needs a Git commit? | Usually needs remote update? | Typical action |
+|---|---:|---:|---|
+| Rename local parent folder containing `.git/` | No | No | Rename in File Explorer or PowerShell |
+| Rename tracked file inside repo | Yes | No | `git mv`, then commit |
+| Rename tracked folder inside repo | Yes | No | `git mv`, then commit |
+| Rename GitHub repository | No, not by itself | Yes, for local clones | Rename in GitHub settings, then `git remote set-url` |
+| Rename project/application in source files | Yes | Maybe | Edit files, search old name, commit |
+| Rename live site/domain | Maybe | Maybe | Update docs, DNS/deployment config, links, and commit tracked changes |
+
+### Recommended rename workflow
+
+For a clean, low-risk rename:
+
+```bash
+git status
+git branch -vv
+git remote -v
+```
+
+If renaming tracked files or folders:
+
+```bash
+git mv old-path new-path
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "chore: rename project paths" -m "Rename tracked paths to match the final project naming convention."
+```
+
+If renaming the GitHub repository:
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git remote -v
+git fetch origin
+```
+
+Then search for old references:
+
+```bash
+git grep "old-name"
+```
+
+Update references as needed:
+
+```bash
+git add -A
+git status
+git commit -m "docs: update renamed repository references" -m "Update documentation, links, and metadata after the repository rename."
+git push origin main
+```
+
+### Commit-message recommendations for rename work
+
+| Change | Suggested prefix | Example |
+|---|---|---|
+| Rename tracked files/folders | `chore` | `chore: rename project paths` |
+| Update README/docs links after rename | `docs` | `docs: update renamed repository references` |
+| Fix a stale old-name reference | `fix` | `fix: correct old repository link` |
+| Rename a user-visible app/site/product | `feat` or `chore` | Depends whether it is user-visible or internal |
+
+For documentation-only rename cleanup, `docs:` is usually best.
+
+For path-only cleanup or housekeeping, `chore:` is usually best.
+
+### When to use scenario appendices vs. Troubleshooting
+
+Rename guidance usually belongs in a topic-specific **Scenarios** appendix because it includes planned workflows, decision tables, and examples.
+
+Troubleshooting is best for errors and recovery, such as:
+
+```text
+remote URL still points to old repo
+GitHub Pages URL no longer works
+old-name link is broken
+rename appears as delete/add instead of rename
+```
+
+For this guide, the best structure is:
+
+```text
+Main section: Renaming Repositories, Local Folders, Project Names, and Remotes
+Appendix: Repository Renaming and Rename Workflow Scenarios
+```
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -10392,6 +10738,112 @@ Use Visual Studio when the repo is part of a Visual Studio solution.
 A hybrid workflow is often best: review in an editor, then use Git CLI for exact push/tag/release commands.
 
 
+
+## F.191 Does renaming my local repo folder require a Git commit?
+
+Usually no.
+
+If you rename the parent folder that contains `.git/`, Git does not treat that as a tracked file change.
+
+Example:
+
+```text
+old-local-folder-name/
+  .git/
+  README.md
+```
+
+renamed to:
+
+```text
+new-local-folder-name/
+  .git/
+  README.md
+```
+
+No Git commit is needed for that local parent-folder rename.
+
+## F.192 Does renaming a file or folder inside a repo require a Git commit?
+
+Yes.
+
+If the file or folder is tracked inside the repository, the rename is a tracked change.
+
+Use:
+
+```bash
+git mv old-path new-path
+git status
+git commit -m "chore: rename project paths"
+```
+
+or use a normal filesystem rename followed by:
+
+```bash
+git add -A
+git status
+git commit -m "chore: rename project paths"
+```
+
+## F.193 How do I rename a GitHub repository?
+
+Rename it on GitHub:
+
+```text
+Repository > Settings > General > Repository name
+```
+
+Then update local clones:
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git remote -v
+git fetch origin
+```
+
+## F.194 Is `git mv` used to rename a GitHub repository?
+
+No.
+
+`git mv` renames tracked files or folders inside a repository. A GitHub repository rename is done in GitHub repository settings.
+
+## F.195 How do I update `origin` after a GitHub repo rename?
+
+Use:
+
+```bash
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+```
+
+Verify:
+
+```bash
+git remote -v
+git fetch origin
+```
+
+## F.196 How do I search for old names after a rename?
+
+Use `git grep`:
+
+```bash
+git grep "old-name"
+```
+
+Or in PowerShell:
+
+```powershell
+Get-ChildItem -Recurse -File | Select-String -Pattern "old-name"
+```
+
+## F.197 Should rename work go in Troubleshooting or Common Scenarios?
+
+Planned rename guidance usually belongs in Common Scenarios.
+
+Troubleshooting should be reserved for errors and recovery, such as stale remote URLs, broken GitHub Pages links, broken badges, or old names that remain after cleanup.
+
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -13461,11 +13913,11 @@ git push origin vX.Y.Z
 
 ---
 
-# Appendix W: Multi-Repository Linking and Release Workflow Common Scenarios
+# Appendix W: Multi-Repository Linking and Release Workflow Scenarios
 
 This appendix expands [Section 34](#34-linking-related-repositories-and-multi-repo-release-workflows).
 
-It is a **common scenarios** appendix rather than a troubleshooting-only appendix. Some entries prevent mistakes, some explain choices, and some provide complete workflow examples.
+It is a topic-specific **scenarios** appendix rather than a troubleshooting-only appendix. Some entries prevent mistakes, some explain choices, and some provide complete workflow examples.
 
 ## W.1 Hub repository README template
 
@@ -13673,7 +14125,214 @@ git push origin v1.0.0
 | GitHub topics | No | Recommended for grouping and discovery |
 
 
-# Appendix X: References
+
+---
+
+# Appendix Y: Repository Renaming and Rename Workflow Scenarios
+
+This appendix expands [Section 35](#35-renaming-repositories-local-folders-project-names-and-remotes).
+
+It is a topic-specific **Scenarios** appendix because rename work is often planned cleanup, not necessarily troubleshooting.
+
+## Y.1 Rename a local parent folder that contains a repo
+
+Example before:
+
+```text
+old-local-folder-name/
+  .git/
+  README.md
+```
+
+Example after:
+
+```text
+new-local-folder-name/
+  .git/
+  README.md
+```
+
+PowerShell:
+
+```powershell
+Rename-Item "old-local-folder-name" "new-local-folder-name"
+cd "new-local-folder-name"
+git status
+```
+
+This does not require a Git commit if only the parent folder name changed.
+
+## Y.2 Rename a tracked file
+
+```bash
+git mv old-name.md new-name.md
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "chore: rename file" -m "Rename the tracked file to match the final naming convention."
+```
+
+## Y.3 Rename a tracked folder
+
+```bash
+git mv docs/old-folder docs/new-folder
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "chore: rename docs folder" -m "Rename the tracked folder to match the final documentation structure."
+```
+
+## Y.4 Rename a tracked folder manually in PowerShell
+
+```powershell
+Rename-Item "docs/old-folder" "new-folder"
+git add -A
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+git commit -m "chore: rename docs folder" -m "Rename the tracked folder to match the final documentation structure."
+```
+
+## Y.5 Rename a GitHub repository
+
+Rename the repo in GitHub:
+
+```text
+Repository > Settings > General > Repository name
+```
+
+Then update local clones:
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git remote -v
+git fetch origin
+```
+
+## Y.6 Search for old repository-name references
+
+PowerShell:
+
+```powershell
+Get-ChildItem -Recurse -File | Select-String -Pattern "old-repo-name"
+```
+
+Git:
+
+```bash
+git grep "old-repo-name"
+```
+
+## Y.7 Update old-name references after a repo rename
+
+```bash
+git grep "old-repo-name"
+```
+
+Edit the affected files, then commit:
+
+```bash
+git add -A
+git status
+git commit -m "docs: update renamed repository references" -m "Update documentation, links, badges, and metadata after the repository rename."
+git push origin main
+```
+
+## Y.8 Rename project/application references
+
+Search first:
+
+```bash
+git grep "Old Project Name"
+```
+
+Update files that intentionally use the project name.
+
+Then commit:
+
+```bash
+git add -A
+git status
+git commit -m "chore: rename project references" -m "Update project naming references to match the final name."
+```
+
+If the rename is user-visible, consider whether `feat:` is more appropriate than `chore:`.
+
+## Y.9 Rename a GitHub Pages project repo
+
+Be careful with GitHub Pages project sites.
+
+A repository URL may redirect after a repo rename, but project-site URLs can depend on the repository name.
+
+After renaming, check:
+
+```text
+GitHub Pages settings
+published site URL
+README links
+deployment workflow files
+custom domain settings, if any
+```
+
+## Y.10 Rename workflow checklist
+
+Before:
+
+```bash
+git status
+git branch -vv
+git remote -v
+```
+
+During tracked path rename:
+
+```bash
+git mv old-path new-path
+git status
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+After GitHub repo rename:
+
+```bash
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git fetch origin
+```
+
+After reference cleanup:
+
+```bash
+git grep "old-name"
+git add -A
+git status
+git commit -m "docs: update renamed repository references"
+git push origin main
+```
+
+## Y.11 Common rename problems
+
+| Problem | Likely fix |
+|---|---|
+| Local clone still points to old GitHub URL | `git remote set-url origin https://github.com/USERNAME/new-repo-name.git` |
+| Old name still appears in README | Search and update docs, then commit |
+| Rename appears as delete/add | Use `git diff --cached --name-status --find-renames`; consider separate rename and rewrite commits |
+| GitHub Pages URL changed | Check Pages settings and update docs/deployment references |
+| Badges broke after repo rename | Update badge URLs |
+| Scripts still use old repo name | Search scripts and config files |
+
+## Y.12 Rename commit-message examples
+
+```bash
+git commit -m "chore: rename example folder"
+git commit -m "docs: update renamed repository references"
+git commit -m "fix: correct old repository link"
+git commit -m "chore: rename project references"
+```
+
+
+# Appendix Z: References
 
 ## Core conceptual references
 
@@ -13903,13 +14562,38 @@ https://cli.github.com/manual/gh_release_view
 # Index
 
 
+## Renaming repositories
+
+See [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes) and [Appendix Y](#appendix-y-repository-renaming-and-rename-workflow-scenarios).
+
+## Local folder rename
+
+See [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes).
+
+## GitHub repository rename
+
+See [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes) and [Appendix Y](#appendix-y-repository-renaming-and-rename-workflow-scenarios).
+
+## `git remote set-url`
+
+See [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes) and [Appendix A](#appendix-a-expanded-git-command-reference).
+
+## Rename cleanup
+
+See [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes) and [Appendix Y](#appendix-y-repository-renaming-and-rename-workflow-scenarios).
+
+## Old-name references
+
+See [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes) and [Appendix Y](#appendix-y-repository-renaming-and-rename-workflow-scenarios).
+
+
 ## Related repositories
 
-See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-scenarios).
 
 ## Hub repository
 
-See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-scenarios).
 
 ## Cross-repository links
 
@@ -13929,11 +14613,11 @@ See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-link
 
 ## Visual Studio workflow
 
-See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-scenarios).
 
 ## Multi-repo release workflows
 
-See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-common-scenarios).
+See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows) and [Appendix W](#appendix-w-multi-repository-linking-and-release-workflow-scenarios).
 
 
 ## GitHub file search

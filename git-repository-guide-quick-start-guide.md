@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.15.0  
+**Version:** v1.16.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.15.0
+annotated version tags such as v1.0.0, v1.1.0, v1.16.0
 ```
 
 End result:
@@ -322,6 +322,44 @@ A custom GitHub Release asset ZIP is different. It contains whatever files you m
 ---
 
 ---
+
+---
+
+## Rename repositories, folders, and remotes
+
+Use this distinction:
+
+| Rename type | Needs Git commit? | Typical action |
+|---|---:|---|
+| Local parent folder containing `.git/` | No | Rename in File Explorer or PowerShell |
+| Tracked file/folder inside repo | Yes | `git mv` or rename plus `git add -A` |
+| GitHub repository name | No, not by itself | Rename in GitHub settings |
+| Local remote URL after GitHub rename | No commit | `git remote set-url origin ...` |
+| Project/app name inside files | Yes | Search, edit files, commit |
+
+Tracked rename:
+
+```bash
+git mv old-path new-path
+git status
+git commit -m "chore: rename project paths"
+```
+
+Update local remote after a GitHub repo rename:
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/USERNAME/new-repo-name.git
+git remote -v
+git fetch origin
+```
+
+Search for old names:
+
+```bash
+git grep "old-name"
+```
+
 
 ## Link related repositories
 
@@ -784,7 +822,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.15.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.16.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

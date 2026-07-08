@@ -4,6 +4,39 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.16.0
+
+### Added
+
+- Added guidance distinguishing local parent folder renames, tracked file/folder renames, GitHub repository renames, remote URL updates, and project/application name changes.
+- Added decision tables explaining which rename types require Git commits and which require remote URL updates.
+- Added GitHub repository rename guidance, including when renaming is useful and what risks to check.
+- Added `git remote set-url` workflow examples for updating `origin` after a GitHub repository rename.
+- Added PowerShell and Git examples for renaming tracked folders and searching for old-name references.
+- Added old-name cleanup guidance for README files, docs, badges, scripts, project files, deployment configuration, and GitHub Pages references.
+- Added commit-message recommendations for rename work, including `chore:`, `docs:`, and `fix:` examples.
+- Added a dedicated topic-specific scenario appendix for repository renaming and rename workflows.
+- Added Knowledge Base entries for local folder renames, tracked rename commits, GitHub repo renames, `git remote set-url`, old-name search, and rename troubleshooting placement.
+
+### Changed
+
+- Updated the guide metadata from `v1.15.0` to `v1.16.0`.
+- Expanded existing file/folder rename and remote guidance with repository-level and project-level rename scenarios.
+- Updated README version, version history, and topic list for `v1.16.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.16.0`.
+- Moved the references appendix from Appendix X to Appendix Z so references remain last.
+- Refined scenario appendix titles by removing the generic phrase “Common Scenarios” from topic-specific appendix names.
+
+### Notes
+
+- This is an additive update from `v1.15.0`.
+- Existing stable filename guidance was preserved.
+- Existing related-repository guidance from `v1.15.0` was preserved.
+- Existing file rename guidance was not replaced; repository/folder/project rename guidance was added around it.
+- Rename guidance was placed in a topic-specific scenario appendix rather than Troubleshooting because most rename work is planned cleanup. Troubleshooting remains appropriate for broken links, stale remotes, GitHub Pages issues, or rename detection surprises.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.16.0.md`.
+
 ## v1.15.0
 
 ### Added

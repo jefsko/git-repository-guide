@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.15.0  
+**Version:** v1.16.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.15.0.md
+git-command-quick-reference-v1.16.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -179,6 +179,26 @@ Related repositories are usually connected through documentation and GitHub meta
 | Copying another repo into a folder | `git subtree`, only when truly needed |
 
 Submodules and subtree are advanced tools. For beginner-friendly educational examples, prefer README links, topics, descriptions, tags, and releases.
+
+
+---
+
+# Rename workflow quick reference
+
+| Goal | Command / action |
+|---|---|
+| Rename tracked file/folder | `git mv old-path new-path` |
+| Stage manual rename | `git add -A` |
+| Verify staged rename | `git diff --cached --summary` |
+| Show rename status | `git diff --cached --name-status --find-renames` |
+| Rename GitHub repo | Repository Settings > General > Repository name |
+| Check remotes | `git remote -v` |
+| Update `origin` | `git remote set-url origin https://github.com/USERNAME/new-repo-name.git` |
+| Test remote | `git fetch origin` |
+| Search old names | `git grep "old-name"` |
+| PowerShell search | `Get-ChildItem -Recurse -File | Select-String -Pattern "old-name"` |
+
+Local parent folder renames usually do not require a Git commit. Tracked file/folder renames inside the repo do require a commit.
 
 
 # Alphabetical command reference
@@ -614,6 +634,32 @@ git fetch --prune
 Use `git fetch` when you want to inspect remote changes before merging or rebasing.
 
 ---
+
+---
+
+## `git grep`
+
+### What it does
+
+Searches tracked files in the repository.
+
+### Common syntax
+
+```bash
+git grep "old-name"
+git grep "old-repo-name"
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Pattern | Yes | Text to search for. |
+
+### Notes
+
+Use this after a repository, folder, or project rename to find stale references in tracked files.
+
 
 ## `git init`
 
@@ -1074,6 +1120,8 @@ git remote set-url origin https://github.com/OWNER/REPO.git
 
 `origin` is a remote name, not a branch.
 
+Use `git remote set-url` after renaming a GitHub repository.
+
 ---
 
 ## `git reset`
@@ -1512,7 +1560,7 @@ static-site
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.15.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.16.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
