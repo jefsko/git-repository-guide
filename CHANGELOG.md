@@ -4,6 +4,38 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.17.0
+
+### Added
+
+- Added a consolidated recommended-defaults section for common Git guide choices, including `main`, `origin`, annotated version tags, pre-release tags, stable tags, tag messages, and line-ending policy.
+- Added a compact remote vocabulary reminder for `origin`, `main`, `origin/main`, local repositories, remote repositories, and working trees.
+- Added guidance for choosing `v0.x.0` pre-release snapshots versus `v1.0.0` stable baseline releases.
+- Added pre-release and stable annotated tag message examples.
+- Added GitHub Release title and release-note structure guidance.
+- Added synchronized multi-repo tag guidance for projects that intentionally release related repositories together.
+- Added line-ending renormalization guidance using `git add --renormalize .`.
+- Added PowerShell repository search recipes for all files, Markdown files, and unique matching paths.
+- Added repository publishing readiness and GitHub Pages verification checklists.
+- Added final branch, tag, remote, release, and line-ending verification commands.
+- Added Knowledge Base entries for beginner-friendly defaults, `origin`/`main`/`origin/main`, pre-release tags, synchronized tags, publishing readiness, and line-ending renormalization.
+
+### Changed
+
+- Updated the guide metadata from `v1.16.0` to `v1.17.0`.
+- Expanded existing remote, versioning, tag, release, line-ending, repository publishing, and verification guidance with consolidated checklists.
+- Updated README version, version history, and topic list for `v1.17.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.17.0`.
+
+### Notes
+
+- This is an additive update from `v1.16.0`.
+- Existing detailed sections and topic-specific scenario appendices were preserved.
+- No new broad Common Scenarios appendix was created; the addendum content was integrated as a consolidated defaults and verification section plus targeted companion-file updates.
+- Duplicate material from the consolidated addendum was not re-added unless it provided clearer defaults, a useful checklist, or a more practical command sequence.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.17.0.md`.
+
 ## v1.16.0
 
 ### Added

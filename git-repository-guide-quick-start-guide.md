@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.16.0  
+**Version:** v1.17.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.16.0
+annotated version tags such as v1.0.0, v1.1.0, v1.17.0
 ```
 
 End result:
@@ -324,6 +324,58 @@ A custom GitHub Release asset ZIP is different. It contains whatever files you m
 ---
 
 ---
+
+---
+
+## Consolidated defaults and final verification
+
+Recommended defaults:
+
+| Area | Default |
+|---|---|
+| Primary branch | `main` |
+| Primary remote | `origin` |
+| Version tags | `vMAJOR.MINOR.PATCH` |
+| Meaningful tags | Annotated tags |
+| Stable tag message | `Version X.Y.Z` |
+| Pre-release tag message | `Pre-release X.Y.Z` |
+| Tag pushing | Push one intentional tag at a time |
+
+Pre-release snapshot:
+
+```bash
+git tag -a v0.1.0 -m "Pre-release 0.1.0"
+git push origin v0.1.0
+```
+
+Stable baseline:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+Final verification:
+
+```bash
+git status
+git remote -v
+git branch -vv
+git log --oneline --decorate -5
+git show --stat --oneline vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+git ls-files --eol
+```
+
+Line-ending renormalization after `.gitattributes` changes:
+
+```bash
+git add --renormalize .
+git status
+git diff --cached --stat
+git commit -m "style: normalize line endings"
+```
+
 
 ## Rename repositories, folders, and remotes
 
@@ -822,7 +874,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.16.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.17.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.16.0  
+**Version:** v1.17.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.16.0.md
+git-command-quick-reference-v1.17.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -201,6 +201,30 @@ Submodules and subtree are advanced tools. For beginner-friendly educational exa
 Local parent folder renames usually do not require a Git commit. Tracked file/folder renames inside the repo do require a commit.
 
 
+---
+
+# Consolidated workflow defaults quick reference
+
+| Goal | Command or convention |
+|---|---|
+| Primary branch | `main` |
+| Primary remote | `origin` |
+| First push with tracking | `git push -u origin main` |
+| Later explicit push | `git push origin main` |
+| Pre-release tag | `git tag -a v0.1.0 -m "Pre-release 0.1.0"` |
+| Stable tag | `git tag -a v1.0.0 -m "Version 1.0.0"` |
+| Push one tag | `git push origin vX.Y.Z` |
+| Show remote details | `git remote show origin` |
+| Rename remote | `git remote rename origin github` |
+| Remove remote | `git remote remove origin` |
+| Renormalize line endings | `git add --renormalize .` |
+| Search tracked files | `git grep "search text"` |
+| Check branch alignment | `git log --oneline origin/main..main` and `git log --oneline main..origin/main` |
+| Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
+
+Use these defaults unless your project has a specific reason to differ.
+
+
 # Alphabetical command reference
 
 ## `git add`
@@ -230,6 +254,7 @@ git add -A
 | `.` | Stages changes under the current directory. |
 | `-A` or `--all` | Stages additions, modifications, and deletions across the working tree. |
 | `-p` or `--patch` | Interactively choose parts of files to stage. |
+| `--renormalize` | Reapplies clean filters and line-ending normalization to tracked files according to `.gitattributes`. |
 
 ### Notes
 
@@ -239,6 +264,12 @@ For rename/delete workflows, prefer:
 
 ```bash
 git add -A
+```
+
+After changing `.gitattributes`, renormalize intentionally:
+
+```bash
+git add --renormalize .
 ```
 
 ---
@@ -1115,6 +1146,8 @@ git remote set-url origin https://github.com/OWNER/REPO.git
 | `add name url` | Adds a remote. |
 | `set-url name url` | Changes a remote URL. |
 | `remove name` | Removes a remote. |
+| `show name` | Shows details for a remote. |
+| `rename old-name new-name` | Renames a remote locally. |
 
 ### Notes
 
@@ -1560,7 +1593,7 @@ static-site
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.16.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.17.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 

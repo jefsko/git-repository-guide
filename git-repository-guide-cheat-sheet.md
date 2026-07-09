@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.16.0  
+**Version:** v1.17.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -558,6 +558,55 @@ git commit -m "chore: prepare v2.1.0 release"
 ---
 
 ---
+
+---
+
+## Consolidated defaults and verification
+
+| Goal | Recommendation / command |
+|---|---|
+| Primary branch | `main` |
+| Primary remote | `origin` |
+| First pre-release snapshot | `v0.1.0` |
+| First stable baseline | `v1.0.0` |
+| Stable tag message | `Version X.Y.Z` |
+| Pre-release tag message | `Pre-release X.Y.Z` |
+| Push tags | One intentional tag at a time |
+| Verify remotes | `git remote -v` |
+| Verify branch tracking | `git branch -vv` |
+| Verify tag | `git show --stat --oneline vX.Y.Z` |
+| Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
+| Inspect line endings | `git ls-files --eol` |
+| Renormalize line endings | `git add --renormalize .` |
+| Search tracked files | `git grep "search text"` |
+| PowerShell search | `Get-ChildItem -Recurse -File | Select-String -Pattern "search text"` |
+
+Pre-release tag:
+
+```bash
+git tag -a v0.1.0 -m "Pre-release 0.1.0"
+git push origin v0.1.0
+```
+
+Stable tag:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+Final verification:
+
+```bash
+git status
+git remote -v
+git branch -vv
+git log --oneline --decorate -5
+git show --stat --oneline vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+git ls-files --eol
+```
+
 
 ## Rename repo, folder, project, or remote
 

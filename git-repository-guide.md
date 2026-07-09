@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.16.0  
-Previous locked version: v1.15.0  
+Document version: v1.17.0  
+Previous locked version: v1.16.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.16.0` file. Save future changes as a new version, such as `v1.16.1` or `v1.17.0`.  
+Future edit policy: Do not overwrite this `v1.17.0` file. Save future changes as a new version, such as `v1.17.1` or `v1.18.0`.  
 Current as of: 2026-07-06
 
-Revision note: This `v1.16.0` edition preserves the `v1.15.0` guide and additively incorporates guidance for renaming local folders, tracked files/folders, GitHub repositories, project references, and Git remotes, including `git remote set-url`, old-name search cleanup, and rename workflow common scenarios.
+Revision note: This `v1.17.0` edition preserves the `v1.16.0` guide and additively incorporates a consolidated reference for recommended Git defaults, remotes, pre-release and stable version tags, release notes, synchronized multi-repo tags, line-ending renormalization, PowerShell search, repository publishing readiness, GitHub Pages checks, and final verification workflows.
 
 ---
 
@@ -49,6 +49,7 @@ Revision note: This `v1.16.0` edition preserves the `v1.15.0` guide and additive
 - [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup)
 - [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows)
 - [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes)
+- [36. Consolidated Git Workflow Defaults and Verification Checklists](#36-consolidated-git-workflow-defaults-and-verification-checklists)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -84,7 +85,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1193,6 +1194,43 @@ Search old references:
 
 ```bash
 git grep "old-name"
+```
+
+
+### Consolidated defaults and verification
+
+```text
+Primary branch: main
+Primary remote: origin
+Version tags: vMAJOR.MINOR.PATCH
+Meaningful version tags: annotated tags
+Push tags: one intentional tag at a time
+```
+
+Pre-release tag:
+
+```bash
+git tag -a v0.1.0 -m "Pre-release 0.1.0"
+git push origin v0.1.0
+```
+
+Stable tag:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+Final verification:
+
+```bash
+git status
+git remote -v
+git branch -vv
+git log --oneline --decorate -5
+git show --stat --oneline vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+git ls-files --eol
 ```
 
 ### Create a GitHub Release
@@ -7666,6 +7704,300 @@ Appendix: Repository Renaming and Rename Workflow Scenarios
 ```
 
 
+
+---
+
+## 36. Consolidated Git Workflow Defaults and Verification Checklists
+
+This section consolidates the safest default choices from the guide into one reference.
+
+Most of these topics are explained in more detail elsewhere. This section is a practical “use these defaults unless you have a reason not to” summary.
+
+### Recommended defaults
+
+| Area | Recommended default |
+|---|---|
+| Primary branch | `main` |
+| Primary remote name | `origin` |
+| Version tag format | `vMAJOR.MINOR.PATCH`, such as `v1.0.0` |
+| First pre-1.0 snapshot | `v0.1.0` |
+| First stable release | `v1.0.0` |
+| Meaningful version tags | Annotated tags |
+| Pre-release tag message | `Pre-release 0.1.0` |
+| Stable tag message | `Version 1.0.0` |
+| Commit message style | Subject plus optional body |
+| Tag pushing | Push one intentional tag at a time |
+| Documentation line endings on Windows | Use `.gitattributes` with explicit `text eol=crlf` rules |
+| Repository publishing | Verify local branch, remote branch, tag, README, changelog, and release notes |
+| VS Code workflow | Open one repository folder at a time; commit intentionally; use the terminal for exact tag/release commands |
+
+### Remote vocabulary quick reminder
+
+| Term | Meaning |
+|---|---|
+| `origin` | Local nickname for a remote repository URL |
+| `main` | Local branch name |
+| `origin/main` | Local remote-tracking reference for the `main` branch on `origin` |
+| Remote repository | The repository hosted elsewhere, such as on GitHub |
+| Local repository | The repository on your machine |
+| Working tree | The files you are editing on disk |
+
+Recommended wording:
+
+```text
+I pushed my local main branch to the remote named origin on GitHub.
+```
+
+Less precise wording:
+
+```text
+I pushed to the origin server.
+```
+
+`origin` is usually not the server itself. It is the local nickname for a remote URL.
+
+### First push vs. later push
+
+First push for a new branch:
+
+```bash
+git push -u origin main
+```
+
+Meaning:
+
+```text
+Push local main to origin, then remember that local main tracks origin/main.
+```
+
+Later push after upstream tracking is configured:
+
+```bash
+git push
+```
+
+Explicit later push, recommended in careful release documentation:
+
+```bash
+git push origin main
+```
+
+### Push branch and tag deliberately
+
+For careful versioned updates, push the branch and the tag intentionally:
+
+```bash
+git status
+git add -A
+git status
+git commit -m "docs: describe what changed" -m "Explain why this version changed."
+
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Avoid casual use of:
+
+```bash
+git push --tags
+```
+
+unless you specifically intend to push all local tags.
+
+### Pre-1.0 snapshots and stable releases
+
+Use `v0.x.0` tags for early drafts, prototypes, or pre-1.0 snapshots:
+
+```bash
+git tag -a v0.1.0 -m "Pre-release 0.1.0"
+git push origin v0.1.0
+```
+
+Use `v1.0.0` for the first stable or intentionally published baseline:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0
+```
+
+For documentation projects, the exact meaning of pre-release and stable is a project policy decision. The important thing is to choose a pattern and use it consistently.
+
+### GitHub Release title and notes
+
+A tag and a GitHub Release are related, but different.
+
+Recommended release title:
+
+```text
+v1.0.0
+```
+
+Recommended release notes structure:
+
+```markdown
+## Summary
+
+Short summary of the release.
+
+## Highlights
+
+- Important change 1.
+- Important change 2.
+
+## Notes
+
+- Compatibility, publishing, production, or historical-import notes.
+```
+
+### Multi-repo synchronized version tags
+
+For a multi-repository project, tags are repository-specific.
+
+A `v1.0.0` tag in one repository is not the same Git object as a `v1.0.0` tag in another repository.
+
+If several repositories are intentionally released together, you can use synchronized tag names across repos:
+
+```text
+hub repo:      v1.0.0
+example 01:   v1.0.0
+example 02:   v1.0.0
+example 18:   v1.0.0
+```
+
+Use this only when the versions really represent a coordinated set.
+
+If each repo evolves independently, let each repo version independently.
+
+### Line-ending policy reminder
+
+For a Windows-oriented documentation or static-site repo, a `.gitattributes` starter policy can be:
+
+```gitattributes
+* text=auto
+*.md   text eol=crlf
+*.html text eol=crlf
+*.css  text eol=crlf
+*.js   text eol=crlf
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.pdf  binary
+```
+
+Inspect line endings:
+
+```powershell
+git ls-files --eol
+```
+
+If `.gitattributes` changes after files are already tracked, renormalize intentionally:
+
+```bash
+git add --renormalize .
+git status
+git diff --cached --stat
+git commit -m "style: normalize line endings" -m "Apply the repository line-ending policy from .gitattributes."
+```
+
+### PowerShell repository search recipes
+
+Search tracked files with Git:
+
+```bash
+git grep "search text"
+```
+
+Search all files from PowerShell:
+
+```powershell
+Get-ChildItem -Recurse -File | Select-String -Pattern "search text"
+```
+
+Search Markdown files only:
+
+```powershell
+Get-ChildItem -Recurse -File -Include *.md | Select-String -Pattern "search text"
+```
+
+List matching file paths only:
+
+```powershell
+Get-ChildItem -Recurse -File | Select-String -Pattern "search text" | Select-Object -ExpandProperty Path -Unique
+```
+
+### Repository publishing readiness checklist
+
+Before publishing a new GitHub repo or release, check:
+
+```text
+Repository name is final enough.
+README.md explains the project.
+CHANGELOG.md includes the current version.
+.gitignore is appropriate.
+.gitattributes is appropriate.
+No secrets are staged.
+Remote is correct.
+Default branch is main.
+Version tag is intentional.
+Release notes match the tag.
+GitHub Pages settings are correct, if used.
+```
+
+Useful commands:
+
+```bash
+git status
+git remote -v
+git branch -vv
+git log --oneline --decorate -10
+git tag --list
+git ls-files --eol
+```
+
+### GitHub Pages project-site reminder
+
+For GitHub Pages project sites, repository names can affect project-site URLs.
+
+If you rename a repository, check:
+
+```text
+GitHub Pages settings
+published site URL
+README links
+custom domain settings
+deployment workflow files
+badges
+```
+
+A normal repository URL may redirect after a repo rename, but project-site URLs deserve a separate verification pass.
+
+### Final release verification sequence
+
+After committing, pushing, tagging, and pushing the tag:
+
+```bash
+git status
+git log --oneline --decorate -5
+git show --stat --oneline vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+```
+
+For branch alignment:
+
+```bash
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+```
+
+Those two branch-alignment commands should normally show no output when local `main` and `origin/main` are aligned.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -7944,6 +8276,25 @@ git add .
 Stages files.
 
 Official reference: [R19]
+
+
+### `git add --renormalize`
+
+```bash
+git add --renormalize .
+```
+
+Stages line-ending normalization according to `.gitattributes`.
+
+Use this intentionally after changing `.gitattributes`, because it can touch many files.
+
+Verify before committing:
+
+```bash
+git status
+git diff --cached --stat
+```
+
 
 ### `git archive`
 
@@ -10842,6 +11193,85 @@ Get-ChildItem -Recurse -File | Select-String -Pattern "old-name"
 Planned rename guidance usually belongs in Common Scenarios.
 
 Troubleshooting should be reserved for errors and recovery, such as stale remote URLs, broken GitHub Pages links, broken badges, or old names that remain after cleanup.
+
+
+
+## F.198 What defaults should I use for a beginner-friendly Git repo?
+
+Recommended defaults:
+
+```text
+Primary branch: main
+Primary remote: origin
+Version tags: vMAJOR.MINOR.PATCH
+Meaningful tags: annotated tags
+Stable tag messages: Version X.Y.Z
+Tag pushing: push one intentional tag at a time
+```
+
+Use these defaults unless the project has a specific reason to differ.
+
+## F.199 What is the difference between `origin`, `main`, and `origin/main`?
+
+`origin` is the local nickname for a remote repository URL.
+
+`main` is a local branch.
+
+`origin/main` is a local remote-tracking reference for the `main` branch on the remote named `origin`.
+
+## F.200 Should I use `v0.1.0` or `v1.0.0` for the first version?
+
+Use `v0.1.0` for a pre-1.0 draft, prototype, or early snapshot.
+
+Use `v1.0.0` for the first stable or intentionally published baseline.
+
+## F.201 What tag message should I use for pre-release tags?
+
+For pre-1.0 snapshots:
+
+```bash
+git tag -a v0.1.0 -m "Pre-release 0.1.0"
+```
+
+For stable versions:
+
+```bash
+git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+## F.202 Should related repos use synchronized tags?
+
+Only when the repositories are intentionally released together.
+
+A `v1.0.0` tag in one repository is separate from a `v1.0.0` tag in another repository, even when the names match.
+
+## F.203 How do I verify a repo is ready to publish?
+
+Check:
+
+```bash
+git status
+git remote -v
+git branch -vv
+git log --oneline --decorate -10
+git tag --list
+git ls-files --eol
+```
+
+Also verify README, changelog, `.gitignore`, `.gitattributes`, secrets, tags, release notes, and GitHub Pages settings if used.
+
+## F.204 How do I renormalize line endings after adding `.gitattributes`?
+
+Use:
+
+```bash
+git add --renormalize .
+git status
+git diff --cached --stat
+git commit -m "style: normalize line endings"
+```
+
+Do this intentionally because it can touch many files.
 
 
 # Appendix G: Command Sequences and Workflow Recipes
