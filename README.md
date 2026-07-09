@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.17.0`
+Current guide version: `v1.18.0`
 
 Main guide file:
 
@@ -209,6 +209,16 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Verifying GitHub Pages settings after rename or publication changes
 - Running final branch, tag, release, and line-ending verification commands
 
+- Choosing between `git add .` and `git add -A`
+- Reviewing staged and unstaged changes before committing
+- Checking rename detection with `git status --short --renames`
+- Understanding the working tree, index, and committed snapshot
+- Handling `git mv` destination-file conflicts safely
+- Creating folders safely with PowerShell
+- Checking whether `.gitattributes` exists
+- Using precise wording for commits pushed to `origin`
+- Troubleshooting staging, rename detection, `.gitattributes`, and origin-wording issues
+
 ## Recommended Repository Details
 
 Recommended repository name:
@@ -246,12 +256,12 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.17.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.18.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Patch updates, such as `v1.18.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Minor updates, such as `v1.19.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.17.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.18.0`.
 
 ## Suggested Repository Structure
 

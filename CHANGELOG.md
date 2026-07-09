@@ -4,6 +4,38 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.18.0
+
+### Added
+
+- Added guidance comparing `git add .` and `git add -A`, including current-folder scope versus whole-repository staging.
+- Added a practical staged/unstaged review sequence using `git status --short`, `git diff --stat`, `git diff --cached --stat`, and `git diff --cached --name-status --find-renames`.
+- Added a working tree, index/staging area, and `HEAD` reminder to clarify why staged and unstaged changes can differ.
+- Added rename detection guidance using `git status --short --renames`, `git diff --cached --summary`, and `git diff --cached --name-status --find-renames`.
+- Added `git mv` destination-file caution explaining that `git mv` does not overwrite an existing destination by default.
+- Added PowerShell folder creation guidance using `New-Item -ItemType Directory -Force`.
+- Added `.gitattributes` existence check guidance using `Test-Path .\.gitattributes`.
+- Added precise wording guidance recommending `committed locally and pushed to origin` instead of `checked into origin`.
+- Added targeted Troubleshooting entries for staging scope, rename display, `git mv` destination conflicts, `.gitattributes` checks, line-ending surprises, and precise `origin` wording.
+- Added Knowledge Base entries for staging commands, staged review, rename detection, `git mv`, PowerShell folder creation, `.gitattributes` checks, and `origin` wording.
+
+### Changed
+
+- Updated the guide metadata from `v1.17.0` to `v1.18.0`.
+- Expanded existing staging, rename, status, line-ending, and remote/origin wording coverage with practical pre-commit review workflows.
+- Updated README version, version history, and topic list for `v1.18.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.18.0`.
+
+### Notes
+
+- This is an additive update from `v1.17.0`.
+- Existing staging, file/folder, rename, line-ending, remote, and workflow guidance was preserved.
+- No new broad Common Scenarios appendix was created.
+- The existing Troubleshooting appendix was used for concrete problem/fix entries from the addendum.
+- `How-To` style material was added to the existing Knowledge Base and How-To Reference instead of creating a separate how-to section.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.18.0.md`.
+
 ## v1.17.0
 
 ### Added

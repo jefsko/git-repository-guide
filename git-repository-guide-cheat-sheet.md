@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.17.0  
+**Version:** v1.18.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -560,6 +560,37 @@ git commit -m "chore: prepare v2.1.0 release"
 ---
 
 ---
+
+---
+
+## Staging, rename review, and wording
+
+| Goal | Command / wording |
+|---|---|
+| See compact status | `git status --short` |
+| See unstaged summary | `git diff --stat` |
+| Stage all repo changes | `git add -A` |
+| Stage current folder and below | `git add .` |
+| See staged summary | `git diff --cached --stat` |
+| Check renames | `git status --short --renames` |
+| Check staged rename status | `git diff --cached --name-status --find-renames` |
+| Show repo root | `git rev-parse --show-toplevel` |
+| Check `.gitattributes` | `Test-Path .\.gitattributes` |
+| Create folder in PowerShell | `New-Item -ItemType Directory -Force ".\docs\reference"` |
+| Preferred wording | `committed locally and pushed to origin` |
+| Avoid wording | `checked into origin` |
+
+Careful review sequence:
+
+```bash
+git status --short
+git diff --stat
+git add -A
+git status --short --renames
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+```
+
 
 ## Consolidated defaults and verification
 

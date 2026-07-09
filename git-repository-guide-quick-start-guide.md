@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.17.0  
+**Version:** v1.18.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.17.0
+annotated version tags such as v1.0.0, v1.1.0, v1.18.0
 ```
 
 End result:
@@ -326,6 +326,57 @@ A custom GitHub Release asset ZIP is different. It contains whatever files you m
 ---
 
 ---
+
+---
+
+## Staging and review before commit
+
+For careful documentation or website updates, prefer a repo-wide staging workflow after reviewing status:
+
+```bash
+git status --short
+git diff --stat
+git add -A
+git status --short
+git status --short --renames
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+```
+
+Use `git add .` when you intentionally want to stage changes under the current folder.
+
+Use `git add -A` when you intentionally want to stage all changes across the whole repository.
+
+Check the repo root:
+
+```bash
+git rev-parse --show-toplevel
+```
+
+Check whether `.gitattributes` exists in PowerShell:
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+Create a folder safely in PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force ".\docs\reference"
+```
+
+Precise wording:
+
+```text
+committed locally and pushed to origin
+```
+
+Avoid:
+
+```text
+checked into origin
+```
+
 
 ## Consolidated defaults and final verification
 
@@ -874,7 +925,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.17.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.18.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

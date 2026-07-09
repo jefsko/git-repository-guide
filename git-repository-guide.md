@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.17.0  
-Previous locked version: v1.16.0  
+Document version: v1.18.0  
+Previous locked version: v1.17.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.17.0` file. Save future changes as a new version, such as `v1.17.1` or `v1.18.0`.  
+Future edit policy: Do not overwrite this `v1.18.0` file. Save future changes as a new version, such as `v1.18.1` or `v1.19.0`.  
 Current as of: 2026-07-06
 
-Revision note: This `v1.17.0` edition preserves the `v1.16.0` guide and additively incorporates a consolidated reference for recommended Git defaults, remotes, pre-release and stable version tags, release notes, synchronized multi-repo tags, line-ending renormalization, PowerShell search, repository publishing readiness, GitHub Pages checks, and final verification workflows.
+Revision note: This `v1.18.0` edition preserves the `v1.17.0` guide and additively incorporates guidance for staging all intended changes, comparing `git add .` with `git add -A`, reviewing staged and unstaged changes, checking rename detection, handling `git mv` destination conflicts, creating folders with PowerShell, verifying `.gitattributes`, and using precise wording for commits pushed to `origin`.
 
 ---
 
@@ -50,6 +50,7 @@ Revision note: This `v1.17.0` edition preserves the `v1.16.0` guide and additive
 - [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows)
 - [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes)
 - [36. Consolidated Git Workflow Defaults and Verification Checklists](#36-consolidated-git-workflow-defaults-and-verification-checklists)
+- [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -85,7 +86,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1196,6 +1197,49 @@ Search old references:
 git grep "old-name"
 ```
 
+
+
+### Staging and rename review
+
+```bash
+git status --short
+git diff --stat
+git add -A
+git status --short
+git status --short --renames
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+```
+
+Check the repo root:
+
+```bash
+git rev-parse --show-toplevel
+```
+
+Check for `.gitattributes` in PowerShell:
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+Create a folder safely in PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force ".\docs\reference"
+```
+
+Prefer this wording:
+
+```text
+committed locally and pushed to origin
+```
+
+Avoid this wording:
+
+```text
+checked into origin
+```
 
 ### Consolidated defaults and verification
 
@@ -7998,6 +8042,289 @@ git log --oneline main..origin/main
 Those two branch-alignment commands should normally show no output when local `main` and `origin/main` are aligned.
 
 
+
+---
+
+## 37. Staging, Rename Review, Status Checks, and Precise `origin` Wording
+
+This section adds a careful pre-commit review workflow for documentation and website repositories.
+
+It focuses on a small set of practical questions:
+
+```text
+Am I staging the right changes?
+Did Git notice my rename or move?
+Am I at the repo root?
+Does .gitattributes exist?
+Did I review staged changes before committing?
+Am I describing origin precisely?
+```
+
+### Prefer `git add -A` for whole-repo release/update workflows
+
+Both `git add .` and `git add -A` stage changes, but their scope can differ.
+
+| Command | Meaning | Best use | Main caution |
+|---|---|---|---|
+| `git add .` | Stage changes under the current directory | Current-folder work | May miss changes outside the current folder if you are not at the repo root |
+| `git add -A` | Stage all changes across the whole repository | Controlled whole-repo updates | Can stage unrelated changes if you have not reviewed status first |
+
+For beginner-friendly documentation or website release workflows, prefer:
+
+```bash
+git add -A
+```
+
+when you intentionally want to stage the whole current repo state.
+
+Before staging:
+
+```bash
+git status --short
+```
+
+After staging:
+
+```bash
+git status --short
+git diff --cached --stat
+```
+
+### `git add .` is not wrong
+
+`git add .` is fine when you intentionally want to stage changes under the current folder and below.
+
+It is common in simple examples because users are often at the repo root.
+
+The safer rule is:
+
+```text
+Use git add . when you understand the current folder scope.
+Use git add -A when you want all intended repo-wide changes staged.
+```
+
+If you are unsure where you are, check:
+
+```bash
+pwd
+git rev-parse --show-toplevel
+```
+
+On Windows PowerShell, `pwd` shows your current folder. `git rev-parse --show-toplevel` shows the repository root.
+
+### Working tree, index, and committed history
+
+Git has three important places to compare:
+
+| Place | Meaning |
+|---|---|
+| Working tree | Files currently on disk |
+| Index / staging area | Files staged for the next commit |
+| `HEAD` | The latest committed snapshot currently checked out |
+
+Useful commands:
+
+```bash
+git diff
+```
+
+shows unstaged working-tree changes.
+
+```bash
+git diff --cached
+```
+
+shows staged changes.
+
+```bash
+git status
+```
+
+summarizes both.
+
+This matters because a file can be changed on disk but not staged, or staged but changed again afterward.
+
+### Recommended status review sequence
+
+For careful updates:
+
+```bash
+git status --short
+git diff --stat
+git add -A
+git status --short
+git status --short --renames
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+```
+
+Then commit only after the staged summary matches your intent.
+
+### Review rename detection
+
+A rename may appear as a rename, or it may appear as a delete plus add, depending on similarity and how much the file changed.
+
+Useful commands:
+
+```bash
+git status --short --renames
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+If you want the cleanest history for a major rename plus rewrite, consider two commits:
+
+```text
+Commit 1: rename/move only
+Commit 2: edit/rewrite content
+```
+
+This makes the rename easier for Git and humans to follow.
+
+### `git mv` behavior and overwrite caution
+
+`git mv` is useful for Git-aware moves and renames.
+
+Example:
+
+```bash
+git mv old-name.md new-name.md
+```
+
+However, `git mv` will not overwrite an existing destination file by default.
+
+If the destination already exists, stop and decide what you intend:
+
+```text
+Do you want to replace the destination file?
+Do you want a different filename?
+Do you need to compare the two files first?
+```
+
+Avoid forcing a move unless you are sure.
+
+### Create folders safely in PowerShell
+
+Use `New-Item` to create folders safely:
+
+```powershell
+New-Item -ItemType Directory -Force ".\docs\reference"
+```
+
+The `-Force` option makes the command tolerant if the folder already exists.
+
+### Check whether `.gitattributes` exists
+
+From the repo root in PowerShell:
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+If it returns `True`, the file exists at that path.
+
+If it returns `False`, either the file is missing or you are not in the folder where you expected it.
+
+A helpful check:
+
+```bash
+git rev-parse --show-toplevel
+```
+
+Then check the repo root for `.gitattributes`.
+
+### Re-apply line-ending rules after `.gitattributes` changes
+
+After adding or changing `.gitattributes`, use:
+
+```bash
+git add --renormalize .
+git status --short
+git diff --cached --stat
+```
+
+Then commit the normalization intentionally:
+
+```bash
+git commit -m "style: normalize line endings" -m "Apply the repository line-ending policy from .gitattributes."
+```
+
+### Precise wording for commits and pushes
+
+Avoid saying:
+
+```text
+checked into origin
+```
+
+That phrase is understandable, but it mixes concepts.
+
+Better:
+
+```text
+committed locally and pushed to origin
+```
+
+More precise:
+
+```text
+committed locally on main and pushed to the remote named origin
+```
+
+Best when teaching:
+
+```text
+committed locally to the main branch, then pushed main to the remote named origin on GitHub
+```
+
+The reason:
+
+```text
+A commit is created locally.
+A push sends commits from a local branch to a remote.
+origin is the local nickname for a remote URL.
+```
+
+### Careful check-in sequence
+
+For a versioned guide or documentation repo:
+
+```bash
+git status --short
+git diff --stat
+git add -A
+git status --short --renames
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+
+git commit -m "docs: update guide" -m "Describe the update."
+
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+This is a little longer than a minimal workflow, but it is safer when you care about clean versioned history.
+
+### When this belongs in Troubleshooting
+
+Most staging and rename review guidance belongs in the main workflow and command-reference material.
+
+Troubleshooting is useful for symptoms such as:
+
+```text
+git add . did not stage the file I expected
+rename appears as delete plus add
+git mv failed because the destination exists
+.gitattributes seems missing
+line endings changed unexpectedly
+I said checked into origin and want more precise wording
+```
+
+For that reason, this version adds a small Troubleshooting entry, but does not create a new broad troubleshooting structure.
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -8510,6 +8837,18 @@ Shows current repository state.
 Official reference: [R18]
 
 
+
+### `git status --short --renames`
+
+```bash
+git status --short --renames
+```
+
+Shows compact status output and asks Git to detect renames.
+
+Use it before committing when you moved or renamed files.
+
+
 ### `git submodule`
 
 ```bash
@@ -8780,6 +9119,30 @@ Example:
 ```bash
 git log --follow -- path/to/file.md
 ```
+
+
+
+### PowerShell `New-Item -ItemType Directory -Force`
+
+```powershell
+New-Item -ItemType Directory -Force ".\docs\reference"
+```
+
+Creates a folder and parent folders as needed.
+
+The `-Force` option makes the command tolerant if the folder already exists.
+
+
+
+### PowerShell `Test-Path .\.gitattributes`
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+Returns `True` if `.gitattributes` exists at the current path and `False` if it does not.
+
+Use `git rev-parse --show-toplevel` first if you are unsure whether you are in the repo root.
 
 
 # Appendix B: Expanded VS Code Reference
@@ -9080,6 +9443,105 @@ Then inspect and commit if appropriate.
 
 ---
 
+
+
+## E. Staging and rename review problems
+
+### `git add .` did not stage the file I expected
+
+Likely cause:
+
+```text
+You ran git add . from a subfolder, so Git staged changes under that folder but missed changes elsewhere.
+```
+
+Check:
+
+```bash
+pwd
+git rev-parse --show-toplevel
+git status --short
+```
+
+Fix:
+
+```bash
+cd "$(git rev-parse --show-toplevel)"
+git add -A
+git status --short
+```
+
+On Windows PowerShell, use:
+
+```powershell
+Set-Location (git rev-parse --show-toplevel)
+git add -A
+git status --short
+```
+
+### A rename appears as delete plus add
+
+Check rename detection:
+
+```bash
+git status --short --renames
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+If the file was heavily rewritten during the rename, Git may not display it as a rename. For cleaner history next time, consider one commit for the rename and another commit for the content rewrite.
+
+### `git mv` failed because the destination exists
+
+`git mv` does not overwrite an existing destination by default.
+
+Stop and compare the files before forcing anything. Decide whether you want to replace the existing file, choose a different name, or merge content manually.
+
+### `.gitattributes` seems missing
+
+From the repo root in PowerShell:
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+If needed, confirm the repo root:
+
+```bash
+git rev-parse --show-toplevel
+```
+
+### Line endings changed unexpectedly
+
+Inspect line endings:
+
+```powershell
+git ls-files --eol
+```
+
+If `.gitattributes` changed and you need to re-apply the policy:
+
+```bash
+git add --renormalize .
+git status --short
+git diff --cached --stat
+```
+
+Commit line-ending normalization separately when possible.
+
+### “Checked into origin” sounds imprecise
+
+Use:
+
+```text
+committed locally and pushed to origin
+```
+
+More precise:
+
+```text
+committed locally on main and pushed to the remote named origin
+```
 
 # Appendix F: Knowledge Base and How-To Reference
 
@@ -11272,6 +11734,86 @@ git commit -m "style: normalize line endings"
 ```
 
 Do this intentionally because it can touch many files.
+
+
+
+## F.205 Should I use `git add .` or `git add -A`?
+
+Use `git add .` when you intentionally want to stage changes under the current folder.
+
+Use `git add -A` when you intentionally want to stage all changes across the whole repository, including additions, modifications, deletions, renames, and changes outside the current subfolder.
+
+For careful documentation or release workflows, `git add -A` is usually the safer default after reviewing `git status`.
+
+## F.206 How do I check what is staged before committing?
+
+Use:
+
+```bash
+git status --short
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+```
+
+Use `git diff` without `--cached` to see unstaged working-tree changes.
+
+## F.207 How do I make Git show renames more clearly?
+
+Use:
+
+```bash
+git status --short --renames
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+If a file was renamed and heavily rewritten at the same time, consider separate commits next time: one for the rename and one for the rewrite.
+
+## F.208 Does `git mv` overwrite an existing file?
+
+Not by default.
+
+If the destination exists, stop and compare the files before forcing anything.
+
+## F.209 How do I safely create a folder in PowerShell?
+
+Use:
+
+```powershell
+New-Item -ItemType Directory -Force ".\docs\reference"
+```
+
+`-Force` makes the command tolerant if the folder already exists.
+
+## F.210 How do I check whether `.gitattributes` exists?
+
+From the expected repo root:
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+If you are unsure where the repo root is:
+
+```bash
+git rev-parse --show-toplevel
+```
+
+## F.211 What should I say instead of “checked into origin”?
+
+Prefer:
+
+```text
+committed locally and pushed to origin
+```
+
+More precise:
+
+```text
+committed locally on main and pushed to the remote named origin
+```
+
+A commit is created locally. A push sends commits to a remote. `origin` is the local nickname for a remote URL.
 
 
 # Appendix G: Command Sequences and Workflow Recipes
@@ -14990,6 +15532,31 @@ https://cli.github.com/manual/gh_release_list
 https://cli.github.com/manual/gh_release_view
 
 # Index
+
+
+## `git add -A`
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording) and [Appendix A](#appendix-a-expanded-git-command-reference).
+
+## `git status --short --renames`
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording).
+
+## Staged changes
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording).
+
+## Rename detection
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording), [Appendix N](#appendix-n-file-rename-and-move-scenarios), and [Appendix E](#appendix-e-troubleshooting).
+
+## `Test-Path .\.gitattributes`
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording).
+
+## Precise origin wording
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording).
 
 
 ## Renaming repositories

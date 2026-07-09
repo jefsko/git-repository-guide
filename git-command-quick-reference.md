@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.17.0  
+**Version:** v1.18.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.17.0.md
+git-command-quick-reference-v1.18.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -203,6 +203,33 @@ Local parent folder renames usually do not require a Git commit. Tracked file/fo
 
 ---
 
+---
+
+# Staging and rename review quick reference
+
+| Goal | Command |
+|---|---|
+| Compact status | `git status --short` |
+| Compact status with renames | `git status --short --renames` |
+| Unstaged summary | `git diff --stat` |
+| Stage current folder and below | `git add .` |
+| Stage all repo changes | `git add -A` |
+| Staged summary | `git diff --cached --stat` |
+| Staged names/status with rename detection | `git diff --cached --name-status --find-renames` |
+| Staged rename summary | `git diff --cached --summary` |
+| Show repo root | `git rev-parse --show-toplevel` |
+| Check `.gitattributes` in PowerShell | `Test-Path .\.gitattributes` |
+| Create folder in PowerShell | `New-Item -ItemType Directory -Force ".\docs\reference"` |
+
+Use `git add -A` when you intentionally want to stage all changes across the repository. Use `git add .` when you intentionally want the current folder and below.
+
+Preferred wording:
+
+```text
+committed locally and pushed to origin
+```
+
+
 # Consolidated workflow defaults quick reference
 
 | Goal | Command or convention |
@@ -252,13 +279,15 @@ git add -A
 | Option | Meaning |
 |---|---|
 | `.` | Stages changes under the current directory. |
-| `-A` or `--all` | Stages additions, modifications, and deletions across the working tree. |
+| `-A` or `--all` | Stages all changes across the whole repository, including additions, modifications, deletions, and renames. |
 | `-p` or `--patch` | Interactively choose parts of files to stage. |
 | `--renormalize` | Reapplies clean filters and line-ending normalization to tracked files according to `.gitattributes`. |
 
 ### Notes
 
 Use `git status` before and after `git add`.
+
+Use `git add .` when you intentionally want to stage changes under the current folder. Use `git add -A` when you intentionally want to stage all changes across the repository.
 
 For rename/delete workflows, prefer:
 
@@ -1157,6 +1186,31 @@ Use `git remote set-url` after renaming a GitHub repository.
 
 ---
 
+---
+
+## `git rev-parse`
+
+### What it does
+
+Shows low-level repository information.
+
+### Common syntax
+
+```bash
+git rev-parse --show-toplevel
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| Option | Usually | Example: `--show-toplevel`. |
+
+### Notes
+
+Use `git rev-parse --show-toplevel` when you need to confirm the repository root before running path-sensitive commands such as `git add .`.
+
+
 ## `git reset`
 
 ### What it does
@@ -1337,6 +1391,7 @@ git status --short
 |---|---|
 | `--short` | Shows compact two-column status. |
 | `--branch` | Shows branch and tracking information. |
+| `--renames` | Detects and reports renames in status output. |
 
 ### Notes
 
@@ -1576,6 +1631,27 @@ static-site
 ```
 
 
+---
+
+# PowerShell staging helper quick reference
+
+## `New-Item -ItemType Directory -Force`
+
+```powershell
+New-Item -ItemType Directory -Force ".\docs\reference"
+```
+
+Creates a folder safely. The `-Force` option makes the command tolerant if the folder already exists.
+
+## `Test-Path .\.gitattributes`
+
+```powershell
+Test-Path .\.gitattributes
+```
+
+Returns `True` if `.gitattributes` exists at the current path and `False` if it does not.
+
+
 # Common placeholder meanings
 
 | Placeholder | Meaning | Example |
@@ -1593,7 +1669,7 @@ static-site
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.17.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.18.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
