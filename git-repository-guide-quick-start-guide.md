@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.18.0  
+**Version:** v1.19.0  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.18.0
+annotated version tags such as v1.0.0, v1.1.0, v1.19.0
 ```
 
 End result:
@@ -328,6 +328,67 @@ A custom GitHub Release asset ZIP is different. It contains whatever files you m
 ---
 
 ---
+
+---
+
+## GitHub Release and `.gitignore` basics
+
+A simple memory aid:
+
+```text
+Commit = record the work
+Tag = name the version
+Release = explain and distribute the version
+```
+
+Recommended release flow:
+
+```bash
+git status --short
+git add -A
+git status --short
+git diff --cached --stat
+git commit -m "docs: describe the update"
+
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Then create the GitHub Release from the pushed tag.
+
+Release notes starter:
+
+```markdown
+## Summary
+
+Briefly describe the release.
+
+## Highlights
+
+- Important change 1.
+- Important change 2.
+
+## Notes
+
+- Compatibility, publishing, or documentation notes.
+```
+
+Check ignored files:
+
+```bash
+git status --ignored
+git check-ignore -v path/to/file
+```
+
+If an ignored file is already tracked, `.gitignore` will not stop tracking it. Remove it from the index while keeping it locally:
+
+```bash
+git rm --cached path/to/file
+git commit -m "chore: stop tracking ignored file"
+```
+
 
 ## Staging and review before commit
 
@@ -925,7 +986,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.18.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.19.0`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.18.0  
-Previous locked version: v1.17.0  
+Document version: v1.19.0  
+Previous locked version: v1.18.0  
 Version status: Locked standalone Markdown version  
 Update type: Additive update  
 Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.18.0` file. Save future changes as a new version, such as `v1.18.1` or `v1.19.0`.  
+Future edit policy: Do not overwrite this `v1.19.0` file. Save future changes as a new version, such as `v1.19.1` or `v1.20.0`.  
 Current as of: 2026-07-06
 
-Revision note: This `v1.18.0` edition preserves the `v1.17.0` guide and additively incorporates guidance for staging all intended changes, comparing `git add .` with `git add -A`, reviewing staged and unstaged changes, checking rename detection, handling `git mv` destination conflicts, creating folders with PowerShell, verifying `.gitattributes`, and using precise wording for commits pushed to `origin`.
+Revision note: This `v1.19.0` edition preserves the `v1.18.0` guide and additively incorporates guidance for GitHub Releases, annotated tags, release titles and notes, generated release notes, previous-tag comparisons, release assets, draft and pre-release states, tag/release correction workflows, and practical `.gitignore` usage.
 
 ---
 
@@ -51,6 +51,7 @@ Revision note: This `v1.18.0` edition preserves the `v1.17.0` guide and additive
 - [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes)
 - [36. Consolidated Git Workflow Defaults and Verification Checklists](#36-consolidated-git-workflow-defaults-and-verification-checklists)
 - [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording)
+- [38. GitHub Releases, `.gitignore`, and Release-Ready Version Notes](#38-github-releases-gitignore-and-release-ready-version-notes)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -86,7 +87,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1198,6 +1199,48 @@ git grep "old-name"
 ```
 
 
+
+
+### GitHub Release and `.gitignore` quick checks
+
+```bash
+git status --short
+git diff --cached --stat
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+
+git show vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+```
+
+Release-note reminder:
+
+```text
+Commit = record the work
+Tag = name the version
+Release = explain and distribute the version
+```
+
+Check ignore behavior:
+
+```bash
+git status --ignored
+git check-ignore -v path/to/file
+```
+
+Stop tracking an already tracked file while keeping it locally:
+
+```bash
+git rm --cached path/to/file
+```
+
+Stop tracking an already tracked folder while keeping it locally:
+
+```bash
+git rm -r --cached path/to/folder
+```
 
 ### Staging and rename review
 
@@ -8325,6 +8368,419 @@ I said checked into origin and want more precise wording
 For that reason, this version adds a small Troubleshooting entry, but does not create a new broad troubleshooting structure.
 
 
+
+---
+
+## 38. GitHub Releases, `.gitignore`, and Release-Ready Version Notes
+
+This section consolidates practical release publishing, tag usage, and `.gitignore` guidance.
+
+The guide already explains commits, tags, releases, versioning, stable filenames, and line endings. This section adds a release-ready checklist view and fills in common beginner gaps.
+
+### Commit, tag, and release memory aid
+
+Use this memory aid:
+
+```text
+Commit  = record the work
+Tag     = name the version
+Release = explain and distribute the version
+```
+
+A commit is the saved repository snapshot.
+
+A tag names a specific commit.
+
+A GitHub Release is a GitHub page based on a tag. It usually includes a release title, release notes, automatic source archives, and optional uploaded assets.
+
+### Recommended release workflow
+
+For a documentation or software repo:
+
+```bash
+git status --short
+git diff --stat
+git add -A
+git status --short --renames
+git diff --cached --stat
+git diff --cached --name-status --find-renames
+
+git commit -m "docs: describe the update" -m "Explain what changed and why."
+
+git push origin main
+
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push origin vX.Y.Z
+```
+
+Then create the GitHub Release from the pushed tag.
+
+### GitHub UI wording can vary
+
+GitHub may show wording such as:
+
+```text
+Create a new release
+Draft a new release
+```
+
+The exact button label can vary based on repository state and GitHub UI changes.
+
+Focus on the workflow:
+
+```text
+Choose or create tag
+Choose target branch or commit
+Write release title
+Write release notes
+Attach optional assets if useful
+Choose prerelease/latest/draft options
+Publish release
+```
+
+### Release title and description
+
+A release title is the short display name for the release.
+
+Recommended title:
+
+```text
+v1.19.0
+```
+
+or:
+
+```text
+Version 1.19.0
+```
+
+For this guide's existing convention, concise titles such as `v1.19.0` are usually best on GitHub, while annotated tag messages can use `Version 1.19.0`.
+
+A release description explains what changed and why it matters.
+
+Starter release-note structure:
+
+```markdown
+## Summary
+
+Briefly describe the release.
+
+## Highlights
+
+- Important change 1.
+- Important change 2.
+- Important change 3.
+
+## Notes
+
+- Compatibility, migration, documentation, or publishing notes.
+```
+
+### Manual versus generated release notes
+
+GitHub can generate release notes from commits, pull requests, contributors, and tag comparisons.
+
+Generated notes are useful when:
+
+```text
+commit messages and pull request titles are clean
+the repository has multiple contributors
+you want a quick draft
+the previous tag comparison is correct
+```
+
+Manual notes are better when:
+
+```text
+the audience is beginner-level
+commit messages are too technical
+the project is documentation-heavy
+you want a clearer summary than the raw commit list
+```
+
+A good hybrid workflow is:
+
+```text
+Generate notes, then edit them manually.
+```
+
+### Previous tag selection
+
+The previous tag controls what GitHub compares against when generating release notes.
+
+For a normal next version, compare:
+
+```text
+previous tag: v1.18.0
+current tag:  v1.19.0
+```
+
+If the previous tag is wrong, generated notes can include too much, too little, or unrelated history.
+
+### Release assets versus automatic source archives
+
+GitHub automatically provides source archives for a release tag, usually as ZIP and tarball downloads.
+
+Optional uploaded release assets are separate files you attach yourself.
+
+Use uploaded assets for:
+
+```text
+compiled binaries
+installers
+PDF exports
+custom ZIP packages
+checksums
+signed artifacts
+```
+
+For a Markdown documentation repo, you often do not need a custom uploaded asset unless you intentionally created one.
+
+### Drafts, pre-releases, and latest releases
+
+| Option | Meaning | Use when |
+|---|---|---|
+| Draft release | Saved but not public | You are still editing notes/assets |
+| Pre-release | Not final/stable | Alpha, beta, RC, preview, or draft-quality version |
+| Latest release | The release GitHub highlights as latest | Usually the newest stable release |
+
+A pre-release can still have a normal-looking tag such as:
+
+```text
+v0.3.0
+v1.2.0-rc.1
+```
+
+Choose the label based on what you want users to understand.
+
+### Editing or deleting releases
+
+Editing a GitHub Release changes the release page, title, notes, assets, or release flags.
+
+It does not automatically change the underlying Git tag.
+
+Deleting a GitHub Release removes the release page.
+
+It does not necessarily delete the underlying tag unless you explicitly delete the tag too.
+
+Treat tags as more permanent than release notes.
+
+### Tag names, tag messages, and release titles
+
+These are related but not identical.
+
+| Item | Example | Where it lives | Purpose |
+|---|---|---|---|
+| Tag name | `v1.19.0` | Git | Version marker |
+| Annotated tag message | `Version 1.19.0` | Git tag object | Tag annotation |
+| Release title | `v1.19.0` | GitHub Release | Display title |
+| Release notes | Markdown summary | GitHub Release | Explains what changed |
+
+Recommended convention for this guide:
+
+```bash
+git tag -a v1.19.0 -m "Version 1.19.0"
+```
+
+GitHub Release title:
+
+```text
+v1.19.0
+```
+
+### Optional annotated tag body
+
+Annotated tags can have more than one `-m` paragraph:
+
+```bash
+git tag -a v1.19.0 -m "Version 1.19.0" -m "Add release, tag, and .gitignore guidance."
+```
+
+For most beginner documentation workflows, a concise one-line tag message is enough. Put the detailed explanation in the commit body, changelog, and GitHub Release notes.
+
+### Signed tags
+
+Signed tags are annotated tags with a cryptographic signature.
+
+Use signed tags when:
+
+```text
+your organization requires release provenance
+users need cryptographic verification
+you already have signing keys configured and maintained
+```
+
+Do not add signed tags merely for appearance. Poorly managed signing can create confusion.
+
+### `.gitignore` spelling and purpose
+
+The standard filename is exactly:
+
+```text
+.gitignore
+```
+
+Important details:
+
+```text
+starts with a period
+has no filename before the period
+has no extension after gitignore
+is lowercase by convention
+may appear hidden in some file managers
+should not be accidentally saved as .gitignore.txt
+```
+
+A `.gitignore` file tells Git which untracked files and folders to ignore.
+
+It is commonly used for:
+
+```text
+build output
+dependency folders
+temporary files
+log files
+editor or IDE files
+operating-system metadata
+local environment files
+local secrets/configuration
+```
+
+### `.gitignore` is optional but strongly recommended
+
+Git does not require `.gitignore`.
+
+However, most software and documentation repositories should have one because generated files and local tool files can otherwise clutter `git status` or be committed accidentally.
+
+A good beginner rule:
+
+```text
+If the file is generated, local-only, machine-specific, secret, or easily recreated, it probably belongs in .gitignore.
+```
+
+### `.gitignore` does not affect already tracked files
+
+Important:
+
+```text
+.gitignore affects untracked files.
+It does not stop tracking files that are already tracked.
+```
+
+If a file is already tracked and should become ignored, remove it from Git's index while keeping it locally:
+
+```bash
+git rm --cached path/to/file
+git commit -m "chore: stop tracking generated file"
+```
+
+For a tracked folder:
+
+```bash
+git rm -r --cached path/to/folder
+git commit -m "chore: stop tracking generated folder"
+```
+
+### Check ignore behavior
+
+See whether a file is ignored and why:
+
+```bash
+git check-ignore -v path/to/file
+```
+
+Show ignored files in status:
+
+```bash
+git status --ignored
+```
+
+Force-add an ignored file only when you intentionally want to override the rule:
+
+```bash
+git add -f path/to/file
+```
+
+### Starter `.gitignore` patterns
+
+Common examples:
+
+```gitignore
+# Build output
+bin/
+obj/
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Local environment files
+.env
+.env.*
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# User-specific files
+*.user
+*.suo
+```
+
+Adjust these rules for the project. Do not blindly copy ignore rules that might hide files you actually need to commit.
+
+### `.gitignore`, `.gitattributes`, and `.gitkeep`
+
+These files solve different problems.
+
+| File | Purpose |
+|---|---|
+| `.gitignore` | Ignore untracked generated/local files |
+| `.gitattributes` | Control text/binary handling, line endings, diff/merge behavior, and archive/export attributes |
+| `.gitkeep` | Placeholder convention for keeping an otherwise empty folder in Git |
+
+`.gitkeep` is not a Git feature. It is just a commonly used placeholder filename.
+
+### Release-ready checklist
+
+Before publishing a GitHub Release:
+
+```text
+README is current.
+CHANGELOG has the new version.
+.gitignore exists if the project needs it.
+.gitattributes policy is correct if line endings matter.
+No secrets or local-only files are staged.
+Commit has been pushed.
+Annotated tag has been created and pushed.
+GitHub Release uses the intended tag.
+Previous tag comparison is correct.
+Release title is clear.
+Release notes explain the user-facing changes.
+Optional assets are intentional.
+```
+
+Useful commands:
+
+```bash
+git status --short
+git diff --cached --stat
+git log --oneline --decorate -5
+git tag --list
+git show vX.Y.Z
+git ls-remote --tags origin vX.Y.Z
+git check-ignore -v path/to/file
+git status --ignored
+```
+
+
 # Appendix A: Expanded Git Command Reference
 
 This appendix repeats and expands the commands from the guide. That is intentional.
@@ -8836,6 +9292,18 @@ Shows current repository state.
 
 Official reference: [R18]
 
+
+
+
+### `git status --ignored`
+
+```bash
+git status --ignored
+```
+
+Shows ignored files in status output.
+
+Use it when you want to confirm that `.gitignore` rules are matching files.
 
 
 ### `git status --short --renames`
@@ -9542,6 +10010,104 @@ More precise:
 ```text
 committed locally on main and pushed to the remote named origin
 ```
+
+
+## E. Release, tag, and `.gitignore` problems
+
+### GitHub generated release notes show the wrong changes
+
+Likely causes:
+
+```text
+The previous tag comparison is wrong.
+The current tag points to the wrong commit.
+Expected commits were not pushed.
+The repository history does not match the release sequence you expected.
+```
+
+Check:
+
+```bash
+git tag --list
+git show vX.Y.Z
+git log --oneline previous-tag..current-tag
+git ls-remote --tags origin vX.Y.Z
+```
+
+Fix the release notes manually if the tag is correct but the generated notes are confusing.
+
+### I created a GitHub Release but cannot find the tag locally
+
+Fetch tags:
+
+```bash
+git fetch --tags
+git tag --list
+```
+
+If GitHub created the tag during release creation, fetching tags brings that tag into your local repository.
+
+### I deleted a GitHub Release but the tag still exists
+
+A GitHub Release page and the underlying Git tag are related but separate.
+
+Deleting a release page does not necessarily delete the Git tag.
+
+Check local tags:
+
+```bash
+git tag --list
+```
+
+Check remote tags:
+
+```bash
+git ls-remote --tags origin
+```
+
+### An ignored file is still being tracked
+
+`.gitignore` does not affect files already tracked by Git.
+
+Remove the file from Git's index while keeping it locally:
+
+```bash
+git rm --cached path/to/file
+git commit -m "chore: stop tracking ignored file"
+```
+
+For a folder:
+
+```bash
+git rm -r --cached path/to/folder
+git commit -m "chore: stop tracking ignored folder"
+```
+
+### I do not know why a file is ignored
+
+Use:
+
+```bash
+git check-ignore -v path/to/file
+```
+
+Git prints the matching ignore file, line number, and pattern when a rule applies.
+
+### My `.gitignore` file is not working on Windows
+
+Check that the file is named exactly:
+
+```text
+.gitignore
+```
+
+Not:
+
+```text
+.gitignore.txt
+```
+
+Also make sure it is in the intended repository folder.
 
 # Appendix F: Knowledge Base and How-To Reference
 
@@ -11814,6 +12380,112 @@ committed locally on main and pushed to the remote named origin
 ```
 
 A commit is created locally. A push sends commits to a remote. `origin` is the local nickname for a remote URL.
+
+
+
+## F.212 What is the difference between a commit, tag, and GitHub Release?
+
+A commit records the work.
+
+A tag names a specific version snapshot.
+
+A GitHub Release explains and distributes that tagged version.
+
+Memory aid:
+
+```text
+Commit = record the work
+Tag = name the version
+Release = explain and distribute the version
+```
+
+## F.213 Should I let GitHub create the tag while creating a release?
+
+You can, but this guide generally recommends creating and pushing the annotated tag first.
+
+That makes the Git history explicit before you create the GitHub Release page.
+
+## F.214 What should my GitHub Release title be?
+
+For this guide's convention, use the tag name as the release title:
+
+```text
+v1.19.0
+```
+
+Use the release notes body to explain what changed.
+
+## F.215 Should I use generated release notes or manual release notes?
+
+Generated notes are useful as a starting point when commit messages and pull request titles are clean.
+
+Manual notes are better for beginner-facing documentation, especially when you want a clear explanation instead of raw commit history.
+
+A good workflow is:
+
+```text
+Generate notes, then edit them manually.
+```
+
+## F.216 What is the Previous tag setting for?
+
+It tells GitHub what earlier tag to compare against when generating release notes.
+
+For a normal `v1.19.0` release, the previous tag would usually be:
+
+```text
+v1.18.0
+```
+
+## F.217 Should I upload custom release assets?
+
+Only when they add value.
+
+GitHub automatically provides source archives for the tag. Upload custom assets for compiled binaries, installers, PDFs, custom ZIPs, checksums, or signed artifacts.
+
+## F.218 What is `.gitignore`?
+
+`.gitignore` tells Git which untracked files or folders to ignore.
+
+It is commonly used for build output, dependency folders, logs, temp files, editor files, OS metadata, local environment files, and secrets.
+
+## F.219 Is `.gitignore` required?
+
+No.
+
+Git works without `.gitignore`, but most repositories should have one because it keeps generated and local-only files out of normal staging workflows.
+
+## F.220 Why is an ignored file still tracked?
+
+Because `.gitignore` does not affect files already tracked by Git.
+
+Remove it from the index while keeping it locally:
+
+```bash
+git rm --cached path/to/file
+```
+
+For a folder:
+
+```bash
+git rm -r --cached path/to/folder
+```
+
+## F.221 How do I check why a file is ignored?
+
+Use:
+
+```bash
+git check-ignore -v path/to/file
+```
+
+## F.222 What is the difference between `.gitignore`, `.gitattributes`, and `.gitkeep`?
+
+| File | Purpose |
+|---|---|
+| `.gitignore` | Ignore untracked generated/local files |
+| `.gitattributes` | Control text/binary handling, line endings, diff/merge behavior, and archive/export behavior |
+| `.gitkeep` | Placeholder convention for keeping an otherwise empty folder in Git |
 
 
 # Appendix G: Command Sequences and Workflow Recipes

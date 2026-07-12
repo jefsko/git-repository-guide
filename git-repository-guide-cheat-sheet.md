@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.18.0  
+**Version:** v1.19.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -562,6 +562,40 @@ git commit -m "chore: prepare v2.1.0 release"
 ---
 
 ---
+
+---
+
+## GitHub Releases and `.gitignore`
+
+| Goal | Command / reminder |
+|---|---|
+| Create annotated tag | `git tag -a vX.Y.Z -m "Version X.Y.Z"` |
+| Push one tag | `git push origin vX.Y.Z` |
+| Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
+| Release memory aid | `Commit = record; Tag = name; Release = explain/distribute` |
+| Recommended GitHub Release title | `vX.Y.Z` |
+| Generated notes comparison | Check the Previous tag |
+| Show ignored files | `git status --ignored` |
+| Explain ignore rule | `git check-ignore -v path/to/file` |
+| Stop tracking ignored file | `git rm --cached path/to/file` |
+| Stop tracking ignored folder | `git rm -r --cached path/to/folder` |
+| Force-add ignored file | `git add -f path/to/file` |
+
+Starter `.gitignore` patterns:
+
+```gitignore
+bin/
+obj/
+node_modules/
+*.log
+*.tmp
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.user
+```
+
 
 ## Staging, rename review, and wording
 

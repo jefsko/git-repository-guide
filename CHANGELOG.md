@@ -4,6 +4,43 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.19.0
+
+### Added
+
+- Added consolidated GitHub Release guidance covering the relationship between commits, tags, and releases.
+- Added release workflow guidance for creating a commit, pushing it, creating an annotated tag, pushing the tag, and creating a GitHub Release.
+- Added guidance for GitHub UI wording variations such as **Create a new release** versus **Draft a new release**.
+- Added release title, release description, and release-note structure examples.
+- Added guidance for manual versus generated release notes and the **Previous tag** comparison setting.
+- Added guidance distinguishing uploaded release assets from GitHub's automatic source archives.
+- Added draft release, pre-release, and latest-release option explanations.
+- Added guidance for editing or deleting GitHub Releases without confusing the release page with the underlying Git tag.
+- Added guidance comparing tag names, annotated tag messages, GitHub Release titles, and release notes.
+- Added signed tag guidance and cautions.
+- Added practical `.gitignore` guidance, including spelling, purpose, optional-but-recommended status, common patterns, and relationship to `.gitattributes` and `.gitkeep`.
+- Added `.gitignore` troubleshooting commands such as `git check-ignore -v`, `git status --ignored`, and `git rm --cached`.
+- Added targeted Troubleshooting entries for generated release notes, missing local tags after GitHub release creation, release deletion versus tag deletion, ignored tracked files, and `.gitignore` naming problems.
+- Added Knowledge Base entries for GitHub Releases, generated release notes, previous-tag selection, release assets, `.gitignore`, tracked ignored files, and `.gitignore` diagnostics.
+
+### Changed
+
+- Updated the guide metadata from `v1.18.0` to `v1.19.0`.
+- Expanded existing tag, release, versioning, release-note, asset, and ignore-file guidance with practical release-publishing and `.gitignore` workflows.
+- Updated README version, version history, and topic list for `v1.19.0`.
+- Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.19.0`.
+
+### Notes
+
+- This is an additive update from `v1.18.0`.
+- Existing tag, release, versioning, `.gitattributes`, `.gitkeep`, and repository hygiene guidance was preserved.
+- No new broad Common Scenarios appendix was created.
+- The existing Troubleshooting appendix was used for concrete release/tag/ignore problem-fix entries.
+- `How-To` style material was added to the existing Knowledge Base and How-To Reference instead of creating a separate how-to section.
+- Because the uploaded prompt expected one update brief but the request included multiple addenda, this update treats the `v1.19.0` release brief as the primary update brief and the tags/versioning and `.gitignore` files as supplemental additive addenda.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.19.0.md`.
+
 ## v1.18.0
 
 ### Added

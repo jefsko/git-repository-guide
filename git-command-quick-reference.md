@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.18.0  
+**Version:** v1.19.0  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.18.0.md
+git-command-quick-reference-v1.19.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -205,6 +205,24 @@ Local parent folder renames usually do not require a Git commit. Tracked file/fo
 
 ---
 
+---
+
+# Release and `.gitignore` quick reference
+
+| Goal | Command |
+|---|---|
+| Create annotated tag | `git tag -a vX.Y.Z -m "Version X.Y.Z"` |
+| Annotated tag with body | `git tag -a vX.Y.Z -m "Version X.Y.Z" -m "Details."` |
+| Signed tag | `git tag -s vX.Y.Z -m "Version X.Y.Z"` |
+| Push one tag | `git push origin vX.Y.Z` |
+| Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
+| Show ignored files | `git status --ignored` |
+| Explain ignore rule | `git check-ignore -v path/to/file` |
+| Stop tracking ignored file | `git rm --cached path/to/file` |
+| Stop tracking ignored folder | `git rm -r --cached path/to/folder` |
+| Force-add ignored file | `git add -f path/to/file` |
+
+
 # Staging and rename review quick reference
 
 | Goal | Command |
@@ -372,6 +390,37 @@ git branch -d branch-name
 Use `git switch` for switching branches. Use `git branch` mainly for listing, deleting, or renaming.
 
 ---
+
+---
+
+## `git check-ignore`
+
+### What it does
+
+Shows whether a path is ignored and which ignore rule matched.
+
+### Common syntax
+
+```bash
+git check-ignore -v path/to/file
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| `path/to/file` | Yes | File or folder path to test. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `-v` | Verbose output showing the matching ignore file, line, and pattern. |
+
+### Notes
+
+Use this when `.gitignore` behavior is confusing.
+
 
 ## `git checkout`
 
@@ -1289,6 +1338,43 @@ git restore file-name.md
 
 ---
 
+---
+
+## `git rm --cached`
+
+### What it does
+
+Removes a file from Git's index without deleting the local working-tree file.
+
+### Common syntax
+
+```bash
+git rm --cached path/to/file
+```
+
+For a folder:
+
+```bash
+git rm -r --cached path/to/folder
+```
+
+### Required parameters
+
+| Parameter | Required? | Meaning |
+|---|---:|---|
+| `path/to/file` | Yes | File to stop tracking. |
+
+### Optional parameters
+
+| Option | Meaning |
+|---|---|
+| `-r` | Required when removing a folder from the index. |
+
+### Notes
+
+Use this when a file was already tracked but should now be ignored by `.gitignore`.
+
+
 ## `git rm`
 
 ### What it does
@@ -1365,6 +1451,25 @@ git show v1.0.0
 ```
 
 ---
+
+---
+
+## `git status --ignored`
+
+### What it does
+
+Shows ignored files in status output.
+
+### Common syntax
+
+```bash
+git status --ignored
+```
+
+### Notes
+
+Use this to confirm that `.gitignore` rules are matching the files you expect.
+
 
 ## `git status`
 
@@ -1523,6 +1628,7 @@ git push origin v1.0.0
 |---|---|
 | `--list` | Lists tags. |
 | `-a` | Creates an annotated tag. |
+| `-s` | Creates a signed annotated tag using a configured signing key. |
 | `-m "message"` | Supplies the annotated tag message. |
 | `-d tag-name` | Deletes a local tag. |
 | `-n` | Shows tag annotations. |
@@ -1669,7 +1775,7 @@ Returns `True` if `.gitattributes` exists at the current path and `False` if it 
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.18.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.19.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
