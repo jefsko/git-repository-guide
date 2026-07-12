@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.19.0`
+Current guide version: `v1.19.1`
 
 Main guide file:
 
@@ -229,6 +229,7 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Understanding practical `.gitignore` usage
 - Checking ignored files with `git check-ignore -v` and `git status --ignored`
 - Stopping tracking for already tracked files with `git rm --cached`
+- Keeping release publishing guidance separate from `.gitignore` workflows
 
 ## Recommended Repository Details
 
@@ -267,12 +268,12 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.19.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Patch updates, such as `v1.19.2`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
 - Minor updates, such as `v1.20.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.19.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.19.1`.
 
 ## Suggested Repository Structure
 

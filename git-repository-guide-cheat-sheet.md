@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.19.0  
+**Version:** v1.19.1  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -565,7 +565,7 @@ git commit -m "chore: prepare v2.1.0 release"
 
 ---
 
-## GitHub Releases and `.gitignore`
+## GitHub Releases
 
 | Goal | Command / reminder |
 |---|---|
@@ -580,6 +580,9 @@ git commit -m "chore: prepare v2.1.0 release"
 | Stop tracking ignored file | `git rm --cached path/to/file` |
 | Stop tracking ignored folder | `git rm -r --cached path/to/folder` |
 | Force-add ignored file | `git add -f path/to/file` |
+
+
+## `.gitignore` quick checks
 
 Starter `.gitignore` patterns:
 

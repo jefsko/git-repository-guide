@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.19.0  
+**Version:** v1.19.1  
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.19.0
+annotated version tags such as v1.0.0, v1.1.0, v1.19.1
 ```
 
 End result:
@@ -331,7 +331,8 @@ A custom GitHub Release asset ZIP is different. It contains whatever files you m
 
 ---
 
-## GitHub Release and `.gitignore` basics
+
+## GitHub Release basics
 
 A simple memory aid:
 
@@ -374,6 +375,8 @@ Briefly describe the release.
 
 - Compatibility, publishing, or documentation notes.
 ```
+
+## `.gitignore` basics
 
 Check ignored files:
 
@@ -986,7 +989,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.19.0`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.19.1`, and tag messages simple, such as `Version 1.12.0`.
 
 
 ## Fix commit-message typos

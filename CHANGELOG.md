@@ -4,6 +4,26 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.19.1
+
+### Changed
+
+- Reclassified the final v1.19 polishing/rebalancing pass as patch release `v1.19.1`.
+- Separated the initially combined GitHub Release and `.gitignore` material into cleaner topic-specific main sections:
+  - `38. GitHub Releases, Release Notes, and Release Assets`
+  - `39. .gitignore and Ignored File Workflows`
+- Rebalanced release-publishing, tag-message, release-note, release-asset, and ignore-file content across the main guide, Troubleshooting appendix, Knowledge Base / How-To appendix, command reference, quick-start guide, and cheat sheet.
+- Updated guide metadata, README references, changelog entries, companion guide versions, and standalone filenames for `v1.19.1`.
+
+### Notes
+
+- This is a patch-level polishing and organization update from `v1.19.0`.
+- The `v1.19.0` release remains the additive content update for GitHub Releases, tags, release notes, and `.gitignore`.
+- The `v1.19.1` release is the cleaned-up, commit-ready organization pass for that material.
+- No substantive `v1.19.0` content was intentionally removed; the material was reorganized and reworded for better placement and readability.
+- The active repository filenames remain stable: `git-repository-guide.md`, `README.md`, and `CHANGELOG.md`.
+- Standalone downloadable copies may use versioned filenames, such as `git-repository-guide-v1.19.1.md`.
+
 ## v1.19.0
 
 ### Added
@@ -26,7 +46,7 @@ This project uses semantic versioning-style document versions. The active guide 
 ### Changed
 
 - Updated the guide metadata from `v1.18.0` to `v1.19.0`.
-- Expanded existing tag, release, versioning, release-note, asset, and ignore-file guidance with practical release-publishing and `.gitignore` workflows.
+- Expanded existing tag, release, versioning, release-note, and asset guidance with practical release-publishing workflows.
 - Updated README version, version history, and topic list for `v1.19.0`.
 - Updated quick-start, cheat sheet, and command quick reference companions to align with `v1.19.0`.
 

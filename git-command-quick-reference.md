@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.19.0  
+**Version:** v1.19.1  
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.19.0.md
+git-command-quick-reference-v1.19.1.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -207,7 +207,7 @@ Local parent folder renames usually do not require a Git commit. Tracked file/fo
 
 ---
 
-# Release and `.gitignore` quick reference
+# Release quick reference
 
 | Goal | Command |
 |---|---|
@@ -216,6 +216,11 @@ Local parent folder renames usually do not require a Git commit. Tracked file/fo
 | Signed tag | `git tag -s vX.Y.Z -m "Version X.Y.Z"` |
 | Push one tag | `git push origin vX.Y.Z` |
 | Verify remote tag | `git ls-remote --tags origin vX.Y.Z` |
+
+# `.gitignore` quick reference
+
+| Goal | Command |
+|---|---|
 | Show ignored files | `git status --ignored` |
 | Explain ignore rule | `git check-ignore -v path/to/file` |
 | Stop tracking ignored file | `git rm --cached path/to/file` |
@@ -1775,7 +1780,7 @@ Returns `True` if `.gitattributes` exists at the current path and `False` if it 
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.19.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.19.1` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 
