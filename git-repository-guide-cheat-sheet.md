@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.20.0
+**Version:** v1.21.0
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -39,14 +39,27 @@ For explanations, use the quick-start or full guide. For command syntax and para
 
 ---
 
+## Global setup
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+git config --show-origin --show-scope --list
+```
+
+Use `.gitattributes` as shared repository policy. Inspect `core.autocrlf`; do not treat it as a substitute.
+
 ## First-time setup
 
 ```bash
 cd "C:\Path\To\Your\Project"
 git init -b main
 git status
-git add .
-git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "Create version v1.0.0"
 ```
 
@@ -71,8 +84,10 @@ git push origin v1.0.0
 
 ```bash
 git status
-git add .
-git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "Create version v1.1.0"
 
 # Normal later push after upstream is configured:
@@ -319,6 +334,15 @@ git archive --format=zip --output project-v1.0.0.zip v1.0.0
 ---
 
 ---
+
+### Clean release archive from a tag
+
+```bash
+git archive --format=zip --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+Use only one archive command. The second form adds a top-level folder.
 
 ## Pull Request workflow
 
@@ -608,7 +632,9 @@ Thumbs.db
 | See unstaged summary | `git diff --stat` |
 | Stage all repo changes | `git add -A` |
 | Stage current folder and below | `git add .` |
+| Check staged quality | `git diff --cached --check` |
 | See staged summary | `git diff --cached --stat` |
+| See exact staged patch | `git diff --cached` |
 | Check renames | `git status --short --renames` |
 | Check staged rename status | `git diff --cached --name-status --find-renames` |
 | Show repo root | `git rev-parse --show-toplevel` |

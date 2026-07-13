@@ -4,6 +4,39 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.21.0
+
+### Added
+
+- Added focused global Git configuration guidance covering system, global, local, and worktree scopes; identity settings; `init.defaultBranch`; effective-value inspection; configuration origins; local overrides; and safe removal with `--unset`.
+- Added a dedicated staged-patch review workflow using `git diff --cached`, its `--staged` synonym, `--check`, `--stat`, `--summary`, and `--name-status --find-renames`.
+- Added separate complete first-check-in workflows for an already initialized repository and for an ordinary folder that has not yet been initialized.
+- Added the requested File-Set Update System initial commit, namespaced tag, explicit branch push, explicit tag push, and remote-verification sequence.
+- Added an exact `git archive` example for `aws-hello-world-microservice-v1.1.1.zip` plus an optional `--prefix` form that creates one top-level extraction folder.
+- Added synchronized quick-start, cheat-sheet, command-reference, Knowledge Base, workflow-recipe, index, and troubleshooting guidance for the new material.
+
+### Changed
+
+- Updated all active file-set version metadata from `v1.20.0` to `v1.21.0`.
+- Corrected first-check-in examples that ran `git status` before `git init`; a truly uninitialized folder must be initialized before repository-only commands can succeed.
+- Strengthened first-commit and release examples by adding `git diff --cached --check`, staged statistics, and full staged-patch review before committing.
+- Clarified that `.gitattributes` is the shared committed repository policy, while `core.autocrlf` is an environment-level setting that should not be treated as a substitute.
+- Clarified the scope difference between `git add .` and `git add -A`, retaining both while recommending `git add -A` for controlled whole-repository check-ins.
+- Expanded tag-archive verification and the distinction between a tracked tag snapshot and a custom release package.
+
+### Fixed
+
+- Fixed invalid command ordering in four full-guide examples where `git status` preceded `git init -b main` in a folder described as not yet being a repository.
+- Fixed incomplete staged-review sequences that showed only status or statistics without the exact staged patch.
+
+### Notes
+
+- This is an additive minor release from `v1.20.0`.
+- The staging, configuration, and release-workflow addendum was used as source material and was not added to the active repository package.
+- Existing comprehensive `.gitattributes`, `git status`, and `git add --renormalize .` coverage was preserved and cross-referenced rather than duplicated into unnecessary new standalone sections.
+- Active repository filenames remain stable; the release ZIP uses a versioned filename.
+- Markdown and text files retain UTF-8 without BOM and CRLF line endings.
+
 ## v1.20.0
 
 ### Added

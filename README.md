@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.20.0`
+Current guide version: `v1.21.0`
 
 Main guide file:
 
@@ -94,6 +94,10 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Understanding empty folders and `.gitkeep` placeholder conventions
 - Understanding delete-then-replace behavior
 - Verifying staged and unstaged changes before committing
+- Reviewing the exact staged patch with `git diff --cached`
+- Using `git diff --cached --check` as a pre-commit quality gate
+- Configuring global and repository-specific Git identity and defaults
+- Understanding Git configuration scopes and origins
 - Understanding why ordinary file updates usually do not require merging
 - Understanding `origin`, `main`, `origin/main`, and working branches
 - Creating and using working branches
@@ -109,6 +113,8 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Recovering accidentally deleted tracked files
 - Understanding what files are included in a tagged repository snapshot
 - Understanding GitHub source ZIP downloads versus custom release asset ZIPs
+- Creating a clean release archive directly from a tag with `git archive`
+- Adding an optional top-level folder to a tag archive with `--prefix`
 - Understanding Git push object counts
 
 - Using the quick-start companion guide
@@ -285,6 +291,7 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 | `v1.19.0` | GitHub Release publishing and practical `.gitignore` guidance |
 | `v1.19.1` | Polished and rebalanced release and ignore-file material |
 | `v1.20.0` | Tag deletion, multiline commit bodies, local excludes, namespaced tags, and upstream tracking |
+| `v1.21.0` | Global Git configuration, staged-patch validation, corrected first-check-in ordering, and tag-based release archives |
 
 ## Versioning Policy
 
@@ -295,7 +302,7 @@ This guide uses document-level semantic versioning.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.20.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.21.0`.
 
 ## Suggested Repository Structure
 

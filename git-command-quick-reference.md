@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.20.0
+**Version:** v1.21.0
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.20.0.md
+git-command-quick-reference-v1.21.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -275,6 +275,41 @@ committed locally and pushed to origin
 Use these defaults unless your project has a specific reason to differ.
 
 
+# v1.21.0 workflow quick reference
+
+## Global configuration baseline
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+git config --show-origin --show-scope --list
+```
+
+## Staged validation and exact review
+
+```bash
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+```
+
+## New ordinary folder versus initialized repository
+
+```text
+ordinary folder:        git init -b main, then git status
+initialized repository: git status may come first
+```
+
+## Clean tag archive
+
+```bash
+git archive --format=zip --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+Use one archive form. The second adds a top-level extraction folder.
+
 # v1.20.0 workflow quick reference
 
 ## Multiline commit body
@@ -391,6 +426,7 @@ Creates an archive file, such as a ZIP, from a commit, branch, or tag.
 
 ```bash
 git archive --format=zip --output project-v1.0.0.zip v1.0.0
+git archive --format=zip --prefix=project-v1.0.0/ --output project-v1.0.0.zip v1.0.0
 ```
 
 ### Required parameters
@@ -409,7 +445,7 @@ git archive --format=zip --output project-v1.0.0.zip v1.0.0
 
 ### Notes
 
-Use this when you want a local ZIP of a tagged version.
+Use this when you want a local ZIP of a tagged version. The archive contains the tracked snapshot, not untracked files, later working-tree changes, or the `.git` directory. Inspect the completed ZIP before publishing it.
 
 ---
 
@@ -608,34 +644,53 @@ A malformed quoted message can leave extra words for Git to interpret as pathspe
 
 ### What it does
 
-Gets or sets Git configuration values.
+Gets, sets, lists, or removes Git configuration values.
 
 ### Common syntax
 
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
-git config --list
+git config --global init.defaultBranch main
+git config --show-origin --show-scope --list
+git config --local user.email "you@company.example"
+git config --global --unset core.pager
 ```
 
 ### Required parameters
 
 | Parameter | Required? | Meaning |
 |---|---:|---|
-| Config key | Required when setting/getting a specific value | Example: `user.name`. |
+| Config key | Required when setting, getting, or removing one value | Example: `user.name`. |
 | Config value | Required when setting | Example: `"Your Name"`. |
 
 ### Optional parameters
 
 | Option | Meaning |
 |---|---|
-| `--global` | Applies setting to your user account. |
-| `--local` | Applies setting only to the current repository. |
-| `--list` | Lists active configuration values. |
+| `--system` | Uses configuration shared by all users on the computer. |
+| `--global` | Uses configuration for the current operating-system user. |
+| `--local` | Uses configuration for the current repository. |
+| `--worktree` | Uses configuration for one linked worktree when enabled. |
+| `--list` | Lists configuration values. |
+| `--get` | Gets one value. |
+| `--show-origin` | Shows which configuration file supplied each value. |
+| `--show-scope` | Shows the scope of each value. |
+| `--unset` | Removes a setting from the selected scope. |
 
 ### Notes
 
-Set `user.name` and `user.email` before committing if Git asks for identity information.
+Set `user.name` and `user.email` before committing. These values identify commits; they do not authenticate you to GitHub.
+
+More specific applicable scopes normally override broader scopes for the same key.
+
+Inspect line-ending behavior before changing it:
+
+```bash
+git config --show-origin --get core.autocrlf
+```
+
+Keep `.gitattributes` as the shared committed repository policy. Do not treat `core.autocrlf` as a substitute.
 
 ---
 
@@ -759,7 +814,9 @@ git diff --name-status v1.1.0..v1.1.1
 | Option | Meaning |
 |---|---|
 | `--cached` or `--staged` | Shows staged changes. |
+| `--check` | Warns about introduced whitespace errors and unresolved conflict-marker patterns. |
 | `--stat` | Shows summary statistics. |
+| `--summary` | Summarizes creates, deletes, mode changes, and detected renames. |
 | `--name-only` | Shows only changed filenames. |
 | `--name-status` | Shows changed filenames plus status codes. |
 | `--find-renames` | Enables rename detection. |
@@ -771,8 +828,12 @@ Very useful before committing:
 
 ```bash
 git diff
+git diff --cached --check
+git diff --cached --stat
 git diff --cached
 ```
+
+`git diff` shows unstaged changes. `git diff --cached` shows the exact staged patch.
 
 Very useful between version tags:
 
@@ -1775,7 +1836,7 @@ Returns `True` if `.gitattributes` exists at the current path and `False` if it 
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.20.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.21.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 

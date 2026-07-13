@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.20.0
-Previous locked version: v1.19.1
+Document version: v1.21.0
+Previous locked version: v1.20.0
 Version status: Locked standalone Markdown version
 Update type: Additive update
 Versioning method: Document metadata only; no Git repository package required
-Future edit policy: Do not overwrite this `v1.20.0` file. Save future changes as a new version, such as `v1.20.1` or `v1.21.0`.
+Future edit policy: Do not overwrite this `v1.21.0` file. Save future changes as a new version, such as `v1.21.1` or `v1.22.0`.
 Current as of: 2026-07-13
 
-Revision note: This `v1.20.0` edition preserves the `v1.19.1` guide and adds integrated guidance for deleting local and remote tags without changing commit history, verifying tag removal and annotated-tag targets, creating shell-safe multiline commit bodies, distinguishing shared `.gitignore` rules from clone-local `.git/info/exclude` rules, using namespaced tags in multi-component repositories, and explicitly configuring and checking upstream branch tracking. Companion files, metadata, indexes, references, and version history are synchronized.
+Revision note: This `v1.21.0` edition preserves the `v1.20.0` guide and adds integrated global Git configuration guidance, complete staged-patch and staged-quality review, corrected first-check-in ordering, separate initialized-repository and ordinary-folder workflows, the requested File-Set Update System namespaced-tag sequence, and exact tag-based release archive examples. Companion files, metadata, indexes, references, and version history are synchronized.
 
 ---
 
@@ -88,7 +88,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, `v1.19.1`, `v1.20.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, `v1.19.1`, `v1.20.0`, `v1.21.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -356,6 +356,96 @@ Check the folder contents:
 dir
 ```
 
+### Configure Git identity and useful defaults
+
+Git configuration can exist at several scopes:
+
+| Scope | Typical option | Applies to |
+|---|---|---|
+| System | `--system` | All users on the computer |
+| Global | `--global` | The current operating-system user |
+| Local | `--local` | The current repository |
+| Worktree | `--worktree` | One linked worktree when worktree-specific configuration is enabled |
+
+For the same key, a more specific scope normally overrides a broader scope.
+
+Set the identity recorded in new commits:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+These settings identify the author and committer stored in Git history. They do not sign you into GitHub and do not replace GitHub authentication.
+
+Set the default initial branch for future plain `git init` commands:
+
+```bash
+git config --global init.defaultBranch main
+```
+
+Even with that default, the explicit form remains clear:
+
+```bash
+git init -b main
+```
+
+Inspect the global configuration:
+
+```bash
+git config --global --list
+```
+
+Inspect the effective configuration and where each value came from:
+
+```bash
+git config --show-origin --show-scope --list
+```
+
+Inspect individual values:
+
+```bash
+git config --get user.name
+git config --get user.email
+git config --get init.defaultBranch
+git config --show-origin --get core.autocrlf
+```
+
+After a repository exists, use a local override when one project needs a different identity:
+
+```bash
+git config --local user.name "Your Work Name"
+git config --local user.email "you@company.example"
+```
+
+Remove an unwanted setting from a specific scope:
+
+```bash
+git config --global --unset setting.name
+```
+
+Example:
+
+```bash
+git config --global --unset core.pager
+```
+
+#### `core.autocrlf` and `.gitattributes`
+
+Common `core.autocrlf` values are:
+
+| Value | General behavior |
+|---|---|
+| `true` | Common Windows behavior: check out text with CRLF when appropriate and normalize text toward LF in the repository |
+| `input` | Normalize CRLF toward LF when committing without converting LF to CRLF on checkout |
+| `false` | Disable this automatic conversion behavior |
+
+Do not change `core.autocrlf` casually in the middle of a repository update. A change can make many files appear modified.
+
+Use `.gitattributes` as the shared, committed repository policy. Treat `core.autocrlf` as a user or environment setting, not as a substitute for repository rules. If `.gitattributes` changes after files are tracked, review and renormalize intentionally with `git add --renormalize .`.
+
+Git documents configuration scopes, value inspection, and settings such as `core.autocrlf` in `git-config`. [R31] [R65]
+
 Initialize the Git repository:
 
 ```bash
@@ -401,11 +491,21 @@ node_modules/
 
 Adjust the ignore rules for your project. A .NET project, Node project, Python project, document project, and static website may all need different ignore rules.
 
-Stage the files:
+Stage the intended whole-repository file set:
 
 ```bash
-git add .
+git add -A
 ```
+
+Review the staged result before committing:
+
+```bash
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+```
+
+`git diff --cached --check` is a quality gate for introduced whitespace errors and unresolved conflict-marker patterns. `--stat` gives a compact summary. The plain `git diff --cached` command shows the exact staged patch.
 
 Commit the first file set:
 
@@ -1459,6 +1559,8 @@ Recommended history:
 | `v1.19.0` | GitHub Release publishing and practical `.gitignore` guidance |
 | `v1.19.1` | Polished and rebalanced release and ignore-file material |
 | `v1.20.0` | Tag deletion and verification, multiline commit-body CLI methods, local excludes, namespaced tags, and upstream tracking |
+| `v1.21.0` | Global Git configuration, staged-patch validation, corrected first-check-in ordering, and tag-based release archives |
+
 ### Commit messages, tag names, tag messages, and changelog entries
 
 These are related but not the same thing.
@@ -7759,7 +7861,6 @@ Use consistent tag names and release-note style across the series, but do not as
 Use the Git CLI when you want the most explicit and repeatable workflow.
 
 ```bash
-git status
 git init -b main
 git status
 git add -A
@@ -8285,6 +8386,62 @@ Explicit later push, recommended in careful release documentation:
 git push origin main
 ```
 
+### Distinguish two meanings of “first check-in”
+
+A first content check-in can start from two different states. Do not mix them.
+
+#### First content check-in in an already initialized and configured repository
+
+Use this when `.git` already exists, `main` is already the branch, and `origin` is already configured:
+
+```bash
+git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "feat: initialize repository with File-Set Update System" -m "Add the repository overview, prompt-set catalog, collection changelog, and repository conventions." -m "Add File-Set Update System v1.0.0 under prompt-sets/file-set-update-system." -m "Establish independent prompt-set versioning, lockstep versions within each prompt set, namespaced release tags, and CRLF text-file handling."
+git push origin main
+git tag -a file-set-update-system/v1.0.0 -m "Release File-Set Update System v1.0.0"
+git push origin file-set-update-system/v1.0.0
+git status
+```
+
+The originally requested `git add .` form is valid when the current-directory scope is intentional. This guide uses `git add -A` in the controlled whole-repository version because it also covers intended changes elsewhere in the repository.
+
+#### Complete repository creation and first push from an ordinary folder
+
+Use this when the folder is not yet a Git repository:
+
+```bash
+git init -b main
+git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "feat: initialize repository with File-Set Update System" -m "Add the repository overview, prompt-set catalog, collection changelog, and repository conventions." -m "Add File-Set Update System v1.0.0 under prompt-sets/file-set-update-system." -m "Establish independent prompt-set versioning, lockstep versions within each prompt set, namespaced release tags, and CRLF text-file handling."
+git remote add origin https://github.com/YOUR-USERNAME/chatgpt-ai-resources.git
+git remote -v
+git push -u origin main
+git tag -a file-set-update-system/v1.0.0 -m "Release File-Set Update System v1.0.0"
+git push origin file-set-update-system/v1.0.0
+git status
+```
+
+In an ordinary uninitialized folder, `git status` must not come first. It reports that the directory is not a Git repository. Initialize first, then inspect status.
+
+Optional remote verification:
+
+```bash
+git branch -vv
+git log --oneline --decorate -1
+git ls-remote --heads origin main
+git ls-remote --tags origin file-set-update-system/v1.0.0
+```
+
+For an annotated remote tag, output may include both the tag object and a peeled `^{}` entry for the tagged commit. That is normal.
+
 ### Push branch and tag deliberately
 
 For careful versioned updates, push the branch and the tag intentionally:
@@ -8292,7 +8449,9 @@ For careful versioned updates, push the branch and the tag intentionally:
 ```bash
 git status
 git add -A
-git status
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "docs: describe what changed" -m "Explain why this version changed."
 
 git push origin main
@@ -8603,6 +8762,55 @@ summarizes both.
 
 This matters because a file can be changed on disk but not staged, or staged but changed again afterward.
 
+### Review the exact staged content with `git diff --cached`
+
+```bash
+git diff --cached
+```
+
+This compares the staging area, also called the index, with the current `HEAD` commit. It shows the complete patch prepared for the next commit. It does not show unstaged working-tree changes.
+
+`--staged` is a synonym:
+
+```bash
+git diff --staged
+```
+
+Useful staged-review variants:
+
+| Command | Purpose |
+|---|---|
+| `git diff --cached` | Show the complete staged patch |
+| `git diff --cached --check` | Warn about introduced whitespace errors and unresolved conflict-marker patterns |
+| `git diff --cached --stat` | Show a compact file and line-count summary |
+| `git diff --cached --summary` | Summarize creates, deletes, mode changes, and detected renames |
+| `git diff --cached --name-status` | Show staged filenames and status letters |
+| `git diff --cached --name-status --find-renames` | Show staged file status with rename detection |
+
+Recommended review order:
+
+```bash
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+```
+
+For a large rename or restructuring operation, also use:
+
+```bash
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+The key distinction is:
+
+```text
+git diff           = unstaged changes
+git diff --cached  = staged changes
+```
+
+A file can have both staged and unstaged changes at the same time, so keep `git status` in the workflow even after reviewing the staged patch. Git documents these comparisons and options in `git-diff`. [R25]
+
 ### Recommended status review sequence
 
 For careful updates:
@@ -8613,11 +8821,13 @@ git diff --stat
 git add -A
 git status --short
 git status --short --renames
+git diff --cached --check
 git diff --cached --stat
+git diff --cached
 git diff --cached --name-status --find-renames
 ```
 
-Then commit only after the staged summary matches your intent.
+Then commit only after the staged validation, summary, exact patch, and file list match your intent.
 
 ### Review rename detection
 
@@ -8866,16 +9076,16 @@ A release title is the short display name for the release.
 Recommended GitHub Release title:
 
 ```text
-v1.20.0
+v1.21.0
 ```
 
 or:
 
 ```text
-Version 1.20.0
+Version 1.21.0
 ```
 
-For this guide's convention, concise titles such as `v1.20.0` are usually best on GitHub, while annotated tag messages can use `Version 1.20.0`.
+For this guide's convention, concise titles such as `v1.21.0` are usually best on GitHub, while annotated tag messages can use `Version 1.21.0`.
 
 A release description explains what changed and why it matters.
 
@@ -8932,8 +9142,8 @@ The previous tag controls what GitHub compares against when generating release n
 For a normal next version, compare:
 
 ```text
-previous tag: v1.19.1
-current tag:  v1.20.0
+previous tag: v1.20.0
+current tag:  v1.21.0
 ```
 
 If the previous tag is wrong, generated notes can include too much, too little, or unrelated history.
@@ -8956,6 +9166,33 @@ signed artifacts
 ```
 
 For a Markdown documentation repo, you often do not need a custom uploaded asset unless you intentionally created one.
+
+### Produce a clean release archive directly from a tag
+
+A local tag archive contains the tracked repository snapshot identified by the tag:
+
+```bash
+git archive --format=zip --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+This archive includes tracked files present at `v1.1.1` and excludes the `.git` directory, repository history, untracked files, and later working-tree changes.
+
+By default, the files are written at the archive root. To make the ZIP extract into one named top-level folder:
+
+```bash
+git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+Verify the source tag before archiving:
+
+```bash
+git tag --list v1.1.1
+git show --stat --oneline v1.1.1
+```
+
+Then inspect the finished ZIP before publishing it.
+
+A `git archive` ZIP is a tracked tag snapshot. A custom release package may intentionally contain generated documentation, compiled binaries, deployment files, checksums, renamed paths, or other material that is not identical to the tagged tree. Do not describe the two as identical unless they actually are. [R16]
 
 ### Drafts, pre-releases, and latest releases
 
@@ -8992,21 +9229,21 @@ These are related but not identical.
 
 | Item | Example | Where it lives | Purpose |
 |---|---|---|---|
-| Tag name | `v1.20.0` | Git | Version marker |
-| Annotated tag message | `Version 1.20.0` | Git tag object | Tag annotation |
-| Release title | `v1.20.0` | GitHub Release | Display title |
+| Tag name | `v1.21.0` | Git | Version marker |
+| Annotated tag message | `Version 1.21.0` | Git tag object | Tag annotation |
+| Release title | `v1.21.0` | GitHub Release | Display title |
 | Release notes | Markdown summary | GitHub Release | Explains what changed |
 
 Recommended convention for this guide:
 
 ```bash
-git tag -a v1.20.0 -m "Version 1.20.0"
+git tag -a v1.21.0 -m "Version 1.21.0"
 ```
 
 GitHub Release title:
 
 ```text
-v1.20.0
+v1.21.0
 ```
 
 ### Optional annotated tag body
@@ -9014,7 +9251,7 @@ v1.20.0
 Annotated tags can have more than one `-m` paragraph:
 
 ```bash
-git tag -a v1.20.0 -m "Version 1.20.0" -m "Add tag deletion, commit-body CLI, local-exclude, namespaced-tag, and upstream-tracking guidance."
+git tag -a v1.21.0 -m "Version 1.21.0" -m "Add global configuration, staged-patch validation, corrected first-check-in workflows, and tag-based archive guidance."
 ```
 
 For most beginner documentation workflows, a concise one-line tag message is enough. Put the detailed explanation in the commit body, changelog, and GitHub Release notes.
@@ -9359,6 +9596,44 @@ Moves your terminal into the project folder.
 
 Official reference: shell-specific command, not a Git command.
 
+### `git config --global`
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+```
+
+Sets user-level Git defaults. Use `--local` inside a repository for a repository-specific override.
+
+Inspect effective values and their sources:
+
+```bash
+git config --show-origin --show-scope --list
+```
+
+Official reference: [R31]
+
+### `git diff --cached --check`
+
+```bash
+git diff --cached --check
+```
+
+Checks staged changes for introduced whitespace errors and unresolved conflict-marker patterns before committing.
+
+Official reference: [R25]
+
+### `git diff --cached`
+
+```bash
+git diff --cached
+```
+
+Shows the complete patch staged for the next commit. `git diff --staged` is a synonym.
+
+Official reference: [R25]
+
 ### `git init -b main`
 
 ```bash
@@ -9571,7 +9846,7 @@ git ls-tree -r --name-only HEAD
 
 Purpose:
 
-Shows a compact summary of staged changes before committing.
+Shows a compact file and line-count summary of staged changes before committing. Use the plain `git diff --cached` command when you need the exact staged patch.
 
 Example:
 
@@ -9648,6 +9923,12 @@ git archive --format=zip --output project-v1.0.0.zip v1.0.0
 ```
 
 Exports the tracked files at a tag to an archive.
+
+Add a top-level extraction folder:
+
+```bash
+git archive --format=zip --prefix=project-v1.0.0/ --output project-v1.0.0.zip v1.0.0
+```
 
 Official reference: [R16]
 
@@ -12775,10 +13056,12 @@ A tag named `v1.0.0` in one repository is separate from a tag named `v1.0.0` in 
 Use:
 
 ```bash
-git status
 git init -b main
-git add -A
 git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "feat: add first web page example" -m "Add the initial HTML file, README, changelog, and supporting documentation."
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
 git remote -v
@@ -13010,11 +13293,13 @@ Use:
 
 ```bash
 git status --short
+git diff --cached --check
 git diff --cached --stat
+git diff --cached
 git diff --cached --name-status --find-renames
 ```
 
-Use `git diff` without `--cached` to see unstaged working-tree changes.
+Use `git diff` without `--cached` to see unstaged working-tree changes. Use `git diff --cached` or its synonym `git diff --staged` to see the exact staged patch.
 
 ## F.207 How do I make Git show renames more clearly?
 
@@ -13238,6 +13523,77 @@ git ls-remote --tags origin v1.0.0
 
 No matching output means the targeted reference is absent from that location. Then use `git log`, `git show`, or `git branch -vv` to confirm the commit and branch remain.
 
+## F.235 Why must `git init` come before `git status` in a new folder?
+
+`git status` is a repository command. In an ordinary folder with no `.git` directory, it reports that the directory is not a Git repository.
+
+Use:
+
+```bash
+git init -b main
+git status
+```
+
+A workflow may begin with `git status` only when the repository has already been initialized.
+
+## F.236 What global Git settings should a beginner configure?
+
+A practical baseline is:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+git config --show-origin --show-scope --list
+```
+
+The identity values are recorded in commits. They do not authenticate you to GitHub.
+
+## F.237 What is the difference between system, global, local, and worktree Git configuration?
+
+System configuration applies to all users on the computer. Global configuration applies to the current operating-system user. Local configuration applies to one repository. Worktree configuration applies to one linked worktree when worktree-specific configuration is enabled.
+
+For the same key, the more specific applicable value normally wins.
+
+## F.238 Should `core.autocrlf` replace `.gitattributes`?
+
+No.
+
+Use `.gitattributes` as the shared committed repository policy. Treat `core.autocrlf` as a user or environment setting. Inspect it when troubleshooting, and renormalize intentionally if repository rules change.
+
+## F.239 What is the recommended staged-review order before committing?
+
+Use:
+
+```bash
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+```
+
+Add rename-oriented views when needed:
+
+```bash
+git diff --cached --summary
+git diff --cached --name-status --find-renames
+```
+
+## F.240 How do I create a clean release ZIP directly from a tag?
+
+Use:
+
+```bash
+git archive --format=zip --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+To make the archive extract into one top-level folder:
+
+```bash
+git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+Inspect the completed ZIP before publishing it.
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -13280,7 +13636,7 @@ For explanations of individual commands, see [Appendix A](#appendix-a-expanded-g
 
 ```bash
 git init -b main
-git add .
+git add -A
 git commit -m "Add original pre-release draft"
 
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
@@ -13295,8 +13651,10 @@ git push origin v0.1.0
 ```bash
 git init -b main
 git status
-git add .
-git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "Add original pre-release draft"
 
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
@@ -13305,6 +13663,23 @@ git push -u origin main
 
 git tag -a v0.1.0 -m "Version 0.1.0"
 git push origin v0.1.0
+```
+
+## G.4A Already initialized repository, first content check-in with namespaced tag
+
+Use this only when `.git`, `main`, and `origin` are already configured:
+
+```bash
+git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "feat: initialize repository with File-Set Update System" -m "Add the repository overview, prompt-set catalog, collection changelog, and repository conventions." -m "Add File-Set Update System v1.0.0 under prompt-sets/file-set-update-system." -m "Establish independent prompt-set versioning, lockstep versions within each prompt set, namespaced release tags, and CRLF text-file handling."
+git push origin main
+git tag -a file-set-update-system/v1.0.0 -m "Release File-Set Update System v1.0.0"
+git push origin file-set-update-system/v1.0.0
+git status
 ```
 
 ## G.5 Existing local repository, minimal later update
@@ -13319,8 +13694,10 @@ git push
 
 ```bash
 git status
-git add .
-git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "Describe what changed"
 git push
 ```
@@ -14801,6 +15178,22 @@ GitHub's automatic source ZIP for a tag is generated from the tagged repository 
 
 It should contain the tracked files at that tag.
 
+## K.8A Clean tag archive with an optional top-level folder
+
+Exact tag snapshot:
+
+```bash
+git archive --format=zip --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+Top-level extraction folder:
+
+```bash
+git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+Inspect the actual ZIP contents before publishing it.
+
 ## K.9 Custom release asset ZIP
 
 A manually uploaded release asset ZIP is different.
@@ -16029,7 +16422,9 @@ That means local `main` is tracking `origin/main`.
 ```powershell
 git status
 git add -A
-git status
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "docs: update guide" -m "Explain what changed and why."
 git push origin main
 
@@ -16538,10 +16933,12 @@ simple-website-examples
 ## W.8 First check-in of a new hub repo
 
 ```bash
-git status
 git init -b main
-git add -A
 git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "docs: add Simple Website Examples hub" -m "Add the hub README, changelog, learning-path documentation, and navigation links for the example repository series."
 git remote add origin https://github.com/YOUR-USERNAME/simple-website-examples.git
 git remote -v
@@ -16553,10 +16950,12 @@ git push origin v1.0.0
 ## W.9 First check-in of a new example repo
 
 ```bash
-git status
 git init -b main
-git add -A
 git status
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 git commit -m "feat: add first web page example" -m "Add the initial HTML file, README, changelog, and supporting documentation for Example 01."
 git remote add origin https://github.com/YOUR-USERNAME/simple-website-example-01-first-web-page.git
 git remote -v
@@ -17607,6 +18006,26 @@ See [3. Proper Terms](#3-proper-terms) and [Appendix C](#appendix-c-expanded-ver
 ## Production
 
 See [10. Tags vs. Releases vs. Production Deployments](#10-tags-vs-releases-vs-production-deployments) and [Appendix D](#appendix-d-production-release-and-deployment-details).
+
+## Global Git configuration
+
+See [5. Create the Local Git Repository](#5-create-the-local-git-repository), [Appendix A](#appendix-a-expanded-git-command-reference), and [Appendix F.236](#f236-what-global-git-settings-should-a-beginner-configure).
+
+## `git config`
+
+See [5. Create the Local Git Repository](#5-create-the-local-git-repository) and [Appendix A](#appendix-a-expanded-git-command-reference).
+
+## `git diff --cached`
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording) and [Appendix F.239](#f239-what-is-the-recommended-staged-review-order-before-committing).
+
+## `git diff --cached --check`
+
+See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording).
+
+## Tag-based release archive
+
+See [38. GitHub Releases, Release Notes, and Release Assets](#38-github-releases-release-notes-and-release-assets), [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios), and [Appendix F.240](#f240-how-do-i-create-a-clean-release-zip-directly-from-a-tag).
 
 ## Repository
 

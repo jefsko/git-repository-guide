@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.20.0
+**Version:** v1.21.0
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.20.0
+annotated version tags such as v1.0.0, v1.1.0, v1.21.0
 ```
 
 End result:
@@ -101,6 +101,26 @@ node_modules/
 Be careful with `git add .`. It stages new files, modified files, and deleted tracked files under the current folder. Always run `git status` before and after staging.
 
 ---
+
+## Configure Git once for your user account
+
+Set the identity recorded in commits and the default branch for future repositories:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+```
+
+Inspect the effective values and their sources:
+
+```bash
+git config --show-origin --show-scope --list
+```
+
+These identity settings do not sign you into GitHub. Use a repository-specific `--local` override after initialization when one project requires a different identity.
+
+Keep `.gitattributes` as the shared repository line-ending policy. Do not treat `core.autocrlf` as a replacement for committed repository rules.
 
 ## Quick-start steps
 
@@ -144,16 +164,18 @@ git status
 
 ### 3. Stage and commit the first file set
 
-Stage files:
+Stage the intended whole-repository file set:
 
 ```bash
-git add .
+git add -A
 ```
 
-Check what is staged:
+Validate and review what is staged:
 
 ```bash
-git status
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 ```
 
 Commit:
@@ -236,13 +258,15 @@ git status
 Stage the intended changes:
 
 ```bash
-git add .
+git add -A
 ```
 
-Check again:
+Validate and review the staged result:
 
 ```bash
-git status
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 ```
 
 Commit:
@@ -310,10 +334,16 @@ GitHub's automatic source download for a tag contains the tracked repository sna
 You can also export a version locally:
 
 ```bash
-git archive --format=zip --output project-v1.0.0.zip v1.0.0
+git archive --format=zip --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
 ```
 
-**Checkpoint:** The ZIP should contain the tracked files at that tag.
+For one top-level extraction folder:
+
+```bash
+git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output aws-hello-world-microservice-v1.1.1.zip v1.1.1
+```
+
+**Checkpoint:** Inspect the ZIP and confirm that it contains the tracked files at that tag.
 
 A custom GitHub Release asset ZIP is different. It contains whatever files you manually put into that ZIP.
 
@@ -347,8 +377,9 @@ Recommended release flow:
 ```bash
 git status --short
 git add -A
-git status --short
+git diff --cached --check
 git diff --cached --stat
+git diff --cached
 git commit -m "docs: describe the update"
 
 git push origin main
@@ -403,7 +434,9 @@ git diff --stat
 git add -A
 git status --short
 git status --short --renames
+git diff --cached --check
 git diff --cached --stat
+git diff --cached
 git diff --cached --name-status --find-renames
 ```
 
@@ -480,6 +513,8 @@ git branch -vv
 ```
 
 After tracking is configured, use `git push` or the explicit `git push origin main`.
+
+A truly new ordinary folder must begin with `git init -b main` before `git status`. A first content check-in in an already initialized repository may begin with `git status`.
 
 ## Namespaced tags for a multi-component repository
 
@@ -1069,7 +1104,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.20.0`, and tag messages simple, such as `Version 1.20.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.21.0`, and tag messages simple, such as `Version 1.21.0`.
 
 
 ## Fix commit-message typos
