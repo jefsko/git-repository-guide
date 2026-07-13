@@ -1,8 +1,8 @@
 # Git Command Quick Reference
 
-**Version:** v1.19.1  
-**Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
+**Version:** v1.20.0
+**Full guide:** [`git-repository-guide.md`](git-repository-guide.md)
+**Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
 
 This is a practical quick reference for commonly used Git commands.
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.19.1.md
+git-command-quick-reference-v1.20.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -275,6 +275,61 @@ committed locally and pushed to origin
 Use these defaults unless your project has a specific reason to differ.
 
 
+# v1.20.0 workflow quick reference
+
+## Multiline commit body
+
+```powershell
+git commit -m "Subject" -m @'
+Formatted body.
+
+- First item
+- Second item
+'@
+```
+
+Cross-shell:
+
+```powershell
+git commit -F commit-message.txt
+```
+
+## Upstream tracking
+
+| Goal | Command |
+|---|---|
+| First push and set upstream | `git push -u origin main` |
+| Check tracking | `git branch -vv` |
+| Print current upstream | `git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}"` |
+| Set existing remote branch as upstream | `git branch --set-upstream-to=origin/main main` |
+| Remove upstream | `git branch --unset-upstream` |
+
+## Namespaced tags
+
+| Goal | Command |
+|---|---|
+| Validate | `git check-ref-format "refs/tags/component/v1.0.0"` |
+| Create | `git tag -a component/v1.0.0 -m "Release Component v1.0.0"` |
+| Push | `git push origin component/v1.0.0` |
+| List | `git tag --list "component/*" --sort=-version:refname` |
+| Delete local | `git tag -d component/v1.0.0` |
+| Delete remote | `git push origin --delete component/v1.0.0` |
+
+## Shared and clone-local ignore rules
+
+```text
+.gitignore          shared project rule
+.git/info/exclude   private one-clone rule
+```
+
+## Tag-deletion verification
+
+```powershell
+git tag --list v1.0.0
+git ls-remote --tags origin v1.0.0
+git log --oneline --decorate -10
+```
+
 # Alphabetical command reference
 
 ## `git add`
@@ -362,7 +417,7 @@ Use this when you want a local ZIP of a tagged version.
 
 ### What it does
 
-Lists, creates, deletes, or renames branches.
+Lists, creates, deletes, renames, or configures branches.
 
 ### Common syntax
 
@@ -372,31 +427,25 @@ git branch -a
 git branch -vv
 git branch -M main
 git branch -d branch-name
+git branch --set-upstream-to=origin/main main
+git branch --unset-upstream
 ```
 
-### Required parameters
-
-| Parameter | Required? | Meaning |
-|---|---:|---|
-| Branch name | Required for creating, deleting, or renaming | The branch to operate on. |
-
-### Optional parameters
+### Useful options
 
 | Option | Meaning |
 |---|---|
-| `-a` | Lists local and remote-tracking branches. |
-| `-vv` | Shows branch tracking/upstream information and latest commit subjects. |
-| `-M new-name` | Renames the current branch, forcing the rename if needed. |
-| `-d branch-name` | Deletes a fully merged local branch. |
-| `-D branch-name` | Force-deletes a local branch. Use carefully. |
+| `-a` | List local and remote-tracking branches. |
+| `-vv` | Show upstream/tracking information and latest subjects. |
+| `-M new-name` | Rename the current branch, forcing if needed. |
+| `-d branch-name` | Delete a fully merged local branch. |
+| `-D branch-name` | Force-delete a local branch. |
+| `--set-upstream-to=<remote>/<branch>` | Set the upstream for the current or named local branch. |
+| `--unset-upstream` | Remove the current branch's upstream relationship. |
 
 ### Notes
 
-Use `git switch` for switching branches. Use `git branch` mainly for listing, deleting, or renaming.
-
----
-
----
+Removing an upstream does not delete either branch. Use `git switch` for branch switching.
 
 ## `git check-ignore`
 
@@ -426,6 +475,24 @@ git check-ignore -v path/to/file
 
 Use this when `.gitignore` behavior is confusing.
 
+
+## `git check-ref-format`
+
+### What it does
+
+Checks whether a proposed branch, tag, or other Git reference name is valid.
+
+### Common syntax
+
+```powershell
+git check-ref-format "refs/tags/component/v1.0.0"
+```
+
+### Notes
+
+Supply the complete reference when validating a tag name. A valid name normally produces no output and returns exit status `0`.
+
+---
 
 ## `git checkout`
 
@@ -501,40 +568,41 @@ Use `git init` when you are starting a new local repository from an existing fol
 
 ### What it does
 
-Saves staged changes into local Git history.
+Creates a commit from staged changes.
 
 ### Common syntax
 
 ```bash
-git commit -m "Describe what changed"
-git commit -m "Summary" -m "Longer body explaining why."
-git commit --amend -m "Corrected commit message"
+git commit -m "Subject"
+git commit -m "Subject" -m "Body paragraph."
+git commit -F commit-message.txt
+git commit --amend
 ```
 
-### Required parameters
+PowerShell multiline body:
 
-| Parameter | Required? | Meaning |
-|---|---:|---|
-| Staged changes | Yes | Git needs staged changes to create a normal commit. |
-| Commit message | Yes | Describes the commit. |
+```powershell
+git commit -m "Subject" -m @'
+Body paragraph.
 
-### Optional parameters
+- First item
+- Second item
+'@
+```
+
+### Useful options
 
 | Option | Meaning |
 |---|---|
-| `-m "message"` | Supplies a commit message from the command line. |
-| Multiple `-m` flags | First `-m` is summary; later `-m` values form the body paragraphs. |
-| `--amend` | Replaces the most recent commit. Use carefully after pushing. |
+| `-m <message>` | Supply a message paragraph. Repeated `-m` values become separate paragraphs. |
+| `-F <file>` | Read the complete message from a file; `-F -` reads standard input. |
+| `--amend` | Replace the latest commit with a new commit containing the current staged snapshot and/or corrected message. |
+| `--no-edit` | Reuse the existing message while amending. |
+| `-v` | Show the diff in the editor template. |
 
 ### Notes
 
-A one-line commit message is often enough.
-
-A commit body is optional and useful when the why/context matters.
-
-Commit-message prefixes such as `docs:`, `fix:`, `feat:`, and `chore:` are conventions, not Git commands.
-
----
+A malformed quoted message can leave extra words for Git to interpret as pathspecs. Check `git status`, then use a here-string, editor, or message file.
 
 ## `git config`
 
@@ -928,33 +996,29 @@ Use this to inspect LF/CRLF behavior after adding `.gitattributes`.
 
 ### What it does
 
-Shows references available in a remote repository.
+Lists references advertised by a remote repository without updating local refs.
 
 ### Common syntax
 
-```powershell
+```bash
+git ls-remote origin
+git ls-remote --heads origin
+git ls-remote --tags origin
 git ls-remote --tags origin v1.0.0
+git ls-remote --tags origin component/v1.0.0
 ```
 
-### Required parameters
-
-| Parameter | Required? | Meaning |
-|---|---:|---|
-| Remote name or URL | Usually | Example: `origin`. |
-| Pattern | Optional | Example: `v1.0.0`. |
-
-### Optional parameters
+### Useful options
 
 | Option | Meaning |
 |---|---|
-| `--tags` | Shows tags from the remote. |
-| `--heads` | Shows branches from the remote. |
+| `--heads` | Show branch references. |
+| `--tags` | Show tag references. |
+| Pattern | Limit output to matching refs. |
 
 ### Notes
 
-Useful after replacing a pushed tag to verify the remote tag exists.
-
----
+Use targeted `--tags` queries to verify whether a remote tag exists. Annotated tags may produce a tag-object line and a peeled `^{}` target line.
 
 ## `git rev-list`
 
@@ -1113,7 +1177,7 @@ Run `git status` first if you have local changes.
 
 ### What it does
 
-Sends local commits or tags to a remote repository.
+Updates branches, tags, or other references on a remote and transfers necessary objects.
 
 ### Common syntax
 
@@ -1122,44 +1186,23 @@ git push
 git push origin main
 git push -u origin main
 git push origin v1.0.0
-git push origin --delete branch-name
-git push --force-with-lease
+git push origin component/v1.0.0
+git push origin --delete v1.0.0
 ```
 
-### Required parameters
-
-| Parameter | Required? | Meaning |
-|---|---:|---|
-| None | No, if upstream tracking is configured | Pushes current branch to its upstream. |
-| Remote and branch/tag | Required in many first-time or explicit pushes | Example: `origin main` or `origin v1.0.0`. |
-
-### Optional parameters
+### Useful options
 
 | Option | Meaning |
 |---|---|
-| `-u` or `--set-upstream` | Sets upstream tracking for future plain `git push` and `git pull`. |
-| `--follow-tags` | Pushes annotated tags reachable from pushed commits. |
-| `--tags` | Pushes all tags. Use carefully. |
-| `origin main` | Explicitly pushes local `main` to remote `origin`. |
-| `origin vX.Y.Z` | Explicitly pushes one version tag. |
-| `--delete branch-name` | Deletes a branch on the remote. |
-| `--force-with-lease` | Safer force-push; useful after rebasing a private branch. Use carefully. |
+| `-u`, `--set-upstream` | Explicitly set upstream tracking for a successfully pushed or up-to-date branch. |
+| `--delete <ref>` | Delete the named remote branch or tag reference. |
+| `--tags` | Push all local tags missing from the remote; review first. |
+| `--follow-tags` | Also push reachable annotated tags missing from the remote. |
+| `--force-with-lease` | Safer force update that checks the expected remote state. |
 
 ### Notes
 
-Plain `git push` uses the current branch's configured upstream/push settings. It is often equivalent to `git push origin main` when you are on `main` and tracking `origin/main`, but the explicit form is clearer for careful release work.
-
-Plain `git push` does not necessarily push new tags. Push version tags explicitly:
-
-```bash
-git push origin v1.0.0
-```
-
-Use `--force-with-lease` only when you intentionally rewrote history and it is safe to update the remote branch.
-
-For careful versioned updates, `git push origin main` can be clearer than plain `git push`.
-
----
+`git push origin main` explicitly pushes local `main`; it does not itself include the upstream-setting request. Tracking may already exist or may be established by configuration. Push branches and release tags separately when clarity matters.
 
 ## `git rebase`
 
@@ -1610,105 +1653,57 @@ Use `git switch` instead of older `git checkout` for clearer branch switching.
 
 ### What it does
 
-Lists, creates, deletes, or inspects tags.
+Lists, creates, verifies, or deletes tag references.
 
 ### Common syntax
 
 ```bash
 git tag --list
+git tag --list "component/*" --sort=-version:refname
 git tag -a v1.0.0 -m "Version 1.0.0"
-git push origin v1.0.0
+git tag -a component/v1.0.0 -m "Release Component v1.0.0"
+git tag -d v1.0.0
+git tag -n99 v1.0.0
 ```
 
-### Required parameters
-
-| Parameter | Required? | Meaning |
-|---|---:|---|
-| Tag name | Required when creating or deleting | Example: `v1.0.0`. |
-| Tag message | Required for annotated tag with `-a` when using `-m` | Example: `"Version 1.0.0"`. |
-
-### Optional parameters
+### Useful options
 
 | Option | Meaning |
 |---|---|
-| `--list` | Lists tags. |
-| `-a` | Creates an annotated tag. |
-| `-s` | Creates a signed annotated tag using a configured signing key. |
-| `-m "message"` | Supplies the annotated tag message. |
-| `-d tag-name` | Deletes a local tag. |
-| `-n` | Shows tag annotations. |
+| `-a` | Create an annotated tag. |
+| `-m <message>` | Supply the annotation message. |
+| `-d <tag>` | Delete a local tag reference. |
+| `--list [pattern]` | List tags, optionally filtering by pattern. |
+| `--sort=<key>` | Sort output, including version-aware `version:refname`. |
+| `-n<number>` | Show up to the requested annotation lines. |
 
 ### Notes
 
-For meaningful versions, prefer annotated tags:
+A namespaced name such as `component/v1.0.0` is a normal tag name. Deleting a tag does not delete its commit. Push or delete the remote copy separately with `git push`.
+
+## `.gitignore`, `.git/info/exclude`, and global ignores
+
+### What they do
+
+Provide ignore patterns for intentionally untracked paths.
+
+| Source | Scope | Shared? |
+|---|---|---:|
+| `.gitignore` | Repository/directory | Yes, when committed |
+| `.git/info/exclude` | One clone | No |
+| `core.excludesFile` | One user's repositories | No |
+
+### Common diagnostics
 
 ```bash
-git tag -a v1.0.0 -m "Version 1.0.0"
-git push origin v1.0.0
+git check-ignore -v path/to/file
+git status --ignored
+git ls-files --others --ignored --exclude-standard
 ```
 
----
+### Notes
 
----
-
-# `.gitattributes` quick reference
-
-`.gitattributes` is not a Git command. It is a repository file that tells Git how to treat matching paths.
-
-Common line-ending starter rules:
-
-```gitattributes
-* text=auto
-*.md   text eol=crlf
-*.html text eol=crlf
-*.css  text eol=crlf
-*.js   text eol=crlf
-*.ps1  text eol=crlf
-*.sh   text eol=lf
-*.png  binary
-*.jpg  binary
-*.gif  binary
-*.webp binary
-```
-
-Use:
-
-```powershell
-git ls-files --eol
-```
-
-to inspect the result.
-
-
----
-
-# Repository hygiene quick reference
-
-## `.gitignore`
-
-`.gitignore` is not a Git command. It is a file of patterns that tells Git which untracked files to ignore.
-
-Example:
-
-```gitignore
-*.log
-.env
-dist/
-build/
-.vscode/
-```
-
-Important:
-
-```text
-.gitignore only ignores untracked files.
-```
-
-To stop tracking a file while keeping it locally:
-
-```powershell
-git rm --cached file-name
-```
+Ignore rules do not stop tracking files already in the index. Use `git rm --cached` when appropriate.
 
 ## `.gitkeep`
 
@@ -1780,7 +1775,7 @@ Returns `True` if `.gitattributes` exists at the current path and `False` if it 
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.19.1` |
+| `vX.Y.Z` | Version tag placeholder | `v1.20.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 

@@ -1,8 +1,8 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.19.1  
-**Full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
-**Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)  
+**Version:** v1.20.0
+**Full guide:** [`git-repository-guide.md`](git-repository-guide.md)
+**Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
 
 ## Path
@@ -628,6 +628,76 @@ git diff --cached --stat
 git diff --cached --name-status --find-renames
 ```
 
+
+## Multiline commit bodies
+
+PowerShell:
+
+```powershell
+git commit -m "Subject" -m @'
+Body paragraph.
+
+- First item
+- Second item
+'@
+```
+
+Cross-shell message file:
+
+```powershell
+git commit -F commit-message.txt
+```
+
+## Upstream tracking
+
+```powershell
+# First explicit push and tracking setup
+git push -u origin main
+
+# Verify
+git branch -vv
+git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}"
+
+# Set separately
+git branch --set-upstream-to=origin/main main
+
+# Remove tracking only
+git branch --unset-upstream
+```
+
+## Namespaced tags
+
+```powershell
+git check-ref-format "refs/tags/component/v1.0.0"
+git tag -a component/v1.0.0 -m "Release Component v1.0.0"
+git push origin component/v1.0.0
+git tag --list "component/*" --sort=-version:refname
+```
+
+## Delete a tag locally and remotely
+
+```powershell
+git tag -d v1.0.0
+git push origin --delete v1.0.0
+
+git tag --list v1.0.0
+git ls-remote --tags origin v1.0.0
+git log --oneline --decorate -10
+```
+
+## Shared and local ignore rules
+
+| Rule file | Scope | Committed? |
+|---|---|---:|
+| `.gitignore` | Shared project | Usually yes |
+| `.git/info/exclude` | One clone | No |
+| Global `core.excludesFile` | All repos for one user | No |
+
+```powershell
+git check-ignore -v path/to/file
+git status --ignored
+git ls-files --others --ignored --exclude-standard
+```
 
 ## Consolidated defaults and verification
 

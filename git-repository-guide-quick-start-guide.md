@@ -1,8 +1,8 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.19.1  
-**Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)  
-**Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.  
+**Version:** v1.20.0
+**Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)
+**Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
 
 This is the short, practical version of the full Git Repository Guide. It focuses on the common successful path: create a local repo, connect it to GitHub, commit files, create annotated tags, and understand what is included when you download a tagged version.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.19.1
+annotated version tags such as v1.0.0, v1.1.0, v1.20.0
 ```
 
 End result:
@@ -441,6 +441,86 @@ Avoid:
 checked into origin
 ```
 
+
+## Multiline commit body in PowerShell
+
+For a detailed formatted body:
+
+```powershell
+git commit -m "docs: update guide" -m @'
+Add the requested Git workflow guidance.
+
+The update includes:
+
+- Tag deletion and verification
+- Upstream branch tracking
+- Local exclude rules
+- Namespaced tags
+'@
+```
+
+For CMD, run `git commit` and use Git's editor, or place the complete message in a file:
+
+```cmd
+git commit -F commit-message.txt
+```
+
+## First push and upstream tracking
+
+Use this for the first explicit push of a newly initialized `main` branch:
+
+```powershell
+git push -u origin main
+```
+
+The `-u` records `origin/main` as the upstream. Verify:
+
+```powershell
+git branch -vv
+```
+
+After tracking is configured, use `git push` or the explicit `git push origin main`.
+
+## Namespaced tags for a multi-component repository
+
+When several components release independently, use:
+
+```text
+<component-name>/vX.Y.Z
+```
+
+Example:
+
+```powershell
+git tag -a file-set-update-system/v1.0.0 -m "Release File-Set Update System v1.0.0"
+git push origin file-set-update-system/v1.0.0
+```
+
+Use plain `vX.Y.Z` tags when the whole repository releases as one unit.
+
+## Delete and verify a tag
+
+```powershell
+git tag -d v1.0.0
+git push origin --delete v1.0.0
+
+git tag --list v1.0.0
+git ls-remote --tags origin v1.0.0
+git log --oneline --decorate -10
+```
+
+Deleting the tag does not delete the commit or create a new commit-history entry.
+
+## Shared versus local ignore rules
+
+```text
+.gitignore          shared and normally committed
+.git/info/exclude   private to one clone
+```
+
+Both affect untracked files; neither stops tracking a file that is already tracked.
+
+Use `.gitignore` for project-wide rules. Use `.git/info/exclude` for personal notes, scratch files, or one-clone helper scripts.
 
 ## Consolidated defaults and final verification
 
@@ -989,7 +1069,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.19.1`, and tag messages simple, such as `Version 1.12.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.20.0`, and tag messages simple, such as `Version 1.20.0`.
 
 
 ## Fix commit-message typos

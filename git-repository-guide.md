@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.19.1  
-Previous locked version: v1.19.0  
-Version status: Locked standalone Markdown version  
-Update type: Additive update  
-Versioning method: Document metadata only; no Git repository package required  
-Future edit policy: Do not overwrite this `v1.19.1` file. Save future changes as a new version, such as `v1.19.2` or `v1.20.0`.  
-Current as of: 2026-07-06
+Document version: v1.20.0
+Previous locked version: v1.19.1
+Version status: Locked standalone Markdown version
+Update type: Additive update
+Versioning method: Document metadata only; no Git repository package required
+Future edit policy: Do not overwrite this `v1.20.0` file. Save future changes as a new version, such as `v1.20.1` or `v1.21.0`.
+Current as of: 2026-07-13
 
-Revision note: This `v1.19.1` edition preserves the `v1.19.0` guide and records the final polishing pass that separated GitHub Release guidance from practical `.gitignore` workflows, rebalanced related material across the guide and companion files, and kept related Troubleshooting, Knowledge Base, command-reference, and index entries in their appropriate appendices.
+Revision note: This `v1.20.0` edition preserves the `v1.19.1` guide and adds integrated guidance for deleting local and remote tags without changing commit history, verifying tag removal and annotated-tag targets, creating shell-safe multiline commit bodies, distinguishing shared `.gitignore` rules from clone-local `.git/info/exclude` rules, using namespaced tags in multi-component repositories, and explicitly configuring and checking upstream branch tracking. Companion files, metadata, indexes, references, and version history are synchronized.
 
 ---
 
@@ -52,7 +52,7 @@ Revision note: This `v1.19.1` edition preserves the `v1.19.0` guide and records 
 - [36. Consolidated Git Workflow Defaults and Verification Checklists](#36-consolidated-git-workflow-defaults-and-verification-checklists)
 - [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording)
 - [38. GitHub Releases, Release Notes, and Release Assets](#38-github-releases-release-notes-and-release-assets)
-- [39. `.gitignore` and Ignored File Workflows](#39-gitignore-and-ignored-file-workflows)
+- [39. `.gitignore`, `.git/info/exclude`, and Ignored File Workflows](#39-gitignore-gitinfoexclude-and-ignored-file-workflows)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -88,7 +88,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, `v1.19.1`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, `v1.19.1`, `v1.20.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1437,20 +1437,28 @@ Recommended history:
 |---|---|
 | `v0.1.0` | Original pre-release draft |
 | `v1.0.0` | First complete locked baseline |
-| `v1.1.0` | Additive expansion with expanded Git reference and Knowledge Base |
-| `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
-| `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
-| `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
-| `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
-| `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, and source ZIP vs. release asset ZIP behavior |
-| `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
-| `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, and Markdown reference updates |
-| `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
-| `v1.10.0` | Additive expansion covering project identity, canonical URL, GitHub Release notes, release documentation files, and import-note examples for reconstructed repositories |
-| `v1.11.0` | Additive expansion covering commit-message typo detection, commit-message correction, amend/rebase workflows, pushed-history safety, and force-with-lease guidance |
-| `v1.12.0` | Additive expansion covering commit-message prefixes, prefix selection, Conventional Commit-style examples, scopes, breaking changes, and tag-message distinctions |
-| `v1.11.1` | Patch correction clarifying stable internal repository filenames while preserving versioned standalone download filename examples and historical changelog entries when intentional |
-
+| `v1.1.0` | Expanded Git reference and Knowledge Base |
+| `v1.2.0` | Repository packaging, push workflows, branch workflows, and Git object-count guidance |
+| `v1.3.0` | File updates, fetch/pull/merge/rebase, conflict resolution, and Git tooling |
+| `v1.4.0` | File/folder operations and direct-to-`main` versus working-branch workflows |
+| `v1.5.0` | Commit-message/body guidance and initial-commit examples |
+| `v1.6.0` | Practical staging, tag snapshots, source ZIPs, release assets, and companion guides |
+| `v1.7.0` | Tag comparison, version diffs, and Pull Request workflows |
+| `v1.8.0` | Tracked-file renames, `git mv`, rename detection, Markdown reference updates, and command quick reference |
+| `v1.9.0` | Historical reconstruction, production tags, tag repair, GitHub Releases, and line endings |
+| `v1.10.0` | Project identity, canonical URLs, release notes, and import documentation |
+| `v1.11.0` | Commit-message correction, amend/rebase workflows, and pushed-history safety |
+| `v1.11.1` | Stable active filenames and corrected internal links |
+| `v1.12.0` | Commit-message prefixes, scopes, breaking-change notation, and tag-message distinctions |
+| `v1.13.0` | Explicit branch/tag push workflows, repository hygiene, GitHub topics, and `.gitignore` foundations |
+| `v1.14.0` | GitHub file search, tag inspection, commit-history lookup, and pager guidance |
+| `v1.15.0` | Related-repository linking and multi-repository release workflows |
+| `v1.16.0` | Repository, folder, project, and remote rename workflows |
+| `v1.17.0` | Consolidated defaults, pre-release/stable tags, publishing readiness, and verification checklists |
+| `v1.18.0` | Staging scope, rename review, `.gitattributes` checks, and precise `origin` wording |
+| `v1.19.0` | GitHub Release publishing and practical `.gitignore` guidance |
+| `v1.19.1` | Polished and rebalanced release and ignore-file material |
+| `v1.20.0` | Tag deletion and verification, multiline commit-body CLI methods, local excludes, namespaced tags, and upstream tracking |
 ### Commit messages, tag names, tag messages, and changelog entries
 
 These are related but not the same thing.
@@ -3342,6 +3350,136 @@ Body
 
 Git separates the summary and body with a blank line.
 
+### Choose a command-line method by message complexity
+
+| Situation | Recommended method |
+|---|---|
+| Subject only | One `-m` argument |
+| Subject plus a short body | Two `-m` arguments |
+| Detailed multiline body in PowerShell | A literal here-string as the second `-m` argument |
+| Detailed multiline body in CMD | Run `git commit` and use Git's editor, or use `git commit -F message.txt` |
+| Reusable or shell-independent message | Store the full message in a file and use `git commit -F <file>` |
+
+Repeated `-m` arguments create separate message paragraphs. For example:
+
+```powershell
+git commit -m "Create initial AWS Hello World microservice" -m "Add the initial controller-based ASP.NET Core service." -m "Support local, Docker, and AWS Lambda execution."
+```
+
+Git stores a blank line between those paragraphs. This is useful for distinct paragraphs, but it is awkward for a tightly formatted bullet list.
+
+### PowerShell multiline body with a literal here-string
+
+For a detailed body in PowerShell, use a single-quoted, or **literal**, here-string:
+
+```powershell
+git commit -m "Create initial AWS Hello World microservice" -m @'
+Add the initial controller-based ASP.NET Core service.
+
+The baseline includes:
+
+- Root and /hello endpoints that return "Hello, world!"
+- /health and /help endpoints
+- Local Kestrel and Docker execution
+- AWS Lambda HTTP API hosting support
+- Conditional Swagger/OpenAPI documentation
+'@
+```
+
+The opening `@'` must be followed by a newline. The closing `'@` must be on its own line with no preceding characters. A literal here-string preserves quotation marks, dollar signs, backticks, blank lines, and bullets without variable expansion. PowerShell's official quoting rules describe here-strings as multiline strings and distinguish literal single-quoted here-strings from expandable double-quoted here-strings. [R81]
+
+Use the double-quoted form only when expansion is intentional:
+
+```powershell
+$version = "1.20.0"
+
+git commit -m "Prepare release" -m @"
+Prepare version $version.
+
+- Update metadata
+- Verify the file set
+"@
+```
+
+### PowerShell newline escapes
+
+PowerShell double-quoted strings can use `` `n `` for a newline:
+
+```powershell
+git commit -m "Example subject" -m "First paragraph.`n`nSecond paragraph."
+```
+
+This works, but long escaped strings are harder to read and easier to break. Prefer a literal here-string for a detailed fixed body.
+
+### CMD and cross-shell multiline alternatives
+
+PowerShell here-string syntax does not work in ordinary Windows Command Prompt (`cmd.exe`). From CMD, the simplest detailed-message options are:
+
+```cmd
+git commit
+```
+
+Enter the subject, a blank line, and the body in Git's configured editor.
+
+Or create a UTF-8 text file containing the complete message and run:
+
+```cmd
+git commit -F commit-message.txt
+```
+
+The same `-F` form works in PowerShell, Bash, and other shells. Git documents `-F <file>` as reading the commit message from a file. [R20]
+
+A PowerShell standard-input alternative is:
+
+```powershell
+@'
+Create initial AWS Hello World microservice
+
+Add the initial service and its deployment documentation.
+'@ | git commit -F -
+```
+
+Here, `-` tells Git to read the message from standard input.
+
+### Why a malformed message can produce a `pathspec` error
+
+If shell quoting ends earlier than intended, Git can receive the remaining words as positional arguments. `git commit` may interpret them as file paths or pathspecs and report an error such as:
+
+```text
+error: pathspec 'world! ...' did not match any file(s) known to git
+```
+
+That error usually means the shell split the intended message into multiple arguments. It does not normally unstage the files. Check:
+
+```powershell
+git status
+```
+
+Then rerun the commit with a here-string, editor, or message file.
+
+### Verify the stored message
+
+After committing, inspect the exact message:
+
+```powershell
+git show --no-patch --format=fuller HEAD
+git log -1 --format=%B
+```
+
+If the latest commit is still local and the message is wrong, amend it:
+
+```powershell
+git commit --amend
+```
+
+Or replace it directly:
+
+```powershell
+git commit --amend -m "Corrected subject" -m "Corrected body."
+```
+
+Amending creates a new commit ID. Before pushing, this is normally straightforward; after pushing, use the history-rewrite precautions in [Section 30](#30-correcting-commit-message-mistakes).
+
 ### When to use only the summary
 
 Use only the short commit message when the change is simple or self-explanatory.
@@ -4924,6 +5062,120 @@ Do not confuse these:
 
 Changing a tag message is not the same thing as changing a commit message or GitHub Release notes.
 
+### Delete a tag without changing commit history
+
+A tag can be deleted locally, remotely, or in both places. Deleting the tag removes the name; it does not delete the commit, branch, working tree, staging area, or committed files.
+
+Delete a local tag:
+
+```powershell
+git tag -d v1.0.0
+```
+
+Delete the corresponding tag from `origin`:
+
+```powershell
+git push origin --delete v1.0.0
+```
+
+Delete both copies:
+
+```powershell
+git tag -d v1.0.0
+git push origin --delete v1.0.0
+```
+
+Tag creation and deletion are reference operations, not commits. They do not create entries in `git log`. If `main` still points to the release commit, the commit remains reachable and unchanged.
+
+### Verify that a tag is gone and its commit remains
+
+Check the local tag:
+
+```powershell
+git tag --list v1.0.0
+git show-ref --tags
+```
+
+Check the remote tag:
+
+```powershell
+git ls-remote --tags origin v1.0.0
+```
+
+After successful deletion, the targeted commands normally produce no matching output.
+
+Confirm that the branch and commit remain:
+
+```powershell
+git log --oneline --decorate -10
+git status
+git branch -vv
+```
+
+A compact verification block is:
+
+```powershell
+git tag --list v1.0.0
+git ls-remote --tags origin v1.0.0
+git show --stat HEAD
+git status
+```
+
+### Why the deleted tag ID may differ from the commit ID
+
+An annotated tag has its own tag object:
+
+```text
+Tag object b402c48
+    ↓
+Commit bfdf044
+```
+
+Therefore, this output is normal:
+
+```text
+Deleted tag 'v1.0.0' (was b402c48)
+```
+
+while `git log` shows a different commit ID such as `bfdf044`. The deleted ID can be the annotated tag object's ID; the commit remains reachable through the branch.
+
+Inspect both values before deletion when needed:
+
+```powershell
+git rev-parse v1.0.0
+git rev-parse "v1.0.0^{}"
+```
+
+For an annotated tag, the first command resolves the tag object and the peeled `^{}` form resolves the commit it ultimately references.
+
+### Local-only and remote-only deletion scenarios
+
+| Desired result | Command |
+|---|---|
+| Delete an unpushed local tag | `git tag -d v1.0.0` |
+| Keep the local tag but remove the remote copy | `git push origin --delete v1.0.0` |
+| Remote tag exists but local tag is missing | Verify with `git ls-remote --tags origin v1.0.0`, then delete remotely |
+| Remove both copies | Run both deletion commands |
+
+A remote tag may still exist in another person's clone after they fetched it. Deleting the tag from `origin` does not delete references stored in other clones.
+
+### GitHub Release caution
+
+A GitHub Release and its Git tag are related but separate objects. If a hosted release exists, review or remove the release as well as the tag so the release page, assets, and notes do not misrepresent the repository state.
+
+Treat publicly released tags as immutable whenever practical. Replacing a published tag can confuse users, caches, automation, builds, and deployment records.
+
+### Does pushing a tag push its commit?
+
+When a tag points to an object the remote does not yet have, Git transfers the necessary objects while pushing the tag. However, pushing the tag does not move `origin/main` or another remote branch. For a normal release, push the branch and the intended tag separately:
+
+```powershell
+git push origin main
+git push origin v1.0.0
+```
+
+Git's push documentation describes branch, tag, and other reference updates separately. [R22]
+
 ### Correct a local tag that has not been pushed
 
 Problem:
@@ -6268,7 +6520,9 @@ This section gathers practical repository-maintenance guidance for careful versi
 It covers:
 
 - when plain `git push` behaves like `git push origin main`;
+- how `-u` explicitly sets upstream tracking and how to inspect or remove it;
 - why branch pushes and tag pushes are different;
+- when namespaced tags are useful in a multi-component repository;
 - a repeatable commit, push, and tag checklist;
 - when to work directly on `main` versus a working branch;
 - recommended repository folders;
@@ -6343,6 +6597,93 @@ git push origin main
 
 Git's `git push` documentation describes pushing local refs to remote refs; this is why being explicit about remote and branch can reduce ambiguity. [R22]
 
+### `git push origin main` vs. `git push -u origin main`
+
+Both commands push local `main` to the `main` branch on the remote named `origin`:
+
+```powershell
+git push origin main
+```
+
+```powershell
+git push -u origin main
+```
+
+The `-u` option is shorthand for `--set-upstream`. It explicitly records `origin/main` as the upstream branch for local `main` after a successful or already-up-to-date push. Git then has a default comparison and integration branch for commands such as `git status`, `git pull`, and usually argument-less `git push`. [R22]
+
+Important precision:
+
+```text
+git push origin main
+```
+
+pushes the explicitly named branch but does not itself include the `--set-upstream` request. The upstream may nevertheless already exist because the repository was cloned, because it was configured earlier, or because Git configuration such as `push.autoSetupRemote` established it during another push. Do not assume; verify.
+
+Recommended first explicit push of a newly initialized branch:
+
+```powershell
+git push -u origin main
+```
+
+Recommended later push after tracking is established:
+
+```powershell
+git push
+```
+
+An explicit later push is also valid:
+
+```powershell
+git push origin main
+```
+
+### Check, set, or remove upstream tracking
+
+Check with status:
+
+```powershell
+git status
+```
+
+Check all local branches and their upstreams:
+
+```powershell
+git branch -vv
+```
+
+Print the current branch's upstream exactly:
+
+```powershell
+git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}"
+```
+
+Set tracking without pushing when the remote branch already exists:
+
+```powershell
+git branch --set-upstream-to=origin/main main
+```
+
+When already on `main`:
+
+```powershell
+git branch --set-upstream-to=origin/main
+```
+
+Remove only the tracking relationship:
+
+```powershell
+git branch --unset-upstream
+```
+
+Removing the upstream does not delete the local or remote branch.
+
+The same first-push pattern applies to a new working branch:
+
+```powershell
+git switch -c feature/add-search
+git push -u origin feature/add-search
+```
+
 ### Why branch pushes and tag pushes both matter
 
 A commit, branch, and tag are related but different.
@@ -6409,6 +6750,80 @@ git push --tags
 ```
 
 unless you have checked that every local tag should be published.
+
+### Namespaced tags for independently versioned components
+
+A **namespaced tag** is an ordinary Git tag whose name includes a stable component prefix:
+
+```text
+file-set-update-system/v1.0.0
+```
+
+It is a naming convention, not a third Git tag type. The tag can still be annotated or lightweight. Internally, the complete reference is:
+
+```text
+refs/tags/file-set-update-system/v1.0.0
+```
+
+Use namespaced tags when one repository contains multiple components that release independently:
+
+```text
+file-set-update-system/v1.0.0
+conversation-handoff-system/v1.0.0
+prompt-optimization-system/v2.1.0
+```
+
+This avoids collisions between plain tags such as `v1.0.0` and makes each release self-describing.
+
+Use a plain repository-wide tag such as `v1.20.0` when the entire repository is one product or all components intentionally share a synchronized release version.
+
+Recommended format:
+
+```text
+<component-name>/v<major>.<minor>.<patch>
+```
+
+Recommended rules:
+
+- use a stable lowercase component name;
+- use hyphens between words;
+- use one slash between component and version;
+- keep the `v` prefix consistent;
+- avoid unnecessary namespace depth;
+- treat a published namespace as part of the component's release identity.
+
+Create and push an annotated namespaced tag:
+
+```powershell
+git tag -a file-set-update-system/v1.0.0 -m "Release File-Set Update System v1.0.0"
+git push origin file-set-update-system/v1.0.0
+```
+
+List one component's tags:
+
+```powershell
+git tag --list "file-set-update-system/*"
+git tag --list "file-set-update-system/*" --sort=-version:refname
+```
+
+Validate a proposed full reference name:
+
+```powershell
+git check-ref-format "refs/tags/file-set-update-system/v1.0.0"
+```
+
+A valid name normally produces no output and exits successfully. Git stores tags under `refs/tags/`, and Git's reference-name rules allow slash-delimited components when the complete name is valid. [R80]
+
+Inspect, compare, and delete namespaced tags exactly as you would other tags:
+
+```powershell
+git show file-set-update-system/v1.0.0
+git diff file-set-update-system/v1.0.0 file-set-update-system/v1.1.0
+git tag -d file-set-update-system/v1.0.0
+git push origin --delete file-set-update-system/v1.0.0
+```
+
+A slash represents logical hierarchy in the reference name. Do not depend on a physical `.git/refs/tags/...` directory existing because Git may pack references or use another reference-storage implementation.
 
 ### Consequences of not pushing `main`
 
@@ -7217,7 +7632,7 @@ Each example README should link back to the hub and, when useful, to the previou
 ```markdown
 Part of the [Simple Website Examples](https://github.com/YOUR-USERNAME/simple-website-examples) series.
 
-Previous: [Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)  
+Previous: [Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
 Next: [Example 04 — Multi-Page Site](https://github.com/YOUR-USERNAME/simple-website-example-04-multi-page-site)
 ```
 
@@ -8451,16 +8866,16 @@ A release title is the short display name for the release.
 Recommended GitHub Release title:
 
 ```text
-v1.19.1
+v1.20.0
 ```
 
 or:
 
 ```text
-Version 1.19.1
+Version 1.20.0
 ```
 
-For this guide's convention, concise titles such as `v1.19.0` are usually best on GitHub, while annotated tag messages can use `Version 1.19.0`.
+For this guide's convention, concise titles such as `v1.20.0` are usually best on GitHub, while annotated tag messages can use `Version 1.20.0`.
 
 A release description explains what changed and why it matters.
 
@@ -8517,8 +8932,8 @@ The previous tag controls what GitHub compares against when generating release n
 For a normal next version, compare:
 
 ```text
-previous tag: v1.19.0
-current tag:  v1.19.1
+previous tag: v1.19.1
+current tag:  v1.20.0
 ```
 
 If the previous tag is wrong, generated notes can include too much, too little, or unrelated history.
@@ -8577,21 +8992,21 @@ These are related but not identical.
 
 | Item | Example | Where it lives | Purpose |
 |---|---|---|---|
-| Tag name | `v1.19.1` | Git | Version marker |
-| Annotated tag message | `Version 1.19.1` | Git tag object | Tag annotation |
-| Release title | `v1.19.1` | GitHub Release | Display title |
+| Tag name | `v1.20.0` | Git | Version marker |
+| Annotated tag message | `Version 1.20.0` | Git tag object | Tag annotation |
+| Release title | `v1.20.0` | GitHub Release | Display title |
 | Release notes | Markdown summary | GitHub Release | Explains what changed |
 
 Recommended convention for this guide:
 
 ```bash
-git tag -a v1.19.1 -m "Version 1.19.1"
+git tag -a v1.20.0 -m "Version 1.20.0"
 ```
 
 GitHub Release title:
 
 ```text
-v1.19.1
+v1.20.0
 ```
 
 ### Optional annotated tag body
@@ -8599,7 +9014,7 @@ v1.19.1
 Annotated tags can have more than one `-m` paragraph:
 
 ```bash
-git tag -a v1.19.1 -m "Version 1.19.1" -m "Polish release and ignore-file guidance."
+git tag -a v1.20.0 -m "Version 1.20.0" -m "Add tag deletion, commit-body CLI, local-exclude, namespaced-tag, and upstream-tracking guidance."
 ```
 
 For most beginner documentation workflows, a concise one-line tag message is enough. Put the detailed explanation in the commit body, changelog, and GitHub Release notes.
@@ -8621,13 +9036,43 @@ Do not add signed tags merely for appearance. Poorly managed signing can create 
 
 ---
 
-## 39. `.gitignore` and Ignored File Workflows
+## 39. `.gitignore`, `.git/info/exclude`, and Ignored File Workflows
 
-This section explains the `.gitignore` file and how it fits into safe repository hygiene.
+Git supports several sources of ignore patterns. The two most important for one repository are:
 
-It belongs near the end of the main guide because ignored files affect many workflows: first commits, later updates, release packaging, troubleshooting, and accidental secret prevention.
+```text
+.gitignore          Shared repository rules
+.git/info/exclude   Private local rules for one clone
+```
 
-### `.gitignore` spelling and purpose
+They use the same core pattern language and both affect intentionally untracked files, but they have different audiences and lifecycles.
+
+### Quick comparison
+
+| Question | `.gitignore` | `.git/info/exclude` |
+|---|---|---|
+| Normal location | Repository root or nested directories | Inside the repository's Git metadata directory |
+| Intended audience | Everyone using the project | One user in one clone |
+| Normally committed | Yes | No |
+| Appears on GitHub | Yes, after commit and push | No |
+| Copied by `git clone` | Yes | No |
+| Can `git add .` stage the rule file | Yes | No |
+| Affects matching untracked files | Yes | Yes |
+| Affects already tracked files | No | No |
+
+On Windows, the local file is commonly displayed as:
+
+```text
+.git\info\exclude
+```
+
+Git documentation normally uses the cross-platform form:
+
+```text
+.git/info/exclude
+```
+
+### `.gitignore` spelling, purpose, and placement
 
 The standard filename is exactly:
 
@@ -8635,199 +9080,268 @@ The standard filename is exactly:
 .gitignore
 ```
 
-Important details:
+It starts with a period, has no extension, and should not accidentally become `.gitignore.txt`.
 
-```text
-starts with a period
-has no filename before the period
-has no extension after gitignore
-is lowercase by convention
-may appear hidden in some file managers
-should not be accidentally saved as .gitignore.txt
-```
-
-A `.gitignore` file tells Git which untracked files and folders to ignore.
-
-It is commonly used for:
+A committed `.gitignore` is shared project policy. It commonly excludes:
 
 ```text
 build output
 dependency folders
-temporary files
-log files
-editor or IDE files
-operating-system metadata
+temporary and backup files
+logs
+IDE or operating-system metadata
 local environment files
-local secrets/configuration
+secret-bearing local configuration
+generated packages
 ```
 
-### `.gitignore` is optional but strongly recommended
+The most common location is the repository root, although nested `.gitignore` files are supported. Patterns in nested files apply relative to their directory and can override higher-level rules.
 
-Git does not require `.gitignore`.
+Example:
 
-However, most software and documentation repositories should have one because generated files and local tool files can otherwise clutter `git status` or be committed accidentally.
+```gitignore
+# Visual Studio workspace data
+.vs/
 
-A good beginner rule:
+# .NET build output
+[Bb]in/
+[Oo]bj/
+
+# User-specific project files
+*.user
+*.suo
+
+# Temporary, backup, and log files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.log
+```
+
+Because `.gitignore` is an ordinary working-tree file, stage and commit it:
+
+```powershell
+git add .gitignore
+git commit -m "chore: add repository ignore rules"
+```
+
+### `.git/info/exclude`: private rules for one clone
+
+Use `.git/info/exclude` for repository-specific rules that should remain private to one clone:
+
+```gitignore
+# Personal scratch notes
+local-notes.md
+scratch/
+
+# Personal helper scripts
+run-my-local-test.ps1
+
+# Machine-specific diagnostics
+local-diagnostics/
+```
+
+This file lives inside `.git`, so normal working-tree commands do not stage or commit it. It is not pushed, shown on GitHub, or copied to another clone.
+
+Good uses include:
+
+- personal notes and scratch folders;
+- one-off helper scripts;
+- machine-specific reports;
+- temporary migration comparisons;
+- local output that other contributors may legitimately want to track in their own workflows.
+
+Do not hide project-wide generated files only in `.git/info/exclude`; collaborators would not receive the rule.
+
+### A third level: global personal ignore rules
+
+For patterns you want in every repository on your computer, use the file configured by `core.excludesFile` rather than changing every repository:
+
+```powershell
+git config --global core.excludesFile "$HOME/.config/git/ignore"
+```
+
+This is appropriate for editor backups or operating-system artifacts that are personal and universal. Git's official ignore documentation distinguishes shared `.gitignore`, repository-local `$GIT_COMMON_DIR/info/exclude`, and global `core.excludesFile` rules. [R72] [R84]
+
+### Precedence
+
+Git normally evaluates ignore sources from highest to lowest precedence:
+
+1. command-line patterns for commands that support them;
+2. `.gitignore` files, with lower/deeper files overriding higher ones;
+3. `.git/info/exclude`;
+4. the global file configured by `core.excludesFile`.
+
+Within one precedence level, the last matching pattern decides the result. [R72]
+
+This means a shared `.gitignore` rule can override a lower-precedence local or global rule. Keep patterns narrow and use diagnostics rather than guessing.
+
+### The most important rule: ignored does not mean untracked retroactively
+
+Ignore rules apply to files Git is not already tracking.
+
+If a file is already tracked, adding a matching rule does not remove it from the index or history. Changes continue to appear in `git status`.
+
+Stop tracking one file while keeping it locally:
+
+```powershell
+git rm --cached appsettings.Local.json
+git commit -m "chore: stop tracking local application settings"
+```
+
+Stop tracking a directory while keeping it locally:
+
+```powershell
+git rm -r --cached .vs
+git commit -m "chore: stop tracking Visual Studio workspace files"
+```
+
+A broad index refresh is possible:
+
+```powershell
+git rm -r --cached .
+git add .
+```
+
+but use it cautiously because it restages the whole repository.
+
+### How ignore rules affect `git add .`
+
+Both `.gitignore` and `.git/info/exclude` normally prevent matching **untracked** files from being staged by broad commands such as:
+
+```powershell
+git add .
+```
+
+The rule file itself behaves differently:
 
 ```text
-If the file is generated, local-only, machine-specific, secret, or easily recreated, it probably belongs in .gitignore.
+.gitignore          ordinary file; can be staged and committed
+.git/info/exclude   Git metadata; not part of the working tree
 ```
 
-### Where `.gitignore` goes
+Git can force-add an ignored file:
 
-The most common location is the repository root:
-
-```text
-my-project/
-  .git/
-  .gitignore
-  README.md
-  src/
-```
-
-Git also supports nested `.gitignore` files inside subdirectories.
-
-For a small or medium project, begin with one `.gitignore` in the repository root. Add nested files only when they improve clarity.
-
-### What ignore means
-
-Ignoring is not deleting.
-
-Ignoring is not encryption.
-
-Ignoring is not access control.
-
-Ignoring normally means:
-
-```text
-Git does not show the matching untracked file in the normal untracked-file list.
-Git does not add it through ordinary broad staging commands.
-The file still exists locally.
-The file is not automatically protected from other programs or users on the computer.
-```
-
-### `.gitignore` does not affect already tracked files
-
-Important:
-
-```text
-.gitignore affects untracked files.
-It does not stop tracking files that are already tracked.
-```
-
-If a file is already tracked and should become ignored, remove it from Git's index while keeping it locally:
-
-```bash
-git rm --cached path/to/file
-git commit -m "chore: stop tracking generated file"
-```
-
-For a tracked folder:
-
-```bash
-git rm -r --cached path/to/folder
-git commit -m "chore: stop tracking generated folder"
-```
-
-### Check ignore behavior
-
-See whether a file is ignored and why:
-
-```bash
-git check-ignore -v path/to/file
-```
-
-Show ignored files in status:
-
-```bash
-git status --ignored
-```
-
-Force-add an ignored file only when you intentionally want to override the rule:
-
-```bash
+```powershell
 git add -f path/to/file
 ```
 
-### Starter `.gitignore` patterns
+Use `-f` only when the exception is intentional.
 
-Common examples:
+### Pattern examples
 
 ```gitignore
-# Build output
-bin/
-obj/
-dist/
-build/
+# Exact file in the scope root
+/local-only.txt
 
-# Dependencies
-node_modules/
+# Directory at any level beneath this rule's scope
+cache/
 
-# Logs and temporary files
-*.log
+# Extension
 *.tmp
 
-# Local environment files
-.env
-.env.*
+# Common case variants
+[Bb]in/
+[Oo]bj/
 
-# Editor and OS files
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
+# Ignore everything in a directory except one file
+reports/*
+!reports/README.md
 
-# User-specific files
-*.user
-*.suo
+# Literal leading comment or negation characters
+\#notes.txt
+\!important.txt
 ```
 
-Adjust these rules for the project. Do not blindly copy ignore rules that might hide files you actually need to commit.
+Remember that Git cannot re-include a file if an ancestor directory itself remains excluded. Pattern placement and order matter. [R72]
 
-### `.gitignore`, `.gitattributes`, and `.gitkeep`
+### Diagnostic commands
 
-These files solve different problems.
+Explain the exact matching rule:
 
-| File | Purpose |
-|---|---|
-| `.gitignore` | Ignore untracked generated/local files |
-| `.gitattributes` | Control text/binary handling, line endings, diff/merge behavior, and archive/export attributes |
-| `.gitkeep` | Placeholder convention for keeping an otherwise empty folder in Git |
-
-`.gitkeep` is not a Git feature. It is just a commonly used placeholder filename.
-
-### Release-ready ignore-file checklist
-
-Before publishing a GitHub Release:
-
-```text
-README is current.
-CHANGELOG has the new version.
-.gitignore exists if the project needs it.
-.gitattributes policy is correct if line endings matter.
-No secrets or local-only files are staged.
-Commit has been pushed.
-Annotated tag has been created and pushed.
-GitHub Release uses the intended tag.
-Previous tag comparison is correct.
-Release title is clear.
-Release notes explain the user-facing changes.
-Optional assets are intentional.
-```
-
-Useful commands:
-
-```bash
-git status --short
-git diff --cached --stat
-git log --oneline --decorate -5
-git tag --list
-git show vX.Y.Z
-git ls-remote --tags origin vX.Y.Z
+```powershell
 git check-ignore -v path/to/file
+```
+
+Show ignored paths in status:
+
+```powershell
 git status --ignored
 ```
 
+List ignored untracked files:
+
+```powershell
+git ls-files --others --ignored --exclude-standard
+```
+
+Check whether a path is already tracked:
+
+```powershell
+git ls-files --error-unmatch path/to/file
+```
+
+Show tracked files matching a pattern:
+
+```powershell
+git ls-files "*.log"
+```
+
+`git check-ignore` can report rules from `.gitignore`, `.git/info/exclude`, and other standard exclusion sources. [R83]
+
+### Decision guide
+
+| Situation | Best location |
+|---|---|
+| Everyone should ignore build output | `.gitignore` |
+| Everyone should ignore local secret-bearing config | `.gitignore` |
+| Only this clone should ignore personal notes | `.git/info/exclude` |
+| Only this clone should ignore a one-off helper script | `.git/info/exclude` |
+| Every repository on this computer should ignore editor backups | Global `core.excludesFile` |
+| The file is already tracked | Remove it from the index first; an ignore rule alone is insufficient |
+
+### `.gitignore`, `.gitattributes`, and `.gitkeep`
+
+| File | Purpose |
+|---|---|
+| `.gitignore` | Shared rules for intentionally untracked files |
+| `.git/info/exclude` | Clone-local rules for intentionally untracked files |
+| `.gitattributes` | Text/binary handling, line endings, diff/merge, and archive attributes |
+| `.gitkeep` | Conventional placeholder for an otherwise empty folder |
+
+`.gitkeep` is not a special Git feature.
+
+### Common misunderstandings
+
+- **“If it is ignored, Git can never commit it.”** Git can force-add it, and already tracked files remain tracked.
+- **“Adding `.gitignore` removes matching files.”** It does not; use `git rm --cached` when appropriate.
+- **“`.git/info/exclude` is sent to GitHub.”** It is local Git metadata.
+- **“`git add .` stages `.git/info/exclude`.”** It does not live in the working tree.
+- **“Personal preferences always belong in `.gitignore`.”** Use the local or global exclude mechanisms when the rule should not become shared project policy.
+
+### Release-ready ignore-file checklist
+
+Before publishing a release:
+
+```text
+Shared ignore rules are committed when needed.
+Personal-only rules remain outside the tracked file set.
+No secrets or local-only artifacts are staged.
+Already tracked generated files were handled intentionally.
+Ignore behavior was checked with git check-ignore -v or git status --ignored.
+README, CHANGELOG, branch, tag, and release metadata are current.
+```
+
+Useful final commands:
+
+```powershell
+git status --short
+git diff --cached --stat
+git check-ignore -v path/to/file
+git status --ignored
+git ls-files --others --ignored --exclude-standard
+```
 
 # Appendix A: Expanded Git Command Reference
 
@@ -9661,6 +10175,61 @@ Returns `True` if `.gitattributes` exists at the current path and `False` if it 
 Use `git rev-parse --show-toplevel` first if you are unsure whether you are in the repo root.
 
 
+## A.3 Commands added or expanded in v1.20.0
+
+### Validate a tag or branch reference name
+
+```powershell
+git check-ref-format "refs/tags/component/v1.0.0"
+```
+
+A valid complete reference normally exits successfully without output.
+
+### Read a commit message from a file or standard input
+
+```powershell
+git commit -F commit-message.txt
+```
+
+```powershell
+@'
+Subject
+
+Body.
+'@ | git commit -F -
+```
+
+### Check, set, and remove upstream tracking
+
+```powershell
+git branch -vv
+git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}"
+git branch --set-upstream-to=origin/main main
+git branch --unset-upstream
+```
+
+### List and verify tags on a remote
+
+```powershell
+git ls-remote --tags origin
+git ls-remote --tags origin v1.0.0
+```
+
+### Delete a tag locally and remotely
+
+```powershell
+git tag -d v1.0.0
+git push origin --delete v1.0.0
+```
+
+### Work with namespaced tags
+
+```powershell
+git tag -a component/v1.0.0 -m "Release Component v1.0.0"
+git push origin component/v1.0.0
+git tag --list "component/*" --sort=-version:refname
+```
+
 # Appendix B: Expanded VS Code Reference
 
 ## B.1 Source Control view
@@ -10156,6 +10725,82 @@ Not:
 ```
 
 Also make sure it is in the intended repository folder.
+
+## E. Commit-body, upstream, tag-deletion, and local-ignore problems
+
+### PowerShell reports a `pathspec` error during `git commit`
+
+Likely cause: quoting ended early and Git interpreted part of the intended message as a file path.
+
+```powershell
+git status
+```
+
+Then retry with a literal here-string, Git's editor, or `git commit -F message.txt`.
+
+### Plain `git push` says the branch has no upstream
+
+Set it explicitly on the first push:
+
+```powershell
+git push -u origin main
+```
+
+Or, when `origin/main` already exists:
+
+```powershell
+git branch --set-upstream-to=origin/main main
+```
+
+Verify with:
+
+```powershell
+git branch -vv
+```
+
+### The tag was deleted locally but still appears on GitHub
+
+Delete the remote reference too:
+
+```powershell
+git push origin --delete v1.0.0
+```
+
+### The remote tag was deleted but it still appears locally
+
+Delete the local reference:
+
+```powershell
+git tag -d v1.0.0
+```
+
+### Tag deletion output shows a different ID than `git log`
+
+For an annotated tag, the deletion output may show the tag object's ID rather than the commit ID. Verify the peeled target with:
+
+```powershell
+git rev-parse "v1.0.0^{}"
+```
+
+### A personal file keeps appearing in `git status`, but it should not become project policy
+
+Add a narrow pattern to:
+
+```text
+.git/info/exclude
+```
+
+If the file is already tracked, a local ignore rule will not hide its changes; decide whether it should remain tracked or be removed from the index.
+
+### A namespaced tag command fails
+
+Validate the complete reference:
+
+```powershell
+git check-ref-format "refs/tags/component/v1.0.0"
+```
+
+Check for spaces, repeated separators, invalid punctuation, or a collision with an existing reference.
 
 # Appendix F: Knowledge Base and How-To Reference
 
@@ -12536,6 +13181,63 @@ git check-ignore -v path/to/file
 | `.gitkeep` | Placeholder convention for keeping an otherwise empty folder in Git |
 
 
+## F.223 What is the difference between `.gitignore` and `.git/info/exclude`?
+
+`.gitignore` is normally committed and shared. `.git/info/exclude` is private to one clone and is not committed, pushed, or copied by `git clone`.
+
+## F.224 Does `.git/info/exclude` affect already tracked files?
+
+No. Like `.gitignore`, it applies to intentionally untracked files. Already tracked files remain tracked.
+
+## F.225 What is a namespaced Git tag?
+
+It is a normal tag with a component prefix, such as `file-set-update-system/v1.0.0`. The slash-delimited prefix is a naming convention inside Git's `refs/tags/` namespace, not a separate tag type.
+
+## F.226 When should I use namespaced tags?
+
+Use them when one repository contains multiple independently versioned components. Use plain `vX.Y.Z` tags when the repository releases as one unit.
+
+## F.227 What is the difference between `git push origin main` and `git push -u origin main`?
+
+Both push local `main` to `origin/main`; `-u` explicitly sets `origin/main` as the upstream. The non-`-u` command does not itself request that tracking change, although tracking may already exist or be established by configuration.
+
+## F.228 How do I check, set, or remove an upstream?
+
+```powershell
+git branch -vv
+git branch --set-upstream-to=origin/main main
+git branch --unset-upstream
+```
+
+## F.229 What is the safest CLI method for a detailed multiline commit body in PowerShell?
+
+Use a literal here-string as the second `-m` argument. It preserves quotes, bullets, and blank lines without variable expansion.
+
+## F.230 What should I use for a multiline commit body in CMD?
+
+Run `git commit` and use the configured editor, or save the complete message in a file and run `git commit -F message.txt`.
+
+## F.231 Why did a commit-message command produce a `pathspec` error?
+
+Shell quoting probably ended early, so Git treated leftover message text as file paths. Confirm the staging state with `git status`, then retry with safer quoting.
+
+## F.232 Does deleting a tag change commit history?
+
+No. Tag deletion removes a reference name. It does not create a commit or remove the commit from `git log` when the commit remains reachable.
+
+## F.233 Why can an annotated tag ID differ from its commit ID?
+
+An annotated tag has its own tag object. `git rev-parse tag-name` can resolve that object, while `git rev-parse "tag-name^{}"` peels the tag to its target commit.
+
+## F.234 How do I verify a local and remote tag are gone?
+
+```powershell
+git tag --list v1.0.0
+git ls-remote --tags origin v1.0.0
+```
+
+No matching output means the targeted reference is absent from that location. Then use `git log`, `git show`, or `git branch -vv` to confirm the commit and branch remain.
+
 # Appendix G: Command Sequences and Workflow Recipes
 
 This appendix is intentionally workflow-oriented.
@@ -13917,6 +14619,64 @@ Use each one for its own purpose.
 
 ---
 
+## J.7 Detailed PowerShell body with a literal here-string
+
+```powershell
+git commit -m "docs: expand Git repository guide" -m @'
+Add integrated guidance for tag deletion, upstream tracking, local exclude rules, namespaced tags, and multiline commit messages.
+
+The update also synchronizes:
+
+- README and version history
+- Quick-start and cheat-sheet material
+- Command reference and troubleshooting
+'@
+```
+
+## J.8 Reusable cross-shell message file
+
+`commit-message.txt`:
+
+```text
+docs: expand Git repository guide
+
+Add integrated guidance for advanced everyday Git workflows.
+```
+
+Command:
+
+```powershell
+git commit -F commit-message.txt
+```
+
+## J.9 Read the message from PowerShell standard input
+
+```powershell
+@'
+docs: expand Git repository guide
+
+Add integrated guidance and synchronize companion files.
+'@ | git commit -F -
+```
+
+## J.10 Verify the exact stored message
+
+```powershell
+git log -1 --format=%B
+git show --no-patch --format=fuller HEAD
+```
+
+## J.11 Repair the latest local message
+
+```powershell
+git commit --amend -m "Corrected subject" -m @'
+Corrected multiline body.
+
+- First item
+- Second item
+'@
+```
+
 # Appendix K: Practical Staging, Tag, and Download Scenarios
 
 This appendix expands [Section 23](#23-practical-staging-and-tag-snapshot-example) with compact recipes and Q&A-style reminders.
@@ -14793,6 +15553,48 @@ Before replacing the tag:
 
 ---
 
+## Q.8 Delete a local and remote tag without recreating it
+
+```powershell
+git tag -d v1.0.0
+git push origin --delete v1.0.0
+```
+
+## Q.9 Verify deletion and preserved history
+
+```powershell
+git tag --list v1.0.0
+git ls-remote --tags origin v1.0.0
+git log --oneline --decorate -10
+git status
+```
+
+## Q.10 Keep the local tag but remove the remote copy
+
+```powershell
+git push origin --delete v1.0.0
+```
+
+## Q.11 Remove an unpushed local tag only
+
+```powershell
+git tag -d v1.0.0
+```
+
+## Q.12 Compare annotated tag object and commit IDs
+
+```powershell
+git rev-parse v1.0.0
+git rev-parse "v1.0.0^{}"
+```
+
+## Q.13 Delete a namespaced tag
+
+```powershell
+git tag -d component/v1.0.0
+git push origin --delete component/v1.0.0
+```
+
 # Appendix R: Line-Ending and `.gitattributes` Scenarios
 
 This appendix expands [Section 29](#29-line-endings-lf-crlf-and-gitattributes).
@@ -15384,6 +16186,58 @@ Use this after adding or changing `.gitattributes`.
 
 ---
 
+## U.12 Explicit first push with upstream tracking
+
+```powershell
+git push -u origin main
+```
+
+Verify:
+
+```powershell
+git branch -vv
+git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}"
+```
+
+## U.13 Set or remove upstream separately
+
+```powershell
+git branch --set-upstream-to=origin/main main
+git branch --unset-upstream
+```
+
+## U.14 Namespaced component release
+
+```powershell
+git push origin main
+git tag -a component/v1.0.0 -m "Release Component v1.0.0"
+git push origin component/v1.0.0
+git ls-remote --tags origin component/v1.0.0
+```
+
+## U.15 Shared versus clone-local ignore rule
+
+Shared rule:
+
+```text
+.gitignore
+```
+
+Clone-local rule:
+
+```text
+.git/info/exclude
+```
+
+## U.16 Tag-deletion verification
+
+```powershell
+git tag -d component/v1.0.0
+git push origin --delete component/v1.0.0
+git tag --list component/v1.0.0
+git ls-remote --tags origin component/v1.0.0
+```
+
 # Appendix V: GitHub File Search, Tag Inspection, and Commit History Scenarios
 
 This appendix expands [Section 33](#33-github-file-search-tag-inspection-and-commit-history-lookup).
@@ -15631,7 +16485,7 @@ A progressive series of plain HTML, CSS, and JavaScript examples.
 ```markdown
 Part of the [Simple Website Examples](https://github.com/YOUR-USERNAME/simple-website-examples) series.
 
-Previous: [Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)  
+Previous: [Example 02 — Basic Site Files](https://github.com/YOUR-USERNAME/simple-website-example-02-basic-site-files)
 Next: [Example 04 — Multi-Page Site](https://github.com/YOUR-USERNAME/simple-website-example-04-multi-page-site)
 ```
 
@@ -16028,230 +16882,297 @@ git commit -m "chore: rename project references"
 
 ## Core conceptual references
 
-[R1] Git Book, “Git Basics - Tagging.”  
+[R1] Git Book, “Git Basics - Tagging.”
 https://git-scm.com/book/en/v2/Git-Basics-Tagging
 
-[R2] Git documentation, `git-tag`.  
+[R2] Git documentation, `git-tag`.
 https://git-scm.com/docs/git-tag
 
-[R3] Git documentation, `gitglossary`.  
+[R3] Git documentation, `gitglossary`.
 https://git-scm.com/docs/gitglossary
 
-[R4] GitHub Docs, “Creating a new repository.”  
+[R4] GitHub Docs, “Creating a new repository.”
 https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository
 
-[R5] GitHub Docs, “Adding locally hosted code to GitHub.”  
+[R5] GitHub Docs, “Adding locally hosted code to GitHub.”
 https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github
 
-[R6] Visual Studio Code Docs, “Source Control in VS Code.”  
+[R6] Visual Studio Code Docs, “Source Control in VS Code.”
 https://code.visualstudio.com/docs/sourcecontrol/overview
 
-[R7] Visual Studio Code Docs, “Terminal Basics.”  
+[R7] Visual Studio Code Docs, “Terminal Basics.”
 https://code.visualstudio.com/docs/terminal/basics
 
-[R8] GitHub Docs, “About releases.”  
+[R8] GitHub Docs, “About releases.”
 https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases
 
-[R9] GitHub Docs, “Managing releases in a repository.”  
+[R9] GitHub Docs, “Managing releases in a repository.”
 https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
 
-[R10] GitHub Docs, “Viewing your repository’s releases and tags.”  
+[R10] GitHub Docs, “Viewing your repository’s releases and tags.”
 https://docs.github.com/en/repositories/releasing-projects-on-github/viewing-your-repositorys-releases-and-tags
 
-[R11] GitHub Docs, “Deployment environments.”  
+[R11] GitHub Docs, “Deployment environments.”
 https://docs.github.com/en/actions/concepts/workflows-and-actions/deployment-environments
 
-[R12] GitHub CLI Manual, `gh repo create`.  
+[R12] GitHub CLI Manual, `gh repo create`.
 https://cli.github.com/manual/gh_repo_create
 
-[R13] GitHub CLI Manual, `gh release create`.  
+[R13] GitHub CLI Manual, `gh release create`.
 https://cli.github.com/manual/gh_release_create
 
-[R14] Semantic Versioning 2.0.0.  
+[R14] Semantic Versioning 2.0.0.
 https://semver.org/
 
-[R15] Git documentation, `git-restore`.  
+[R15] Git documentation, `git-restore`.
 https://git-scm.com/docs/git-restore
 
-[R16] Git documentation, `git-archive`.  
+[R16] Git documentation, `git-archive`.
 https://git-scm.com/docs/git-archive
 
 ## Git command references used in Appendix A
 
-[R17] Git documentation, `git-init`.  
+[R17] Git documentation, `git-init`.
 https://git-scm.com/docs/git-init
 
-[R18] Git documentation, `git-status`.  
+[R18] Git documentation, `git-status`.
 https://git-scm.com/docs/git-status
 
-[R19] Git documentation, `git-add`.  
+[R19] Git documentation, `git-add`.
 https://git-scm.com/docs/git-add
 
-[R20] Git documentation, `git-commit`.  
+[R20] Git documentation, `git-commit`.
 https://git-scm.com/docs/git-commit
 
-[R21] Git documentation, `git-remote`.  
+[R21] Git documentation, `git-remote`.
 https://git-scm.com/docs/git-remote
 
-[R22] Git documentation, `git-push`.  
+[R22] Git documentation, `git-push`.
 https://git-scm.com/docs/git-push
 
-[R23] GitHub CLI Manual, `gh auth login`.  
+[R23] GitHub CLI Manual, `gh auth login`.
 https://cli.github.com/manual/gh_auth_login
 
-[R24] Git documentation, `git-branch`.  
+[R24] Git documentation, `git-branch`.
 https://git-scm.com/docs/git-branch
 
-[R25] Git documentation, `git-diff`.  
+[R25] Git documentation, `git-diff`.
 https://git-scm.com/docs/git-diff
 
-[R26] Git documentation, `git-log`.  
+[R26] Git documentation, `git-log`.
 https://git-scm.com/docs/git-log
 
-[R27] Git documentation, `git-show`.  
+[R27] Git documentation, `git-show`.
 https://git-scm.com/docs/git-show
 
-[R28] Git documentation, `git-switch`.  
+[R28] Git documentation, `git-switch`.
 https://git-scm.com/docs/git-switch
 
 ## VS Code reference used in Appendix B
 
-[R29] Visual Studio Code Docs, “Quickstart: Use source control in VS Code.”  
+[R29] Visual Studio Code Docs, “Quickstart: Use source control in VS Code.”
 https://code.visualstudio.com/docs/sourcecontrol/quickstart
 
 ## Additional references used in Appendix F
 
 
-[R30] Git documentation, `git` global options, including `--no-pager`.  
+[R30] Git documentation, `git` global options, including `--no-pager`.
 https://git-scm.com/docs/git
 
-[R31] Git documentation, `git-config`, including `core.pager`.  
+[R31] Git documentation, `git-config`, including `core.pager`.
 https://git-scm.com/docs/git-config
 
-[R32] Linux manual page, `less(1)`.  
+[R32] Linux manual page, `less(1)`.
 https://man7.org/linux/man-pages/man1/less.1.html
 
-[R33] Git documentation, `git-checkout`.  
+[R33] Git documentation, `git-checkout`.
 https://git-scm.com/docs/git-checkout
 
-[R34] Git documentation, `git-clone`.  
+[R34] Git documentation, `git-clone`.
 https://git-scm.com/docs/git-clone
 
-[R35] Git documentation, `git-rev-list`.  
+[R35] Git documentation, `git-rev-list`.
 https://git-scm.com/docs/git-rev-list
 
-[R36] GitHub Docs, “About the repository README file.”  
+[R36] GitHub Docs, “About the repository README file.”
 https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes
 
-[R37] Git documentation, `git-ls-tree`.  
+[R37] Git documentation, `git-ls-tree`.
 https://git-scm.com/docs/git-ls-tree
 
-[R38] Git documentation, `git-merge`.  
+[R38] Git documentation, `git-merge`.
 https://git-scm.com/docs/git-merge
 
-[R39] Git documentation, `git-rebase`.  
+[R39] Git documentation, `git-rebase`.
 https://git-scm.com/docs/git-rebase
 
-[R40] Git documentation, `git-fetch`.  
+[R40] Git documentation, `git-fetch`.
 https://git-scm.com/docs/git-fetch
 
-[R41] Git documentation, `git-pull`.  
+[R41] Git documentation, `git-pull`.
 https://git-scm.com/docs/git-pull
 
-[R42] GitHub Docs, “Creating a pull request.”  
+[R42] GitHub Docs, “Creating a pull request.”
 https://docs.github.com/articles/creating-a-pull-request
 
 
-[R43] Git documentation, `git-mergetool`.  
+[R43] Git documentation, `git-mergetool`.
 https://git-scm.com/docs/git-mergetool
 
-[R44] GitHub Docs, “About merge conflicts.”  
+[R44] GitHub Docs, “About merge conflicts.”
 https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts
 
-[R45] GitHub Docs, “Resolving a merge conflict using the command line.”  
+[R45] GitHub Docs, “Resolving a merge conflict using the command line.”
 https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line
 
-[R46] GitHub Docs, “Resolving a merge conflict on GitHub.”  
+[R46] GitHub Docs, “Resolving a merge conflict on GitHub.”
 https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-on-github
 
-[R47] Visual Studio Code Docs, “Source Control: Merge conflicts.”  
+[R47] Visual Studio Code Docs, “Source Control: Merge conflicts.”
 https://code.visualstudio.com/docs/sourcecontrol/overview#_merge-conflicts
 
-[R48] Microsoft Learn, “Use Git and GitHub in Visual Studio.”  
+[R48] Microsoft Learn, “Use Git and GitHub in Visual Studio.”
 https://learn.microsoft.com/en-us/visualstudio/version-control/git-with-visual-studio
 
-[R49] GitHub Docs, “Committing and reviewing changes to your project in GitHub Desktop.”  
+[R49] GitHub Docs, “Committing and reviewing changes to your project in GitHub Desktop.”
 https://docs.github.com/en/desktop/making-changes-in-a-branch/committing-and-reviewing-changes-to-your-project-in-github-desktop
 
-[R50] Sublime Merge.  
+[R50] Sublime Merge.
 https://www.sublimemerge.com/
 
-[R51] Git Extensions documentation, “Merge Conflicts.”  
+[R51] Git Extensions documentation, “Merge Conflicts.”
 https://git-extensions-documentation.readthedocs.io/
 
-[R52] GitKraken, “Merge Conflict Resolution Tool.”  
+[R52] GitKraken, “Merge Conflict Resolution Tool.”
 https://www.gitkraken.com/features/merge-conflict-resolution-tool
 
-[R53] GitLens documentation.  
+[R53] GitLens documentation.
 https://help.gitkraken.com/gitlens/gitlens-home/
 
-[R54] Git Large File Storage documentation.  
+[R54] Git Large File Storage documentation.
 https://git-lfs.com/
 
 
-[R55] Git documentation, `git-rm`.  
+[R55] Git documentation, `git-rm`.
 https://git-scm.com/docs/git-rm
 
-[R56] Git documentation, `git-mv`.  
+[R56] Git documentation, `git-mv`.
 https://git-scm.com/docs/git-mv
 
 ---
 
 
-[R57] GitHub Docs, “Viewing and comparing commits.”  
-[R58] GitHub Docs, “Comparing releases.”  
-[R59] GitHub Docs, “About pull requests.”  
-[R60] GitHub Docs, “Creating a pull request.”  
-[R61] GitHub Docs, “Reviewing changes in pull requests.”  
-[R62] GitHub Docs, “About pull request merges.”  
-[R63] GitHub Docs, “Changing the stage of a pull request.”  
+[R57] GitHub Docs, “Viewing and comparing commits.”
+[R58] GitHub Docs, “Comparing releases.”
+[R59] GitHub Docs, “About pull requests.”
+[R60] GitHub Docs, “Creating a pull request.”
+[R61] GitHub Docs, “Reviewing changes in pull requests.”
+[R62] GitHub Docs, “About pull request merges.”
+[R63] GitHub Docs, “Changing the stage of a pull request.”
 
 
-[R64] Git documentation, `git-rev-list`.  
-[R65] Git documentation, `git-config`, including `core.autocrlf`.  
-[R66] Git documentation, `gitattributes`.  
-[R67] Git documentation, `git-ls-files`, including `--eol`.  
+[R64] Git documentation, `git-rev-list`.
+[R65] Git documentation, `git-config`, including `core.autocrlf`.
+[R66] Git documentation, `gitattributes`.
+[R67] Git documentation, `git-ls-files`, including `--eol`.
 
 
-[R68] Git documentation, `git-log`, including commit log output and message filtering options such as `--grep`.  
-[R69] Git documentation, `git-commit`, including `--amend`.  
-[R70] Git documentation, `git-rebase`, including interactive rebase and `reword`.  
-[R71] Git documentation, `git-push`, including `--force-with-lease`.  
+[R68] Git documentation, `git-log`, including commit log output and message filtering options such as `--grep`.
+[R69] Git documentation, `git-commit`, including `--amend`.
+[R70] Git documentation, `git-rebase`, including interactive rebase and `reword`.
+[R71] Git documentation, `git-push`, including `--force-with-lease`.
 
 
-[R72] Git documentation, `gitignore`.  
-[R73] GitHub Docs, repository topics/classification guidance.  
+[R72] Git documentation, `gitignore`.
+[R73] GitHub Docs, repository topics/classification guidance.
 
 
-[R74] Git documentation, `git-describe`.  
+[R74] Git documentation, `git-describe`.
 https://git-scm.com/docs/git-describe
 
-[R75] Git documentation, `git-show-ref`.  
+[R75] Git documentation, `git-show-ref`.
 https://git-scm.com/docs/git-show-ref
 
-[R76] GitHub Docs, “Searching code.”  
+[R76] GitHub Docs, “Searching code.”
 https://docs.github.com/en/search-github/searching-on-github/searching-code
 
-[R77] GitHub Docs, “Navigating code on GitHub.”  
+[R77] GitHub Docs, “Navigating code on GitHub.”
 https://docs.github.com/en/repositories/working-with-files/using-files/navigating-code-on-github
 
-[R78] GitHub CLI Manual, `gh release list`.  
+[R78] GitHub CLI Manual, `gh release list`.
 https://cli.github.com/manual/gh_release_list
 
-[R79] GitHub CLI Manual, `gh release view`.  
+[R79] GitHub CLI Manual, `gh release view`.
 https://cli.github.com/manual/gh_release_view
 
+[R80] Git documentation, `git-check-ref-format`.
+https://git-scm.com/docs/git-check-ref-format
+
+[R81] Microsoft Learn, PowerShell `about_Quoting_Rules`, including here-strings.
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_quoting_rules
+
+[R82] Git documentation, `git-ls-remote`.
+https://git-scm.com/docs/git-ls-remote
+
+[R83] Git documentation, `git-check-ignore`.
+https://git-scm.com/docs/git-check-ignore
+
+[R84] Git documentation, `git-config`, including `core.excludesFile` and `push.autoSetupRemote`.
+https://git-scm.com/docs/git-config
+
 # Index
+
+## `.git/info/exclude`
+
+See [39. `.gitignore`, `.git/info/exclude`, and Ignored File Workflows](#39-gitignore-gitinfoexclude-and-ignored-file-workflows).
+
+## Clone-local ignore rules
+
+See [39. `.gitignore`, `.git/info/exclude`, and Ignored File Workflows](#39-gitignore-gitinfoexclude-and-ignored-file-workflows).
+
+## Namespaced tags
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## `git check-ref-format`
+
+See [Appendix A](#appendix-a-expanded-git-command-reference).
+
+## Upstream branch
+
+See [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## `git push -u`
+
+See [16. First-Time Setup vs. Later Updates](#16-first-time-setup-vs-later-updates) and [Section 32](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## `git branch --set-upstream-to`
+
+See [Section 32](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## `git branch --unset-upstream`
+
+See [Section 32](#32-push-tag-branch-and-repository-hygiene-workflows).
+
+## PowerShell here-string
+
+See [22. Commit Messages, Commit Bodies, and Repository Descriptions](#22-commit-messages-commit-bodies-and-repository-descriptions) and [Appendix J](#appendix-j-commit-message-and-commit-body-examples).
+
+## `git commit -F`
+
+See [22. Commit Messages, Commit Bodies, and Repository Descriptions](#22-commit-messages-commit-bodies-and-repository-descriptions).
+
+## Tag deletion
+
+See [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages) and [Appendix Q](#appendix-q-tag-correction-and-release-repair-scenarios).
+
+## Annotated tag object ID
+
+See [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages).
+
+## `git ls-remote --tags`
+
+See [Appendix A](#appendix-a-expanded-git-command-reference).
 
 
 ## `git add -A`

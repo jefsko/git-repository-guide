@@ -4,6 +4,37 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.20.0
+
+### Added
+
+- Added complete local and remote tag-deletion guidance, including verification that commits, branches, and working-tree state remain intact.
+- Added annotated-tag object-versus-commit ID explanations using peeled tag syntax such as `tag^{}`.
+- Added PowerShell literal here-string guidance for formatted multiline commit bodies, plus CMD editor and cross-shell `git commit -F` alternatives.
+- Added troubleshooting for malformed commit quoting that causes Git `pathspec` errors.
+- Added a detailed comparison of shared `.gitignore`, clone-local `.git/info/exclude`, and global `core.excludesFile` rules.
+- Added ignore-source precedence, diagnostic commands, decision tables, and tracked-versus-untracked examples.
+- Added namespaced Git tag guidance for independently versioned components, including naming, validation, creation, filtering, pushing, comparing, and deletion.
+- Added explicit upstream branch tracking guidance covering `git push -u`, `git branch -vv`, `git branch --set-upstream-to`, and `git branch --unset-upstream`.
+- Added synchronized Knowledge Base, Troubleshooting, command-reference, scenario, quick-start, cheat-sheet, index, and reference entries for the new material.
+
+### Changed
+
+- Updated all active file-set version metadata from `v1.19.1` to `v1.20.0`.
+- Clarified that `git push origin main` pushes the named branch but does not itself include an explicit `--set-upstream` request; tracking may already exist or may be auto-configured by Git settings.
+- Expanded tag-repair guidance into a broader deletion, verification, and release-safety workflow.
+- Replaced the narrow `.gitignore` main section with an integrated treatment of shared, clone-local, and global ignore mechanisms.
+- Completed the previously truncated README and main-guide version-history tables through `v1.20.0`.
+- Corrected the README repository tree and contents table to include `VERSION.txt` and `git-command-quick-reference.md`.
+
+### Notes
+
+- This is an additive minor release from `v1.19.1`.
+- The five update addenda were treated as source briefs and were not added to the active repository package.
+- Existing useful tag, commit-body, push, release, and `.gitignore` guidance was preserved and consolidated rather than duplicated verbatim.
+- Active repository filenames remain stable; the release ZIP uses a versioned filename.
+- Markdown and text files retain UTF-8 without BOM and CRLF line endings.
+
 ## v1.19.1
 
 ### Changed

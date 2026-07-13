@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.19.1`
+Current guide version: `v1.20.0`
 
 Main guide file:
 
@@ -52,6 +52,7 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 |---|---|
 | [`README.md`](README.md) | Repository overview and navigation. |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version history and notable changes. |
+| [`VERSION.txt`](VERSION.txt) | Machine- and human-readable current file-set version. |
 | [`git-repository-guide.md`](git-repository-guide.md) | Full guide with complete explanations, examples, appendixes, and references. |
 | [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md) | Short, sequential companion guide for the most common Git repository/version-tag workflow. |
 | [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md) | Compact checklist for repeating the common workflow after learning it. |
@@ -231,6 +232,17 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Stopping tracking for already tracked files with `git rm --cached`
 - Keeping release publishing guidance separate from `.gitignore` workflows
 
+- Deleting local and remote tags without deleting commits
+- Verifying tag removal and preserved branch/commit history
+- Understanding annotated tag-object IDs versus commit IDs
+- Creating multiline commit bodies safely in PowerShell and CMD
+- Using `git commit -F` and Git's configured editor
+- Distinguishing shared `.gitignore` rules from clone-local `.git/info/exclude` rules
+- Understanding ignore-rule precedence and global `core.excludesFile`
+- Creating, listing, validating, and deleting namespaced component tags
+- Comparing `git push origin main` with `git push -u origin main`
+- Checking, setting, and removing upstream branch tracking
+
 ## Recommended Repository Details
 
 Recommended repository name:
@@ -251,39 +263,51 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 |---|---|
 | `v0.1.0` | Original pre-release draft |
 | `v1.0.0` | First complete locked baseline |
-| `v1.1.0` | Additive expansion with expanded Git reference and Knowledge Base |
-| `v1.2.0` | Additive expansion covering repository packaging, push workflows, branch workflows, and Git object-count guidance |
-| `v1.3.0` | Additive expansion covering file update workflows, fetch/pull/merge/rebase workflows, merge scenarios, conflict resolution, and Git tooling |
-| `v1.4.0` | Additive expansion covering file/folder operations and direct-to-main vs. working-branch push workflows |
-| `v1.5.0` | Additive expansion covering commit message/body guidance and initial commit documentation examples |
-| `v1.6.0` | Additive expansion covering practical staging, unchanged tracked files, tag snapshot downloads, source ZIP vs. release asset ZIP behavior, plus quick-start and cheat-sheet companions |
-| `v1.7.0` | Additive expansion covering GitHub.com tag comparison, version-diff workflows, and Pull Request workflows |
-| `v1.8.0` | Additive expansion covering tracked-file rename workflows, `git mv`, rename detection, Markdown reference updates, and a Git command quick reference companion |
-| `v1.9.0` | Additive expansion covering historical repository reconstruction, production tags, tag correction workflows, GitHub Releases, and LF/CRLF line-ending guidance |
-| `v1.10.0` | Additive expansion covering project identity, canonical URL, GitHub Release notes, release documentation files, and import-note examples for reconstructed repositories |
-| `v1.11.0` | Additive expansion covering commit-message typo detection, amend/rebase correction workflows, pushed-history safety, and force-with-lease guidance |
-| `v1.11.1` | Patch correction updating internal links and active file references to use stable repository filenames while preserving intentional versioned standalone filename examples |
+| `v1.1.0` | Expanded Git reference and Knowledge Base |
+| `v1.2.0` | Repository packaging, push workflows, branch workflows, and Git object-count guidance |
+| `v1.3.0` | File updates, synchronization, merge/rebase, conflict resolution, and Git tooling |
+| `v1.4.0` | File/folder operations and direct-to-`main` versus branch workflows |
+| `v1.5.0` | Commit-message/body guidance and initial-commit examples |
+| `v1.6.0` | Practical staging, tag snapshots, ZIP behavior, quick-start, and cheat sheet |
+| `v1.7.0` | Tag comparisons, version diffs, and Pull Requests |
+| `v1.8.0` | Rename workflows and Git command quick reference |
+| `v1.9.0` | Historical reconstruction, production tags, tag repair, releases, and line endings |
+| `v1.10.0` | Project identity, canonical URLs, release notes, and import documentation |
+| `v1.11.0` | Commit-message correction and history-rewrite safety |
+| `v1.11.1` | Stable active filenames and corrected internal links |
+| `v1.12.0` | Commit-message prefixes, scopes, and breaking-change notation |
+| `v1.13.0` | Explicit pushes, repository hygiene, topics, and `.gitignore` foundations |
+| `v1.14.0` | GitHub file search, tag inspection, and commit-history lookup |
+| `v1.15.0` | Related-repository linking and multi-repository release workflows |
+| `v1.16.0` | Repository, folder, project, and remote rename workflows |
+| `v1.17.0` | Consolidated defaults, publishing readiness, and verification checklists |
+| `v1.18.0` | Staging scope, rename review, `.gitattributes` checks, and precise `origin` wording |
+| `v1.19.0` | GitHub Release publishing and practical `.gitignore` guidance |
+| `v1.19.1` | Polished and rebalanced release and ignore-file material |
+| `v1.20.0` | Tag deletion, multiline commit bodies, local excludes, namespaced tags, and upstream tracking |
 
 ## Versioning Policy
 
 This guide uses document-level semantic versioning.
 
-- Patch updates, such as `v1.19.2`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.20.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Patch updates, such as `v1.20.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
+- Minor updates, such as `v1.21.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.19.1`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.20.0`.
 
 ## Suggested Repository Structure
 
 ```text
 git-repository-guide/
 ├─ README.md
+├─ VERSION.txt
 ├─ CHANGELOG.md
 ├─ git-repository-guide.md
 ├─ git-repository-guide-quick-start-guide.md
-└─ git-repository-guide-cheat-sheet.md
+├─ git-repository-guide-cheat-sheet.md
+└─ git-command-quick-reference.md
 ```
 
 ## Notes
