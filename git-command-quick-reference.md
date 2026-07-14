@@ -1,6 +1,6 @@
 # Git Command Quick Reference
 
-**Version:** v1.21.0
+**Version:** v1.22.0
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)
 **Cheat sheet:** [`git-repository-guide-cheat-sheet.md`](git-repository-guide-cheat-sheet.md)
@@ -16,7 +16,7 @@ It is intentionally command-focused. Use the full guide when you need deeper exp
 Recommended standalone filename:
 
 ```text
-git-command-quick-reference-v1.21.0.md
+git-command-quick-reference-v1.22.0.md
 ```
 
 Recommended stable repository filename, if you prefer non-versioned companion filenames inside an actual Git repository:
@@ -151,9 +151,14 @@ These are quick lookup commands and shortcuts for GitHub files, tags, releases, 
 | List GitHub Releases | `gh release list` |
 | View one GitHub Release | `gh release view v1.0.0` |
 | Compact commit history | `git log --oneline` |
-| Messages only | `git log --format=%B` |
-| Subjects only | `git log --format=%s` |
+| All-ref history graph | `git log --all --graph --decorate --oneline` |
+| Oldest-first history | `git log --all --reverse --oneline` |
+| Complete messages | `git log --all --reverse --format="%H%n%B%n"` |
+| Subjects only | `git log --format="%s"` |
 | Search commit messages | `git log --all --grep="keyword" --oneline` |
+| One-commit summary | `git show --stat --summary <commit-hash>` |
+| One-commit statuses | `git show --name-status --find-renames --format= <commit-hash>` |
+| Complete snapshot paths | `git ls-tree -r --name-only <commit-hash>` |
 | Exit Git pager | `q` |
 
 Plain `git push` usually works after upstream tracking is set. For careful versioned updates, `git push origin main` is often clearer.
@@ -196,7 +201,7 @@ Submodules and subtree are advanced tools. For beginner-friendly educational exa
 | Update `origin` | `git remote set-url origin https://github.com/USERNAME/new-repo-name.git` |
 | Test remote | `git fetch origin` |
 | Search old names | `git grep "old-name"` |
-| PowerShell search | `Get-ChildItem -Recurse -File | Select-String -Pattern "old-name"` |
+| PowerShell search | `Get-ChildItem -Recurse -File \| Select-String -Pattern "old-name"` |
 
 Local parent folder renames usually do not require a Git commit. Tracked file/folder renames inside the repo do require a commit.
 
@@ -253,6 +258,23 @@ committed locally and pushed to origin
 ```
 
 
+# Repository health quick reference
+
+| Goal | Command |
+|---|---|
+| Confirm working tree | `git rev-parse --is-inside-work-tree` |
+| Show repository root | `git rev-parse --show-toplevel` |
+| Show metadata directory | `git rev-parse --git-dir` |
+| Show branch/upstream | `git branch -vv` |
+| Show exact origin URL | `git remote get-url origin` |
+| Show branch and tag refs | `git show-ref --heads --tags` |
+| Verify object database | `git fsck --full` |
+| Refresh origin refs | `git fetch origin --prune` |
+| Compare branch tips | `git rev-parse main` and `git rev-parse origin/main` |
+| Compact alignment status | `git status -sb` |
+
+Do not run `git init` as an automatic reaction to missing metadata when existing history must be preserved.
+
 # Consolidated workflow defaults quick reference
 
 | Goal | Command or convention |
@@ -274,6 +296,55 @@ committed locally and pushed to origin
 
 Use these defaults unless your project has a specific reason to differ.
 
+
+# v1.22.0 workflow quick reference
+
+## Release-tag timing
+
+```powershell
+git commit -m "Release version X.Y.Z"
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git show --stat vX.Y.Z
+git push origin main
+git push origin vX.Y.Z
+```
+
+An unqualified tag command targets the current `HEAD`. Create and verify the tag before making the next release commit, or name the intended older commit explicitly.
+
+## Commit-history and change audit
+
+```bash
+git fetch --all --prune
+git log --all --graph --decorate --oneline
+git log --all --reverse --format="%H%n%B%n"
+git show --stat --summary <commit-hash>
+git show --name-status --find-renames --format= <commit-hash>
+git ls-tree -r --name-only <commit-hash>
+```
+
+## Repository-health verification
+
+```powershell
+Test-Path .git
+git rev-parse --is-inside-work-tree
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git status
+git branch -vv
+git remote -v
+git show-ref --heads --tags
+git fsck --full
+git fetch origin --prune
+git rev-parse main
+git rev-parse origin/main
+git status -sb
+```
+
+## Per-commit file-status source
+
+```powershell
+git diff-tree --root --no-commit-id --name-status --find-renames -r HEAD
+```
 
 # v1.21.0 workflow quick reference
 
@@ -843,6 +914,48 @@ git diff --name-status old-tag..new-tag
 
 ---
 
+## `git diff-tree`
+
+### What it does
+
+Compares the tree associated with a commit and reports the paths or changes introduced by that commit.
+
+### Common syntax
+
+```bash
+git diff-tree --root --no-commit-id --name-status --find-renames -r HEAD
+```
+
+### Useful options
+
+| Option | Meaning |
+|---|---|
+| `--root` | Compares the initial commit with an empty tree |
+| `--no-commit-id` | Suppresses the commit ID header |
+| `--name-status` | Shows status letters and paths |
+| `--find-renames` | Enables rename detection |
+| `-r` | Recurses into subtrees |
+
+---
+
+## `git fsck`
+
+### What it does
+
+Checks connectivity and validity of objects and refs in the local Git object database.
+
+### Common syntax
+
+```bash
+git fsck --full
+```
+
+### Notes
+
+No corruption error is the desired outcome. Dangling-object notices are not automatically corruption. This command does not compare local branch tips with a remote.
+
+---
+
 ## `git fetch`
 
 ### What it does
@@ -1355,7 +1468,12 @@ Shows low-level repository information.
 ### Common syntax
 
 ```bash
+git rev-parse HEAD
+git rev-parse v1.0.0
+git rev-parse "v1.0.0^{}"
+git rev-parse --is-inside-work-tree
 git rev-parse --show-toplevel
+git rev-parse --git-dir
 ```
 
 ### Required parameters
@@ -1836,7 +1954,7 @@ Returns `True` if `.gitattributes` exists at the current path and `False` if it 
 | `HEAD` | Current checked-out commit | `HEAD` |
 | `HEAD~1` | Parent of current commit | `HEAD~1` |
 | `bad-commit-sha` | Commit whose message needs correction | `a1b2c3d` |
-| `vX.Y.Z` | Version tag placeholder | `v1.21.0` |
+| `vX.Y.Z` | Version tag placeholder | `v1.22.0` |
 | `RELEASES.md` | Optional production-release documentation file | `RELEASES.md` |
 | `IMPORT-NOTES.md` | Optional historical reconstruction notes file | `IMPORT-NOTES.md` |
 

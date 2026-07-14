@@ -1,14 +1,14 @@
 # Creating a Git Repository and Marking File Sets as Versions
 
-Document version: v1.21.0
-Previous locked version: v1.20.0
+Document version: v1.22.0
+Previous locked version: v1.21.0
 Version status: Locked standalone Markdown version
 Update type: Additive update
 Versioning method: Document metadata only; no Git repository package required
-Future edit policy: Do not overwrite this `v1.21.0` file. Save future changes as a new version, such as `v1.21.1` or `v1.22.0`.
-Current as of: 2026-07-13
+Future edit policy: Do not overwrite this `v1.22.0` file. Save future changes as a new version, such as `v1.22.1` or `v1.23.0`.
+Current as of: 2026-07-14
 
-Revision note: This `v1.21.0` edition preserves the `v1.20.0` guide and adds integrated global Git configuration guidance, complete staged-patch and staged-quality review, corrected first-check-in ordering, separate initialized-repository and ordinary-folder workflows, the requested File-Set Update System namespaced-tag sequence, and exact tag-based release archive examples. Companion files, metadata, indexes, references, and version history are synchronized.
+Revision note: This `v1.22.0` edition preserves the `v1.21.0` guide and adds integrated commit-message and commit-change auditing, per-commit file-status counts, explicit release-tag timing and verification, and a practical repository-health workflow for checking `.git` metadata, refs, remotes, local/remote synchronization, and object integrity. Companion files, metadata, indexes, references, and version history are synchronized.
 
 ---
 
@@ -46,13 +46,14 @@ Revision note: This `v1.21.0` edition preserves the `v1.20.0` guide and adds int
 - [30. Correcting Commit Message Mistakes](#30-correcting-commit-message-mistakes)
 - [31. Commit Message Prefixes and When to Use Them](#31-commit-message-prefixes-and-when-to-use-them)
 - [32. Push, Tag, Branch, and Repository Hygiene Workflows](#32-push-tag-branch-and-repository-hygiene-workflows)
-- [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup)
+- [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing)
 - [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-linking-related-repositories-and-multi-repo-release-workflows)
 - [35. Renaming Repositories, Local Folders, Project Names, and Remotes](#35-renaming-repositories-local-folders-project-names-and-remotes)
 - [36. Consolidated Git Workflow Defaults and Verification Checklists](#36-consolidated-git-workflow-defaults-and-verification-checklists)
 - [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#37-staging-rename-review-status-checks-and-precise-origin-wording)
 - [38. GitHub Releases, Release Notes, and Release Assets](#38-github-releases-release-notes-and-release-assets)
 - [39. `.gitignore`, `.git/info/exclude`, and Ignored File Workflows](#39-gitignore-gitinfoexclude-and-ignored-file-workflows)
+- [40. Repository Health, `.git` Metadata, and Integrity Verification](#40-repository-health-git-metadata-and-integrity-verification)
 - [Appendix A: Expanded Git Command Reference](#appendix-a-expanded-git-command-reference)
 - [Appendix B: Expanded VS Code Reference](#appendix-b-expanded-vs-code-reference)
 - [Appendix C: Expanded Versioning Concepts](#appendix-c-expanded-versioning-concepts)
@@ -88,7 +89,7 @@ You already have:
 - Git installed.
 - A GitHub account.
 - A folder of files you want to track.
-- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, `v1.19.1`, `v1.20.0`, `v1.21.0`, or another version.
+- A desire to mark one file set as `v1.0.0`, then later mark newer file sets as `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.8.0`, `v1.9.0`, `v1.10.0`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.13.0`, `v1.14.0`, `v1.15.0`, `v1.16.0`, `v1.17.0`, `v1.18.0`, `v1.19.0`, `v1.19.1`, `v1.20.0`, `v1.21.0`, `v1.22.0`, or another version.
 
 That is a normal Git workflow.
 
@@ -1560,6 +1561,7 @@ Recommended history:
 | `v1.19.1` | Polished and rebalanced release and ignore-file material |
 | `v1.20.0` | Tag deletion and verification, multiline commit-body CLI methods, local excludes, namespaced tags, and upstream tracking |
 | `v1.21.0` | Global Git configuration, staged-patch validation, corrected first-check-in ordering, and tag-based release archives |
+| `v1.22.0` | Commit-history and file-change auditing, release-tag timing, and repository-health verification |
 
 ### Commit messages, tag names, tag messages, and changelog entries
 
@@ -1605,10 +1607,11 @@ git init -b main
 git add .
 git commit -m "Add original pre-release draft"
 
+git tag -a v0.1.0 -m "Version 0.1.0"
+git show --stat v0.1.0
+
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
 git push -u origin main
-
-git tag -a v0.1.0 -m "Version 0.1.0"
 git push origin v0.1.0
 ```
 
@@ -1621,11 +1624,12 @@ git add .
 git status
 git commit -m "Add original pre-release draft"
 
+git tag -a v0.1.0 -m "Version 0.1.0"
+git show --stat v0.1.0
+
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
 git remote -v
 git push -u origin main
-
-git tag -a v0.1.0 -m "Version 0.1.0"
 git push origin v0.1.0
 ```
 
@@ -1667,9 +1671,8 @@ Minimal version:
 ```bash
 git add .
 git commit -m "Describe what changed"
-git push
-
 git tag -a vX.Y.Z -m "Version X.Y.Z"
+git push
 git push origin vX.Y.Z
 ```
 
@@ -1681,11 +1684,12 @@ git add .
 git status
 git commit -m "Describe what changed"
 
-# Push the branch first so GitHub's normal/default branch view is current.
-git push origin main
-
-# Then create and push the version tag.
+# Create and verify the tag while HEAD still points to this release commit.
 git tag -a vX.Y.Z -m "Version X.Y.Z"
+git show --stat vX.Y.Z
+
+# Publish the branch and the tag deliberately.
+git push origin main
 git push origin vX.Y.Z
 ```
 
@@ -1697,11 +1701,70 @@ git add .
 git status
 git commit -m "Expand guide with repository packaging and branch workflow guidance"
 
-git push origin main
-
 git tag -a v1.2.0 -m "Version 1.2.0"
+git show --stat v1.2.0
+
+git push origin main
 git push origin v1.2.0
 ```
+
+
+### Create and verify the tag before the next release commit
+
+A tag identifies a commit. When no commit is named explicitly, this command tags the current commit, called `HEAD`:
+
+```powershell
+git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+Therefore, the safest routine is:
+
+```text
+commit release A
+create and verify tag A
+push branch and tag A
+begin release B
+```
+
+The branch may be pushed before or after the local tag is created. Pushing `main` does not move local `HEAD`. Both orders are correct when no new commit occurs between the release commit and the tag command:
+
+```powershell
+# Tag first, then publish.
+git tag -a v1.0.0 -m "Version 1.0.0"
+git show --stat v1.0.0
+git push origin main
+git push origin v1.0.0
+```
+
+```powershell
+# Branch push first is also valid if HEAD does not change before tagging.
+git push origin main
+git tag -a v1.0.0 -m "Version 1.0.0"
+git show --stat v1.0.0
+git push origin v1.0.0
+```
+
+The failure case is creating the `v1.0.0` tag only after committing `v1.1.0`. Unless an older commit is named, the tag would point to the newer `HEAD`.
+
+Verify the target before pushing:
+
+```powershell
+git show --stat v1.0.0
+git rev-parse "v1.0.0^{}"
+git rev-parse HEAD
+```
+
+Immediately after tagging the current release commit, the two `rev-parse` commands should resolve to the same commit hash. The `^{}` suffix peels an annotated tag to its underlying commit.
+
+If the correct release commit is already older, identify it and tag it explicitly:
+
+```powershell
+git log --oneline
+git tag -a v1.0.0 <commit-hash> -m "Version 1.0.0"
+git show --stat v1.0.0
+```
+
+This timing rule applies equally to plain tags such as `v1.0.0` and namespaced tags such as `chat-summary/v1.0.0`.
 
 ### Why later updates usually use plain `git push`
 
@@ -5278,6 +5341,43 @@ git push origin v1.0.0
 
 Git's push documentation describes branch, tag, and other reference updates separately. [R22]
 
+
+### Tag the intended release commit, not merely the newest commit
+
+Consider this linear history:
+
+```text
+A -- B -- C
+     ^     ^
+     |     |
+     |     v1.0.0 should point here only if C is version 1.0.0
+     v0.1.0 should point here
+```
+
+A tag name does not cause Git to locate a matching version automatically. Git records the object you specify, or the current `HEAD` when you do not specify one.
+
+Correct while commit `B` is checked out:
+
+```powershell
+git tag -a component/v0.1.0 -m "Component v0.1.0"
+```
+
+Correct later, after commit `C` exists:
+
+```powershell
+git tag -a component/v0.1.0 <commit-B-hash> -m "Component v0.1.0"
+```
+
+Before pushing, inspect both the annotation and target commit:
+
+```powershell
+git show component/v0.1.0
+git show --stat component/v0.1.0
+git rev-parse "component/v0.1.0^{}"
+```
+
+Creating the tag immediately after its release commit is simpler and less error-prone than locating the commit later.
+
 ### Correct a local tag that has not been pushed
 
 Problem:
@@ -7332,13 +7432,15 @@ Git's `gitattributes` documentation covers text/eol attributes, and Git's `git l
 
 ---
 
-## 33. GitHub File Search, Tag Inspection, and Commit History Lookup
+## 33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing
 
-This section collects quick lookup workflows for three common questions:
+This section collects quick lookup workflows for several common questions:
 
 - How do I search inside the file I am viewing on GitHub?
 - How do I list and inspect version tags or GitHub Releases?
 - How do I review or search commit messages?
+- How do I inspect exactly what one commit changed?
+- How do I count added, modified, deleted, and renamed files by commit?
 
 Some of these commands already appear elsewhere in the guide. This section groups the most useful inspection commands together so they are easier to find.
 
@@ -7507,56 +7609,87 @@ gh release list
 gh release view v1.0.0
 ```
 
-### View commit messages
+### View commit messages and understand the default scope
 
-Compact commit history:
-
-```bash
-git log --oneline
-```
-
-Full current-branch history:
+Show the current branch's reachable history with full metadata and full commit messages:
 
 ```bash
 git log
 ```
 
-All branch and ref history:
+By default, Git normally displays the newest commit first. In a simple linear history, the order is newest to oldest. In a branched history, Git walks the commit graph, so ordering options can affect presentation. Git documents these output, traversal, formatting, and filtering options in `git-log`. [R26] [R68]
+
+Compact current-branch history:
+
+```bash
+git log --oneline
+```
+
+All commits reachable from local branches, remote-tracking branches, tags, and other refs that the clone currently knows about:
 
 ```bash
 git log --all --oneline
 ```
 
-Readable graph:
+Readable graph with branch and tag decorations:
 
 ```bash
-git log --all --oneline --decorate --graph
+git log --all --graph --decorate --oneline
 ```
 
-### Print commit messages only
-
-Print raw commit messages only:
+`--all` does not contact a remote. Refresh remote-tracking refs first when remote freshness matters:
 
 ```bash
-git log --format=%B
+git fetch --all --prune
+git log --all --graph --decorate --oneline
 ```
 
-Print commit subjects only:
+### Print commit-message subjects or complete messages
+
+Subjects only:
 
 ```bash
-git log --format=%s
+git log --format="%s"
 ```
 
-Print short hash and subject:
+Complete subject and body:
 
 ```bash
-git log --format="%h %s"
+git log --format="%B"
 ```
 
-Print short hash, short date, and subject:
+Full hash followed by the complete message, with a blank line between commits:
 
 ```bash
-git log --date=short --format="%h %ad %s"
+git log --format="%H%n%B%n"
+```
+
+Oldest known commit first:
+
+```bash
+git log --reverse --oneline
+```
+
+All known local refs, oldest first, with short hash and subject:
+
+```bash
+git log --all --reverse --format="%h %s"
+```
+
+### Choose history ordering
+
+| Option | Practical effect |
+|---|---|
+| `--reverse` | Reverses the selected output, commonly producing oldest-to-newest reading order |
+| `--date-order` | Uses commit dates while avoiding showing a parent before its children |
+| `--author-date-order` | Similar to date order, but uses author dates where the graph permits a choice |
+| `--topo-order` | Keeps related development lines grouped and avoids showing parents before descendants |
+| `--first-parent` | Follows the mainline first-parent path, useful for merge-heavy release history |
+
+Example:
+
+```bash
+git log --all --topo-order --graph --decorate --oneline
 ```
 
 ### Search or filter commit messages
@@ -7567,7 +7700,7 @@ Search commit messages on the current branch:
 git log --grep="keyword"
 ```
 
-Search commit messages across all refs:
+Search commit messages across all known refs:
 
 ```bash
 git log --all --grep="keyword"
@@ -7590,6 +7723,198 @@ Limit the number of commits shown:
 ```bash
 git log -n 5 --oneline
 ```
+
+### Inspect one commit's change set
+
+A commit stores a complete repository snapshot, but `git show` normally presents the selected commit as its metadata plus the difference from its parent. [R27]
+
+Inspect the current commit:
+
+```bash
+git show HEAD
+```
+
+Inspect a selected commit, branch, or tag:
+
+```bash
+git show <commit-hash>
+git show v1.0.0
+```
+
+Start with a compact file and line summary:
+
+```bash
+git show --stat --summary <commit-hash>
+```
+
+Show file-status classifications:
+
+```bash
+git show --name-status --format=fuller <commit-hash>
+```
+
+Show only statuses and paths:
+
+```bash
+git show --name-status --find-renames --format= <commit-hash>
+```
+
+Show only changed paths:
+
+```bash
+git show --name-only --format= <commit-hash>
+```
+
+Inspect one path in one commit:
+
+```bash
+git show <commit-hash> -- path/to/file.md
+```
+
+Display the complete historical contents of one file as stored in that commit:
+
+```bash
+git show <commit-hash>:path/to/file.md
+```
+
+List the complete tracked-file snapshot stored by the commit, not merely the paths changed by the commit:
+
+```bash
+git ls-tree -r --name-only <commit-hash>
+```
+
+### Review every commit's changed files
+
+Commit statistics, newest first:
+
+```bash
+git log --stat
+```
+
+Chronological review, oldest first:
+
+```bash
+git log --reverse --stat
+```
+
+Status letters for every commit:
+
+```bash
+git log --reverse --name-status
+```
+
+Complete patches for every commit:
+
+```bash
+git log --reverse --patch
+```
+
+Include commits reachable through all known refs:
+
+```bash
+git log --all --reverse --name-status
+```
+
+For a merge-heavy `main` history, review only the first-parent mainline when that better matches the release story:
+
+```bash
+git log --first-parent --reverse --name-status main
+```
+
+### Understand file and line counts
+
+A summary such as:
+
+```text
+10 files changed, 702 insertions(+), 1 deletion(-)
+```
+
+means ten paths were affected and Git counted 702 added lines plus one removed line. It does not mean 702 files were added or one file was deleted. A modified line is commonly represented as one deletion plus one insertion.
+
+Common `--name-status` codes:
+
+| Status | Meaning |
+|---|---|
+| `A` | Added |
+| `M` | Modified |
+| `D` | Deleted |
+| `R` | Renamed; the number may show similarity, such as `R100` |
+| `C` | Copied |
+| `T` | File type changed |
+| `U` | Unmerged conflict state |
+
+Enable rename detection explicitly when it matters:
+
+```bash
+git show --name-status --find-renames --format= HEAD
+```
+
+Without rename detection, a rename can appear as one deletion plus one addition.
+
+### Count added, modified, deleted, and renamed files in one commit
+
+PowerShell examples for `HEAD`:
+
+```powershell
+$statuses = @(git diff-tree --root --no-commit-id --name-status --find-renames -r HEAD)
+$added = @($statuses | Where-Object { $_ -match '^A\s' }).Count
+$modified = @($statuses | Where-Object { $_ -match '^M\s' }).Count
+$deleted = @($statuses | Where-Object { $_ -match '^D\s' }).Count
+$renamed = @($statuses | Where-Object { $_ -match '^R\d*\s' }).Count
+"Added: $added | Modified: $modified | Deleted: $deleted | Renamed: $renamed"
+```
+
+`--root` compares the first commit with an empty repository, so initial files are reported as additions. Replace `HEAD` with a commit hash, branch, or tag as needed. `git diff-tree` compares tree objects associated with commits and supports raw, name-only, name-status, recursive, and rename-detection output. [R87]
+
+### Produce per-commit file-status counts in PowerShell
+
+Current branch, oldest first:
+
+```powershell
+git rev-list --reverse HEAD | ForEach-Object {
+    $commit = $_
+    $statuses = @(git diff-tree --root --no-commit-id --name-status --find-renames -r $commit)
+    $added = @($statuses | Where-Object { $_ -match '^A\s' }).Count
+    $modified = @($statuses | Where-Object { $_ -match '^M\s' }).Count
+    $deleted = @($statuses | Where-Object { $_ -match '^D\s' }).Count
+    $renamed = @($statuses | Where-Object { $_ -match '^R\d*\s' }).Count
+    $info = git show -s --format="%h | %ad | %s" --date=short $commit
+    "$info | Added: $added | Modified: $modified | Deleted: $deleted | Renamed: $renamed"
+}
+```
+
+All commits reachable from all known refs:
+
+```powershell
+git rev-list --reverse --all | ForEach-Object {
+    $commit = $_
+    $statuses = @(git diff-tree --root --no-commit-id --name-status --find-renames -r $commit)
+    $added = @($statuses | Where-Object { $_ -match '^A\s' }).Count
+    $modified = @($statuses | Where-Object { $_ -match '^M\s' }).Count
+    $deleted = @($statuses | Where-Object { $_ -match '^D\s' }).Count
+    $renamed = @($statuses | Where-Object { $_ -match '^R\d*\s' }).Count
+    $info = git show -s --format="%h | %ad | %s" --date=short $commit
+    "$info | Added: $added | Modified: $modified | Deleted: $deleted | Renamed: $renamed"
+}
+```
+
+`HEAD` audits the current checked-out branch's reachable history. `--all` audits commits reachable from all refs the clone knows about. Name `main` explicitly instead of `HEAD` when the audit must target that branch regardless of what is checked out.
+
+Merge commits have multiple parents, so file counts can differ depending on whether Git compares the merge result with the first parent, every parent, or a combined diff. For a mostly linear documentation repository, the commands above produce the expected practical report. For a mainline-focused audit, use `--first-parent` history and inspect unusual merge commits separately.
+
+### Review commits in GitHub, VS Code, or GitHub Desktop
+
+**GitHub.com:** open the repository's commit history, select the correct branch, and open a commit to review its message, hash, author/date, files changed, and diff. GitHub can only show commits that were pushed. After `git fetch origin`, check local commits not represented by the local `origin/main` ref with:
+
+```bash
+git log origin/main..HEAD --oneline
+```
+
+**Visual Studio Code:** open Source Control with `Ctrl+Shift+G`, open the Source Control Graph when available, select a commit, and review its files and diffs. The Timeline view is useful for one file's history. VS Code can show local commits that have not been pushed. [R6] [R29]
+
+**GitHub Desktop:** open the repository, select **History**, select a commit, and review the changed files and diffs. It is beginner-friendly but less scriptable than Git CLI. [R49]
+
+For exact, repeatable audits, prefer Git CLI; use graphical tools for convenient visual review.
 
 ### Exit the Git pager
 
@@ -9036,9 +9361,10 @@ git diff --cached --name-status --find-renames
 
 git commit -m "docs: describe the update" -m "Explain what changed and why."
 
-git push origin main
-
 git tag -a vX.Y.Z -m "Version X.Y.Z"
+git show --stat vX.Y.Z
+
+git push origin main
 git push origin vX.Y.Z
 ```
 
@@ -9076,16 +9402,16 @@ A release title is the short display name for the release.
 Recommended GitHub Release title:
 
 ```text
-v1.21.0
+v1.22.0
 ```
 
 or:
 
 ```text
-Version 1.21.0
+Version 1.22.0
 ```
 
-For this guide's convention, concise titles such as `v1.21.0` are usually best on GitHub, while annotated tag messages can use `Version 1.21.0`.
+For this guide's convention, concise titles such as `v1.22.0` are usually best on GitHub, while annotated tag messages can use `Version 1.22.0`.
 
 A release description explains what changed and why it matters.
 
@@ -9142,8 +9468,8 @@ The previous tag controls what GitHub compares against when generating release n
 For a normal next version, compare:
 
 ```text
-previous tag: v1.20.0
-current tag:  v1.21.0
+previous tag: v1.21.0
+current tag:  v1.22.0
 ```
 
 If the previous tag is wrong, generated notes can include too much, too little, or unrelated history.
@@ -9229,21 +9555,21 @@ These are related but not identical.
 
 | Item | Example | Where it lives | Purpose |
 |---|---|---|---|
-| Tag name | `v1.21.0` | Git | Version marker |
-| Annotated tag message | `Version 1.21.0` | Git tag object | Tag annotation |
-| Release title | `v1.21.0` | GitHub Release | Display title |
+| Tag name | `v1.22.0` | Git | Version marker |
+| Annotated tag message | `Version 1.22.0` | Git tag object | Tag annotation |
+| Release title | `v1.22.0` | GitHub Release | Display title |
 | Release notes | Markdown summary | GitHub Release | Explains what changed |
 
 Recommended convention for this guide:
 
 ```bash
-git tag -a v1.21.0 -m "Version 1.21.0"
+git tag -a v1.22.0 -m "Version 1.22.0"
 ```
 
 GitHub Release title:
 
 ```text
-v1.21.0
+v1.22.0
 ```
 
 ### Optional annotated tag body
@@ -9251,7 +9577,7 @@ v1.21.0
 Annotated tags can have more than one `-m` paragraph:
 
 ```bash
-git tag -a v1.21.0 -m "Version 1.21.0" -m "Add global configuration, staged-patch validation, corrected first-check-in workflows, and tag-based archive guidance."
+git tag -a v1.22.0 -m "Version 1.22.0" -m "Add commit-history auditing, release-tag timing, and repository-health verification guidance."
 ```
 
 For most beginner documentation workflows, a concise one-line tag message is enough. Put the detailed explanation in the commit body, changelog, and GitHub Release notes.
@@ -9579,6 +9905,220 @@ git check-ignore -v path/to/file
 git status --ignored
 git ls-files --others --ignored --exclude-standard
 ```
+
+
+## 40. Repository Health, `.git` Metadata, and Integrity Verification
+
+Use this section when you are concerned that the repository's `.git` metadata may have been removed, replaced, reinitialized, redirected, or damaged.
+
+### Why the `.git` metadata matters
+
+In an ordinary repository, `.git` stores or points to Git's metadata, including:
+
+- commit objects and history;
+- branches and tags;
+- the staging area/index;
+- remotes and repository-specific configuration;
+- reflogs and other internal references.
+
+Deleting `.git` disconnects the working files from that local history. Visual Studio Code does not normally reconstruct the original history silently. Selecting **Initialize Repository** or running `git init` can create a new repository, but it cannot infer and restore the old commits, tags, upstream relationships, or remote settings from the working files alone.
+
+A `.git` entry is commonly a directory, but it can be a text file that redirects Git to metadata elsewhere, such as in a linked worktree or some submodule arrangements. Therefore, `git rev-parse --git-dir` is more authoritative than assuming `.git` must always be a normal directory. [R85]
+
+### Fast checks
+
+From the expected repository root in PowerShell:
+
+```powershell
+Test-Path .git
+git rev-parse --is-inside-work-tree
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git status
+```
+
+Healthy indicators usually include:
+
+- `Test-Path .git` returns `True` for a normal root-level repository or redirected `.git` file;
+- `git rev-parse --is-inside-work-tree` returns `true`;
+- `git rev-parse --show-toplevel` prints the intended project root;
+- `git rev-parse --git-dir` prints the metadata location, often `.git`;
+- `git status` identifies the expected branch and working-tree state.
+
+If Git says:
+
+```text
+fatal: not a git repository (or any of the parent directories): .git
+```
+
+then the current directory is not being recognized as part of a Git repository. Do not immediately run `git init` if preserving existing history matters. First confirm your path and look for a valid clone or remote.
+
+### Confirm branch, remote, history, and tags
+
+```powershell
+git branch -vv
+git remote -v
+git remote get-url origin
+git log --oneline --decorate -5
+git tag --list
+git show-ref --heads --tags
+```
+
+These commands answer different questions:
+
+| Check | What it confirms |
+|---|---|
+| `git branch -vv` | Current branch, current commit, and upstream tracking |
+| `git remote -v` | Configured fetch and push URLs |
+| `git remote get-url origin` | Exact URL assigned to `origin` |
+| `git log --oneline --decorate -5` | Recent history and nearby branch/tag decorations |
+| `git tag --list` | Local tag names |
+| `git show-ref --heads --tags` | Branch and tag refs plus their object IDs |
+
+A newly initialized empty repository would not automatically recreate prior commits, tags, `origin`, or an `origin/main` upstream relationship.
+
+### Check object and reference integrity
+
+Run:
+
+```powershell
+git fsck --full
+```
+
+`git fsck` verifies the connectivity and validity of objects in the local object database and checks reachable objects through refs. Successful output varies by Git version and repository; it may be brief or produce no error output. The important result is the absence of corruption, missing-object, or broken-reference errors. Dangling objects can be harmless after rebases, resets, amended commits, or other history changes. [R86]
+
+`git fsck --full` validates the local Git database. It does not by itself prove that the local branch matches GitHub or another remote.
+
+### Compare local and remote branch state
+
+Refresh remote-tracking information first:
+
+```powershell
+git fetch origin --prune
+```
+
+Then compare the branch tips:
+
+```powershell
+git rev-parse main
+git rev-parse origin/main
+git status -sb
+```
+
+If both `rev-parse` commands return the same commit hash, local `main` and the local remote-tracking ref `origin/main` identify the same commit after the fetch.
+
+`git status -sb` may show:
+
+```text
+## main...origin/main
+```
+
+with no ahead/behind count when the branch tips are aligned. If it shows `[ahead N]` or `[behind N]`, review the differences:
+
+```powershell
+git log --oneline origin/main..main
+git log --oneline main..origin/main
+```
+
+For tags on the remote:
+
+```powershell
+git ls-remote --tags origin
+```
+
+### Recommended practical verification sequence
+
+```powershell
+Test-Path .git
+git rev-parse --is-inside-work-tree
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git status
+git branch -vv
+git remote -v
+git log --oneline --decorate -5
+git tag --list
+git show-ref --heads --tags
+git fsck --full
+git fetch origin --prune
+git rev-parse main
+git rev-parse origin/main
+git status -sb
+```
+
+Interpret the sequence as a set of independent checks rather than one pass/fail command:
+
+```text
+metadata path exists or resolves
+expected working tree is active
+repository root is correct
+branch and upstream are correct
+remote is correct
+history and tags are present
+refs resolve
+object database is readable
+remote is reachable
+local and remote branch tips are understood
+```
+
+### Why these checks rule out silent recreation
+
+The combined presence of historical commits, annotated tags, expected remotes, upstream tracking, valid refs, and a healthy object database is strong evidence that the original repository metadata remains intact.
+
+A newly initialized repository would usually show some combination of:
+
+- no prior commits;
+- no historical tags;
+- no configured remote;
+- all project files as untracked;
+- no `origin/main` upstream;
+- a newly created branch with unrelated history.
+
+### If `.git` really is missing
+
+Choose recovery based on what is authoritative.
+
+**Best when the remote is current:**
+
+1. Preserve any uncommitted working files outside the damaged folder.
+2. Clone the remote repository into a new clean folder.
+3. Compare and copy only intentional uncommitted changes into the clean clone.
+4. Review with `git status` and `git diff` before committing.
+
+```powershell
+git clone https://github.com/OWNER/REPOSITORY.git
+```
+
+**When another healthy clone exists:** copy working changes into that clone rather than copying an unknown `.git` directory between folders.
+
+**When no history must be preserved:** `git init` can intentionally start a new repository, but document that it is a new history. Do not describe it as recovery of the deleted repository.
+
+**When the remote is behind:** locate another clone, backup, bundle, or exported refs before reinitializing. A remote cannot restore commits or tags that were never pushed there.
+
+### Harmless command-entry errors
+
+An error such as:
+
+```text
+fatal: ambiguous argument 'origin/maingit': unknown revision or path not in the working tree
+```
+
+can result from accidentally concatenating two commands:
+
+```powershell
+git rev-parse origin/maingit status -sb
+```
+
+Run the intended commands separately:
+
+```powershell
+git rev-parse origin/main
+git status -sb
+```
+
+A malformed combined command does not by itself indicate repository corruption.
+
+---
 
 # Appendix A: Expanded Git Command Reference
 
@@ -10511,6 +11051,56 @@ git push origin component/v1.0.0
 git tag --list "component/*" --sort=-version:refname
 ```
 
+
+## A.4 Commands added or expanded in v1.22.0
+
+### View all known commit messages
+
+```bash
+git log --all --graph --decorate --oneline
+git log --all --reverse --format="%H%n%B%n"
+```
+
+Use `git fetch --all --prune` first when remote-tracking freshness matters. Official reference: [R26] [R68]
+
+### Inspect one commit's files and snapshot
+
+```bash
+git show --stat --summary <commit-hash>
+git show --name-status --find-renames --format= <commit-hash>
+git show <commit-hash>:path/to/file.md
+git ls-tree -r --name-only <commit-hash>
+```
+
+Official references: [R27] [R37]
+
+### Count file statuses introduced by a commit
+
+```powershell
+git diff-tree --root --no-commit-id --name-status --find-renames -r HEAD
+```
+
+Official reference: [R87]
+
+### Resolve repository metadata and refs
+
+```powershell
+git rev-parse --is-inside-work-tree
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git show-ref --heads --tags
+```
+
+Official references: [R75] [R85]
+
+### Verify local Git object integrity
+
+```powershell
+git fsck --full
+```
+
+Official reference: [R86]
+
 # Appendix B: Expanded VS Code Reference
 
 ## B.1 Source Control view
@@ -10593,6 +11183,19 @@ For this guide, VS Code is the recommended default tool for merge conflicts beca
 - integrated terminal commands.
 
 ---
+
+
+## B.7 Source Control Graph and file Timeline
+
+When available in the installed VS Code version, open **Source Control Graph** from the Source Control view to inspect local branches, commits, tags, and commit changes visually.
+
+1. Open the repository folder.
+2. Press `Ctrl+Shift+G`.
+3. Open the Source Control Graph.
+4. Select a commit.
+5. Select an affected file to view its diff.
+
+For one file, use the Explorer **Timeline** view to inspect file-specific history. Graph and Timeline views are convenient for local visual review, including commits that have not yet been pushed. Use Git CLI for exact scripted reports and integrity checks. [R6] [R29]
 
 # Appendix C: Expanded Versioning Concepts
 
@@ -13593,6 +14196,78 @@ git archive --format=zip --prefix=aws-hello-world-microservice-v1.1.1/ --output 
 ```
 
 Inspect the completed ZIP before publishing it.
+
+
+## F.241 How do I view every known commit message?
+
+Refresh remote-tracking refs when needed, then show all known history:
+
+```bash
+git fetch --all --prune
+git log --all --graph --decorate --oneline
+```
+
+For complete messages from oldest to newest:
+
+```bash
+git log --all --reverse --format="%H%n%B%n"
+```
+
+## F.242 How do I confirm exactly what one commit changed?
+
+Start with:
+
+```bash
+git show --stat --summary <commit-hash>
+git show --name-status --find-renames --format= <commit-hash>
+```
+
+Use `git show <commit-hash>:path/to/file` for one file's complete historical contents and `git ls-tree -r --name-only <commit-hash>` for the complete tracked snapshot.
+
+## F.243 How do I count added, modified, deleted, and renamed files in a commit?
+
+In PowerShell:
+
+```powershell
+$statuses = @(git diff-tree --root --no-commit-id --name-status --find-renames -r HEAD)
+$added = @($statuses | Where-Object { $_ -match '^A\s' }).Count
+$modified = @($statuses | Where-Object { $_ -match '^M\s' }).Count
+$deleted = @($statuses | Where-Object { $_ -match '^D\s' }).Count
+$renamed = @($statuses | Where-Object { $_ -match '^R\d*\s' }).Count
+"Added: $added | Modified: $modified | Deleted: $deleted | Renamed: $renamed"
+```
+
+## F.244 When should I create a release tag?
+
+Create and verify it immediately after the release commit when practical, before making the next release commit:
+
+```powershell
+git commit -m "Release version 1.0.0"
+git tag -a v1.0.0 -m "Version 1.0.0"
+git show --stat v1.0.0
+git push origin main
+git push origin v1.0.0
+```
+
+Pushing `main` before creating the local tag is also valid if no new commit changes `HEAD` before tagging.
+
+## F.245 How do I verify repository health after possible `.git` deletion?
+
+Use the sequence in [40. Repository Health, `.git` Metadata, and Integrity Verification](#40-repository-health-git-metadata-and-integrity-verification). The most important checks include:
+
+```powershell
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git branch -vv
+git remote -v
+git log --oneline --decorate -5
+git show-ref --heads --tags
+git fsck --full
+```
+
+## F.246 Will VS Code silently restore a deleted `.git` folder and its history?
+
+No. Initializing a repository can create new metadata, but VS Code cannot infer and silently reconstruct the original commits, tags, remotes, upstream tracking, and object database from ordinary working files. Recover from a healthy remote, clone, backup, or bundle when preserving history matters.
 
 # Appendix G: Command Sequences and Workflow Recipes
 
@@ -16635,7 +17310,7 @@ git ls-remote --tags origin component/v1.0.0
 
 # Appendix V: GitHub File Search, Tag Inspection, and Commit History Scenarios
 
-This appendix expands [Section 33](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+This appendix expands [Section 33](#33-github-file-search-tag-inspection-commit-history-and-change-auditing).
 
 ## V.1 Search only the open file on GitHub
 
@@ -17519,6 +18194,16 @@ https://git-scm.com/docs/git-check-ignore
 [R84] Git documentation, `git-config`, including `core.excludesFile` and `push.autoSetupRemote`.
 https://git-scm.com/docs/git-config
 
+
+[R85] Git documentation, `git-rev-parse`.
+https://git-scm.com/docs/git-rev-parse
+
+[R86] Git documentation, `git-fsck`.
+https://git-scm.com/docs/git-fsck
+
+[R87] Git documentation, `git-diff-tree`.
+https://git-scm.com/docs/git-diff-tree
+
 # Index
 
 ## `.git/info/exclude`
@@ -17659,39 +18344,39 @@ See [34. Linking Related Repositories and Multi-Repo Release Workflows](#34-link
 
 ## GitHub file search
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
 
 ## `Ctrl+F` / `Cmd+F`
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing).
 
 ## GitHub `path:` search
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing).
 
 ## `git tag --sort`
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
 
 ## `git describe --tags`
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
 
 ## `git show-ref --tags`
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
 
 ## Commit history lookup
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
 
 ## `git log --format=%B`
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix V](#appendix-v-github-file-search-tag-inspection-and-commit-history-scenarios).
 
 ## Git pager
 
-See [33. GitHub File Search, Tag Inspection, and Commit History Lookup](#33-github-file-search-tag-inspection-and-commit-history-lookup).
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing).
 
 
 ## `git push` vs `git push origin main`
@@ -18026,6 +18711,34 @@ See [37. Staging, Rename Review, Status Checks, and Precise `origin` Wording](#3
 ## Tag-based release archive
 
 See [38. GitHub Releases, Release Notes, and Release Assets](#38-github-releases-release-notes-and-release-assets), [Appendix K](#appendix-k-practical-staging-tag-and-download-scenarios), and [Appendix F.240](#f240-how-do-i-create-a-clean-release-zip-directly-from-a-tag).
+
+## Commit history and commit messages
+
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix F.241](#f241-how-do-i-view-every-known-commit-message).
+
+## Commit inspection
+
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix F.242](#f242-how-do-i-confirm-exactly-what-one-commit-changed).
+
+## File-change counts
+
+See [33. GitHub File Search, Tag Inspection, Commit History, and Change Auditing](#33-github-file-search-tag-inspection-commit-history-and-change-auditing) and [Appendix F.243](#f243-how-do-i-count-added-modified-deleted-and-renamed-files-in-a-commit).
+
+## Tag timing
+
+See [16. First-Time Setup vs. Later Updates](#16-first-time-setup-vs-later-updates), [28. Correcting Tag Mistakes and Understanding Tag Messages](#28-correcting-tag-mistakes-and-understanding-tag-messages), and [Appendix F.244](#f244-when-should-i-create-a-release-tag).
+
+## Repository health
+
+See [40. Repository Health, `.git` Metadata, and Integrity Verification](#40-repository-health-git-metadata-and-integrity-verification) and [Appendix F.245](#f245-how-do-i-verify-repository-health-after-possible-git-deletion).
+
+## `.git` directory and Git metadata
+
+See [40. Repository Health, `.git` Metadata, and Integrity Verification](#40-repository-health-git-metadata-and-integrity-verification) and [Appendix F.246](#f246-will-vs-code-silently-restore-a-deleted-git-folder-and-its-history).
+
+## `git fsck`
+
+See [40. Repository Health, `.git` Metadata, and Integrity Verification](#40-repository-health-git-metadata-and-integrity-verification) and [Appendix A.4](#a4-commands-added-or-expanded-in-v1220).
 
 ## Repository
 

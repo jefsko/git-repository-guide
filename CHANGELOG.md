@@ -4,6 +4,41 @@ All notable changes to this guide are documented here.
 
 This project uses semantic versioning-style document versions. The active guide file should keep a stable filename, such as `git-repository-guide.md`, while versions are tracked through Git commits, tags, releases, and this changelog.
 
+## v1.22.0
+
+### Added
+
+- Added a consolidated commit-history and change-auditing workflow covering `git log` scope, ordering, complete commit messages, graph views, message filtering, and remote-ref refresh.
+- Added detailed one-commit inspection guidance using `git show --stat --summary`, `--name-status`, `--find-renames`, historical file-content syntax, and complete snapshot listing with `git ls-tree`.
+- Added PowerShell workflows for counting added, modified, deleted, and renamed files in one commit and across every commit reachable from `HEAD`, `main`, or `--all` refs.
+- Added explicit release-tag timing guidance explaining that an unqualified `git tag` targets `HEAD`, why each tag should be created and verified before the next release commit, and how to tag an older commit explicitly.
+- Added a dedicated repository-health section covering `.git` metadata, repository-root detection, branch/upstream checks, remote checks, history and tag refs, `git fsck --full`, remote refresh, and local/remote commit alignment.
+- Added recovery guidance for a truly missing `.git` directory and clarification that VS Code or `git init` cannot silently reconstruct prior history, tags, remotes, or upstream tracking.
+- Added synchronized quick-start, cheat-sheet, command-reference, Appendix A, VS Code, Knowledge Base, index, and reference material for the new workflows.
+
+### Changed
+
+- Updated all active file-set version metadata from `v1.21.0` to `v1.22.0`.
+- Reordered recommended release examples so the local annotated tag is created and inspected immediately after its release commit, before work begins on the next release.
+- Expanded the existing GitHub file-search and commit-history section into a broader commit-history and change-auditing section instead of creating duplicate standalone history material.
+- Preserved the distinction between commit snapshots and per-commit diffs, and clarified that line insertion/deletion totals are not file counts.
+- Added first-parent and merge-commit caveats to prevent overinterpreting per-commit status reports in merge-heavy histories.
+
+### Fixed
+
+- Removed ambiguity in workflows that could be read as allowing the next release commit before the prior release tag was created.
+- Clarified that `--all` reads refs already known to the local clone and does not itself fetch newer remote history.
+- Clarified that `git fsck --full` validates the local object database but does not prove local and remote branch tips match.
+- Escaped PowerShell pipeline characters in two Markdown table cells so the tables retain the intended column structure.
+
+### Notes
+
+- This is an additive minor release from `v1.21.0`.
+- The four v1.22.0 addenda were consolidated as source material and were not added to the active repository package.
+- Existing useful tag correction, commit-message, GitHub history, staged-review, and verification guidance was preserved and expanded without unnecessary duplication.
+- The active repository remains a seven-file flat root structure; no active files were added, removed, or renamed.
+- Markdown and text files retain UTF-8 without BOM and CRLF line endings.
+
 ## v1.21.0
 
 ### Added

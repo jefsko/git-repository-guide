@@ -10,7 +10,7 @@ The guide is written in a conversational style for novice-to-advanced users. It 
 
 ## Main Guide
 
-Current guide version: `v1.21.0`
+Current guide version: `v1.22.0`
 
 Main guide file:
 
@@ -187,6 +187,14 @@ Use versioned filenames for standalone downloads when helpful, such as files sha
 - Printing commit messages only with `git log --format=%B`
 - Exiting Git's pager with `q`
 - Choosing between plain `git push` and explicit `git push origin main` in later-update examples
+- Viewing complete commit messages across current-branch or all-ref history
+- Ordering history newest-first, oldest-first, by date, or topologically
+- Inspecting one commit's patch, file statuses, and complete tracked snapshot
+- Counting added, modified, deleted, and renamed files per commit in PowerShell
+- Reviewing local commit history in Git CLI, GitHub, VS Code, and GitHub Desktop
+- Creating and verifying a release tag while `HEAD` still points to the intended release commit
+- Verifying `.git` metadata, repository roots, refs, remotes, object integrity, and local/remote alignment
+- Understanding why VS Code cannot silently reconstruct deleted Git history
 
 - Linking related GitHub repositories through README navigation
 - Building hub-and-example repository series
@@ -292,17 +300,18 @@ A beginner-friendly guide to creating Git repositories and managing versioned fi
 | `v1.19.1` | Polished and rebalanced release and ignore-file material |
 | `v1.20.0` | Tag deletion, multiline commit bodies, local excludes, namespaced tags, and upstream tracking |
 | `v1.21.0` | Global Git configuration, staged-patch validation, corrected first-check-in ordering, and tag-based release archives |
+| `v1.22.0` | Commit-history and file-change auditing, release-tag timing, and repository-health verification |
 
 ## Versioning Policy
 
 This guide uses document-level semantic versioning.
 
 - Patch updates, such as `v1.20.1`, are for small corrections, typo fixes, formatting fixes, or minor clarifications.
-- Minor updates, such as `v1.21.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
+- Minor updates, such as `v1.22.0`, are for additive content, new examples, new appendixes, or meaningful expansions.
 - Major updates, such as `v2.0.0`, are for major restructuring, rewritten guidance, or changes that significantly alter the document's organization or recommendations.
 - Pre-1.0 versions, such as `v0.1.0`, are early drafts or pre-release versions.
 
-Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.21.0`.
+Once this guide is managed in Git, the file should usually keep the stable filename `git-repository-guide.md`. Each meaningful version should be marked with a Git tag, such as `v1.22.0`.
 
 ## Suggested Repository Structure
 

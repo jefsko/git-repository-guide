@@ -1,6 +1,6 @@
 # Git Repository Quick-Start Guide
 
-**Version:** v1.21.0
+**Version:** v1.22.0
 **Based on full guide:** [`git-repository-guide.md`](git-repository-guide.md)
 **Recommended path:** Create a Git repository, commit your files, push to GitHub, tag a version, and repeat for later versions.
 **Best for:** Creating a versioned documentation or project repository where each version tag identifies a full file-set snapshot.
@@ -60,7 +60,7 @@ GitHub repository named origin
 commits on main
         |
         v
-annotated version tags such as v1.0.0, v1.1.0, v1.21.0
+annotated version tags such as v1.0.0, v1.1.0, v1.22.0
 ```
 
 End result:
@@ -217,10 +217,18 @@ git push -u origin main
 
 ### 5. Create and push the first version tag
 
-Create an annotated tag:
+Create an annotated tag while `HEAD` still points to the release commit:
 
 ```bash
 git tag -a v1.0.0 -m "Version 1.0.0"
+```
+
+Inspect the tag before publishing it:
+
+```bash
+git show --stat v1.0.0
+git rev-parse "v1.0.0^{}"
+git rev-parse HEAD
 ```
 
 Push the tag:
@@ -233,12 +241,6 @@ Verify local tags:
 
 ```bash
 git tag --list
-```
-
-Inspect the tag:
-
-```bash
-git show v1.0.0
 ```
 
 **Checkpoint:** GitHub should show a `v1.0.0` tag.
@@ -275,6 +277,13 @@ Commit:
 git commit -m "Create version v1.1.0"
 ```
 
+Create and inspect the next tag before making another release commit:
+
+```bash
+git tag -a v1.1.0 -m "Version 1.1.0"
+git show --stat v1.1.0
+```
+
 Push the commit. After upstream tracking is configured, plain `git push` usually works:
 
 ```bash
@@ -287,12 +296,9 @@ For careful versioned updates, the explicit form is clearer:
 git push origin main
 ```
 
-Use one of those branch-push forms, not both every time.
-
-Create and push the next tag:
+Use one of those branch-push forms, not both every time. Then push the tag:
 
 ```bash
-git tag -a v1.1.0 -m "Version 1.1.0"
 git push origin v1.1.0
 ```
 
@@ -680,7 +686,7 @@ Avoid sibling-folder links as the final form for separate GitHub repos:
 Use Git CLI for exact push, tag, and release commands even when reviewing files in VS Code or Visual Studio.
 
 
-## Inspect tags and commit messages
+## Inspect tags, commit messages, and commit changes
 
 List tags newest-first by version:
 
@@ -688,16 +694,17 @@ List tags newest-first by version:
 git tag --sort=-v:refname
 ```
 
-Show a compact graph with branches and tags:
+Refresh remote-tracking refs and show a compact graph with branches and tags:
 
 ```bash
-git log --oneline --decorate --graph --all
+git fetch --all --prune
+git log --all --graph --decorate --oneline
 ```
 
-Show only tagged or decorated commits:
+Show complete commit messages from oldest to newest:
 
 ```bash
-git log --tags --simplify-by-decoration --oneline
+git log --all --reverse --format="%H%n%B%n"
 ```
 
 Search commit messages:
@@ -706,10 +713,17 @@ Search commit messages:
 git log --all --grep="keyword" --oneline
 ```
 
-Show commit messages only:
+Inspect one commit's summary and file statuses:
 
 ```bash
-git log --format=%B
+git show --stat --summary <commit-hash>
+git show --name-status --find-renames --format= <commit-hash>
+```
+
+List the complete tracked snapshot stored by a commit:
+
+```bash
+git ls-tree -r --name-only <commit-hash>
 ```
 
 Find the nearest reachable tag from the current commit:
@@ -722,6 +736,31 @@ Press `q` to exit the Git pager.
 
 When viewing a file on GitHub, use `Ctrl+F` on Windows/Linux or `Cmd+F` on Mac to search inside that file. Press `.` on GitHub to open the web editor if you want an editor-like view.
 
+## Verify repository health after a `.git` concern
+
+From the expected repository root:
+
+```powershell
+Test-Path .git
+git rev-parse --is-inside-work-tree
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git status
+git branch -vv
+git remote -v
+git log --oneline --decorate -5
+git tag --list
+git show-ref --heads --tags
+git fsck --full
+git fetch origin --prune
+git rev-parse main
+git rev-parse origin/main
+git status -sb
+```
+
+A healthy result should identify the intended root, expected branch and upstream, correct remote, historical commits and tags, readable refs and objects, and understood local/remote branch tips.
+
+Do not immediately run `git init` if `.git` may be missing and the old history matters. VS Code can create a new repository, but it cannot infer and restore the original history silently. Prefer a clean clone from the authoritative remote, then copy in any intentional uncommitted working changes.
 
 ## Stop here if your goal is only a quick test
 
@@ -1104,7 +1143,7 @@ git commit -m "feat: add web applications section"
 git commit -m "chore: prepare v2.1.0 release"
 ```
 
-Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.21.0`, and tag messages simple, such as `Version 1.21.0`.
+Commit prefixes belong in commit messages, not tag names. Keep tag names clean, such as `v1.22.0`, and tag messages simple, such as `Version 1.22.0`.
 
 
 ## Fix commit-message typos

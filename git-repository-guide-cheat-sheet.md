@@ -1,6 +1,6 @@
 # Git Repository Cheat Sheet
 
-**Version:** v1.21.0
+**Version:** v1.22.0
 **Full guide:** [`git-repository-guide.md`](git-repository-guide.md)
 **Quick-start guide:** [`git-repository-guide-quick-start-guide.md`](git-repository-guide-quick-start-guide.md)
 **Command quick reference:** [`git-command-quick-reference.md`](git-command-quick-reference.md)
@@ -75,6 +75,7 @@ Create and push the first tag:
 
 ```bash
 git tag -a v1.0.0 -m "Version 1.0.0"
+git show --stat v1.0.0
 git push origin v1.0.0
 ```
 
@@ -90,13 +91,14 @@ git diff --cached --stat
 git diff --cached
 git commit -m "Create version v1.1.0"
 
-# Normal later push after upstream is configured:
-git push
+git tag -a v1.1.0 -m "Version 1.1.0"
+git show --stat v1.1.0
 
-# Explicit branch push, often clearer for versioned updates:
+# Use one branch-push form:
+git push
+# or:
 git push origin main
 
-git tag -a v1.1.0 -m "Version 1.1.0"
 git push origin v1.1.0
 ```
 
@@ -743,7 +745,7 @@ git ls-files --others --ignored --exclude-standard
 | Inspect line endings | `git ls-files --eol` |
 | Renormalize line endings | `git add --renormalize .` |
 | Search tracked files | `git grep "search text"` |
-| PowerShell search | `Get-ChildItem -Recurse -File | Select-String -Pattern "search text"` |
+| PowerShell search | `Get-ChildItem -Recurse -File \| Select-String -Pattern "search text"` |
 
 Pre-release tag:
 
@@ -859,11 +861,53 @@ Avoid as final separate-repo link:
 | Nearest reachable tag | `git describe --tags` |
 | Show tag refs and hashes | `git show-ref --tags` |
 | Show commit messages | `git log --oneline` |
+| All-ref graph | `git log --all --graph --decorate --oneline` |
+| Oldest-first complete messages | `git log --all --reverse --format="%H%n%B%n"` |
 | Search commit messages | `git log --all --grep="keyword" --oneline` |
-| Messages only | `git log --format=%B` |
-| Subjects only | `git log --format=%s` |
+| Inspect one commit | `git show --stat --summary <commit-hash>` |
+| Show file statuses | `git show --name-status --find-renames --format= <commit-hash>` |
+| Show complete snapshot paths | `git ls-tree -r --name-only <commit-hash>` |
 | Exit pager | `q` |
 
+
+## Release-tag timing
+
+```powershell
+git commit -m "Release version X.Y.Z"
+git tag -a vX.Y.Z -m "Version X.Y.Z"
+git show --stat vX.Y.Z
+git push origin main
+git push origin vX.Y.Z
+```
+
+Create and inspect the tag while `HEAD` still identifies the intended release commit. If tagging later, specify the older commit hash explicitly.
+
+## Repository-health check
+
+```powershell
+Test-Path .git
+git rev-parse --is-inside-work-tree
+git rev-parse --show-toplevel
+git rev-parse --git-dir
+git status
+git branch -vv
+git remote -v
+git show-ref --heads --tags
+git fsck --full
+git fetch origin --prune
+git rev-parse main
+git rev-parse origin/main
+git status -sb
+```
+
+VS Code can initialize a new repository, but it cannot silently reconstruct deleted commits, tags, remotes, and upstream tracking.
+
+## Count one commit's file statuses
+
+```powershell
+$statuses = @(git diff-tree --root --no-commit-id --name-status --find-renames -r HEAD)
+"Added: $(@($statuses | Where-Object { $_ -match '^A\s' }).Count) | Modified: $(@($statuses | Where-Object { $_ -match '^M\s' }).Count) | Deleted: $(@($statuses | Where-Object { $_ -match '^D\s' }).Count) | Renamed: $(@($statuses | Where-Object { $_ -match '^R\d*\s' }).Count)"
+```
 
 ## Commit-message typo fixes
 
@@ -919,8 +963,9 @@ git status
 git add -A
 git status
 git commit -m "docs: update guide"
-git push origin main
 git tag -a vX.Y.Z -m "Version X.Y.Z"
+git show --stat vX.Y.Z
+git push origin main
 git push origin vX.Y.Z
 ```
 
